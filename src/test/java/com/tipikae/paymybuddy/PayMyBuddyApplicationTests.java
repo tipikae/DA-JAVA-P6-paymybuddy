@@ -1,4 +1,4 @@
-package com.tipikae.safetynetalerts;
+package com.tipikae.paymybuddy;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

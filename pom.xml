@@ -12,15 +12,13 @@
 	<artifactId>PayMyBuddy</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>PayMyBuddy</name>
-	<description>Transfer money application</description>
+	<description>Money transfer application</description>
+	
 	<properties>
 		<java.version>1.8</java.version>
 	</properties>
+	
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
