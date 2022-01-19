@@ -26,4 +26,10 @@ class AccountTest {
 	void testGetFirstname() {
 		assertEquals("Alice", accountRepository.getById(1).getUser().getFirstname());
 	}
+	
+	@Transactional
+	@Test
+	void testGetConnections() {
+		assertEquals(2, accountRepository.getById(1).getSrcConnections().size());
+	}
 }

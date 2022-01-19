@@ -1,13 +1,16 @@
 package com.tipikae.paymybuddy.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -36,10 +39,15 @@ public class Account implements Serializable {
 	@Column(name = "balance")
 	private double balance;
 	
-	@OneToOne(
-			cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(
 			name = "email_user",
 			referencedColumnName = "email")
 	private User user;
+	
+	@OneToMany(mappedBy = "srcAccount")
+	private List<Connection> srcConnections = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "account")
+	private List<Operation> operations = new ArrayList<>();
 }

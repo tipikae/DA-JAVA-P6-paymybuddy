@@ -3,9 +3,11 @@ package com.tipikae.paymybuddy.entities;
 import java.io.Serializable;
 
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -19,18 +21,22 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "connections")
-@IdClass(ConnectionId.class)
 public class Connection implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	
+	@EmbeddedId
+	private ConnectionId id;
 
-	@Id
-	@Column(name = "number_account1")
-	private int numberAccount1;
+	@ManyToOne
+	@MapsId("numberSrcAccount")
+	@JoinColumn(name = "number_src_account")
+	private Account srcAccount;
 
-	@Id
-	@Column(name = "number_account2")
-	private int numberAccount2;
+	@ManyToOne
+	@MapsId("numberDestAccount")
+	@JoinColumn(name = "number_dest_account")
+	private Account destAccount;
 
 	@Column(name = "name")
 	private String name;

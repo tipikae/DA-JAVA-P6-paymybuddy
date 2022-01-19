@@ -49,7 +49,6 @@ public class User implements Serializable {
 	@JoinColumn(name = "email_user")
 	private Set<InfoBankAccount> infosBankAccount = new HashSet<>();
 	
-	@OneToOne(
-			mappedBy = "user")
+	@OneToOne(mappedBy = "user")
 	private Account account;
 }
