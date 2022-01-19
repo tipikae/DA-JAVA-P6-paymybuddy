@@ -41,9 +41,9 @@ public class Account implements Serializable {
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(
-			name = "email_user",
+			name = "email_client",
 			referencedColumnName = "email")
-	private User user;
+	private Client client;
 	
 	@OneToMany(mappedBy = "srcAccount")
 	private List<Connection> srcConnections = new ArrayList<>();

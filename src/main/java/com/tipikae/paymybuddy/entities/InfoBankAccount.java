@@ -26,6 +26,6 @@ public class InfoBankAccount implements Serializable {
 	@Column(name = "iban")
 	private String iban;
 	
-	@Column(name = "email_user")
-	private String emailUser;
+	@Column(name = "email_client")
+	private String emailClient;
 }

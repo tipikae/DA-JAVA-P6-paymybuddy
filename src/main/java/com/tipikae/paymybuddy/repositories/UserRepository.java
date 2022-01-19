@@ -3,7 +3,7 @@ package com.tipikae.paymybuddy.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.tipikae.paymybuddy.entities.User;
+import com.tipikae.paymybuddy.entities.Client;
 
 /**
  * User repository interface.
@@ -12,6 +12,6 @@ import com.tipikae.paymybuddy.entities.User;
  *
  */
 @Repository
-public interface UserRepository extends JpaRepository<User, String> {
+public interface UserRepository extends JpaRepository<Client, String> {
 
 }

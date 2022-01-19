@@ -24,7 +24,7 @@ class AccountIT {
 	@Transactional
 	@Test
 	void testGetFirstname() {
-		assertEquals("Alice", accountRepository.getById(1).getUser().getFirstname());
+		assertEquals("Alice", accountRepository.getById(1).getClient().getFirstname());
 	}
 	
 	@Transactional

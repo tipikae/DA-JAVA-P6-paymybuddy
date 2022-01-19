@@ -23,6 +23,6 @@ class InfoBankAccountIT {
 	@Transactional
 	@Test
 	void testFindByIban() {
-		assertEquals("hector@hector.com", infoBankAccountRepository.getById("ES147258369").getEmailUser());
+		assertEquals("hector@hector.com", infoBankAccountRepository.getById("ES147258369").getEmailClient());
 	}
 }

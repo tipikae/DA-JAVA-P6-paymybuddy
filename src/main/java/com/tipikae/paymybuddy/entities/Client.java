@@ -24,17 +24,14 @@ import lombok.Data;
  */
 @Data
 @Entity
-@Table(name = "users")
-public class User implements Serializable {
+@Table(name = "clients")
+public class Client implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name = "email")
 	private String email;
-	
-	@Column(name = "password")
-	private String password;
 	
 	@Column(name = "firstname")
 	private String firstname;
@@ -46,9 +43,9 @@ public class User implements Serializable {
 			cascade = CascadeType.ALL,
 			orphanRemoval = true,
 			fetch = FetchType.EAGER)
-	@JoinColumn(name = "email_user")
+	@JoinColumn(name = "email_client")
 	private Set<InfoBankAccount> infosBankAccount = new HashSet<>();
 	
-	@OneToOne(mappedBy = "user")
+	@OneToOne(mappedBy = "client")
 	private Account account;
 }
