@@ -34,7 +34,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.jdbcAuthentication()
 			.dataSource(datasource)
-			.usersByUsernameQuery("SELECT email as principal, password as credential, 1 FROM users WHERE email = ?")
+			.usersByUsernameQuery("SELECT email as principal, password as credential, active FROM users WHERE email = ?")
 			.authoritiesByUsernameQuery("SELECT email_user as principal, role FROM users_roles WHERE email_user = ?")
 			.rolePrefix("ROLE_")
 			.passwordEncoder(passwordEncoder());
