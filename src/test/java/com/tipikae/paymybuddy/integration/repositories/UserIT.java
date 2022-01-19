@@ -1,4 +1,4 @@
-package com.tipikae.paymybuddy.unit.repositories;
+package com.tipikae.paymybuddy.integration.repositories;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tipikae.paymybuddy.repositories.UserRepository;
 
 @SpringBootTest
-class UserTest {
+class UserIT {
 	
 	@Autowired
 	private UserRepository userRepository;

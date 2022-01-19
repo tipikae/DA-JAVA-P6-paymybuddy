@@ -14,6 +14,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import lombok.Data;
 
@@ -30,6 +31,7 @@ import lombok.Data;
 		name = "type",
 		discriminatorType = DiscriminatorType.STRING,
 		length = 4)
+@Table(name = "operations")
 public abstract class Operation implements Serializable {
 
 	private static final long serialVersionUID = 1L;
