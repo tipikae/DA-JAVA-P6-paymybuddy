@@ -1,4 +1,4 @@
-package com.tipikae.paymybuddy.unit;
+package com.tipikae.paymybuddy.unit.services;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;

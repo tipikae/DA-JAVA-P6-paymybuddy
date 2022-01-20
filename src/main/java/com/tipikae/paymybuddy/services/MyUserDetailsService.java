@@ -20,6 +20,12 @@ import com.tipikae.paymybuddy.entities.Role;
 import com.tipikae.paymybuddy.entities.User;
 import com.tipikae.paymybuddy.repositories.UserRepository;
 
+/**
+ * An implementation of UserDetailsService.
+ * @author tipikae
+ * @version 1.0
+ *
+ */
 @Transactional
 @Service
 public class MyUserDetailsService implements UserDetailsService {
@@ -29,6 +35,12 @@ public class MyUserDetailsService implements UserDetailsService {
 	@Autowired
 	private UserRepository userRepository;
 
+	/**
+	 * {@inheritDoc}
+	 * @param {@inheritDoc}
+	 * @return {@inheritDoc}
+	 * @throws {@inheritDoc}
+	 */
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		Optional<User> optional = userRepository.findByEmail(email);

@@ -12,5 +12,17 @@ import com.tipikae.paymybuddy.exceptions.UserAlreadyExistException;
  */
 public interface IUserService {
 
+	/**
+	 * Register a new user.
+	 * @param userDTO	UserDTO object.
+	 * @return User
+	 * @throws UserAlreadyExistException
+	 */
 	User registerNewUser(UserDTO userDTO) throws UserAlreadyExistException;
+
+	/**
+	 * Delete a user by email
+	 * @param email
+	 */
+	void deleteUser(String email);
 }

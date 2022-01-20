@@ -34,6 +34,9 @@ public class User implements Serializable {
 	@Column(name = "password")
 	private String password;
 	
+	@Column(name = "active")
+	private boolean active;
+	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 			  name = "users_roles", 

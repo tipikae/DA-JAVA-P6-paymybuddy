@@ -2,10 +2,14 @@ package com.tipikae.paymybuddy.services;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.tipikae.paymybuddy.dto.UserDTO;
@@ -28,13 +32,23 @@ import com.tipikae.paymybuddy.repositories.UserRepository;
 @Service
 public class UserServiceImpl implements IUserService {
 	
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
+	
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
 	private ClientRepository clientRepository;
 	@Autowired
 	private AccountRepository accountRepository;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
+	/**
+	 * {@inheritDoc}
+	 * @param {@inheritDoc}
+	 * @return {@inheritDoc}
+	 * @throws {@inheritDoc}
+	 */
 	@Override
 	public User registerNewUser(UserDTO userDTO) throws UserAlreadyExistException {
 		if(emailExists(userDTO.getEmail())) {
@@ -46,7 +60,8 @@ public class UserServiceImpl implements IUserService {
 		Role role = new Role();
 		role.setRole("USER");
 		user.setEmail(userDTO.getEmail());
-		user.setPassword(userDTO.getPassword());
+		user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+		user.setActive(true);
 		user.setRoles(Arrays.asList(role));
 		userRepository.save(user);
 		
@@ -54,20 +69,40 @@ public class UserServiceImpl implements IUserService {
 		client.setEmail(userDTO.getEmail());
 		client.setFirstname(userDTO.getFirstname());
 		client.setLastname(userDTO.getLastname());
-		clientRepository.save(client);
 		
 		Account account = new Account();
 		account.setBalance(0);
 		account.setDateCreated(new Date());
-		account.setClient(client);
+		account.setClient(clientRepository.save(client));
 		accountRepository.save(account);
 		
 		return user;
 	}
 
     private boolean emailExists(String email) {
-        return userRepository.findByEmail(email) != null;
+    	Optional<User> optional = userRepository.findByEmail(email);
+    	if(optional.isPresent()) {
+    		return true;
+    	} else {
+    		return false;
+    	}
     }
 
-
+    /**
+     * {@inheritDoc}
+     * @param {@inheritDoc}
+     */
+	@Override
+	public void deleteUser(String email) {
+		int accountId = 0;
+		Optional<Client> optional = clientRepository.findByEmail(email);
+		if(optional.isPresent()) {
+			accountId = optional.get().getAccount().getNumber();
+			userRepository.deleteByEmail(email);
+			accountRepository.deleteByNumber(accountId);
+			clientRepository.deleteByEmail(email);
+		} else {
+			LOGGER.debug("Client with email: " + email + " not found.");
+		}
+	}
 }
