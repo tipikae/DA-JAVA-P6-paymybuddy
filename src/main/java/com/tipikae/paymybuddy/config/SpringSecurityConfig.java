@@ -44,6 +44,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable();
 		http.formLogin().loginPage("/login").usernameParameter("email").and().logout();
+		http.authorizeRequests().antMatchers("/user/registration");
 		http.authorizeRequests().antMatchers("/home").hasRole("USER");
 		http.authorizeRequests().antMatchers("/admin").hasRole("ADMIN");
 		http.exceptionHandling().accessDeniedPage("/403");
