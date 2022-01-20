@@ -19,4 +19,10 @@ class UserIT {
 		assertEquals(3, userRepository.count());
 	}
 
+	@Test
+	void testFindByEmail() {
+		assertTrue(userRepository.findByEmail("alice@alice.com").isPresent());
+		assertEquals("alice@alice.com", userRepository.findByEmail("alice@alice.com").get().getEmail());
+		assertEquals("USER", userRepository.findByEmail("alice@alice.com").get().getRoles().get(0).getRole());
+	}
 }
