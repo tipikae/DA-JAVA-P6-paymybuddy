@@ -49,10 +49,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 			.usernameParameter("email")
             .successHandler(myAuthenticationSuccessHandler())
 			.and()
-			.logout();
-		http.authorizeRequests().antMatchers("/user/registration", "/css/**").permitAll();
+			.logout().deleteCookies("JSESSIONID")
+			.and()
+			.rememberMe().key("MySecretRMKey");
 		http.authorizeRequests().antMatchers("/home").hasRole("USER");
 		http.authorizeRequests().antMatchers("/admin").hasRole("ADMIN");
+		http.authorizeRequests().antMatchers("/user/registration").permitAll();
 		http.exceptionHandling().accessDeniedPage("/403");
 	}
 
@@ -66,7 +68,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	/**
-	 * Set the redirection when login succeed.
+	 * Set the redirection when login succeed, based on role.
 	 * @return MySimpleUrlAuthSuccessHandler
 	 */
 	@Bean
