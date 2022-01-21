@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -40,6 +41,7 @@ public class UserController {
 			Model model) {
 		
 		LOGGER.debug("Get registration page.");
+		
 		UserDTO userDTO = new UserDTO();
 		model.addAttribute("user", userDTO);
 		return "registration";
@@ -49,8 +51,13 @@ public class UserController {
 	@PostMapping
 	public ModelAndView registerNewUser(
 			  @ModelAttribute("user") @Valid UserDTO userDTO,
-			  HttpServletRequest request,
-			  Errors errors) {
+			  Errors errors,
+			  HttpServletRequest request) {
+		
+		if(errors.hasErrors()) {
+			LOGGER.debug("has errors");
+			return new ModelAndView("registration", "user", userDTO);
+		}
 		
 		LOGGER.debug("Registering new user: {}", userDTO);
 		

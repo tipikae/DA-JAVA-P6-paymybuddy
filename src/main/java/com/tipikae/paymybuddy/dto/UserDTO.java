@@ -2,11 +2,11 @@ package com.tipikae.paymybuddy.dto;
 
 import java.io.Serializable;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import com.tipikae.paymybuddy.validation.PasswordMatches;
+import com.tipikae.paymybuddy.validation.ValidEmail;
 
 import lombok.Data;
 
@@ -22,9 +22,9 @@ public class UserDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	@ValidEmail
 	@NotNull
 	@NotEmpty
-	@Email
 	private String email;
 	
 	@NotNull

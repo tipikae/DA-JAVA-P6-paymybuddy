@@ -18,30 +18,32 @@
 				    <div>
 				        <label>Firstname</label>
 				        <input type="text" name="firstname" th:value="*{firstname}"/>
-				        <p th:each="error: ${#fields.errors('firstname')}" 
+				        <p class="red" th:each="error: ${#fields.errors('firstname')}" 
 				          th:text="${error}">Validation error</p>
 				    </div>
 				    <div>
 				        <label>Lastname</label>
 				        <input type="text" name="lastname" th:value="*{lastname}"/>
-				        <p th:each="error : ${#fields.errors('lastname')}" 
+				        <p class="red" th:each="error : ${#fields.errors('lastname')}" 
 				          th:text="${error}">Validation error</p>
 				    </div>
 				    <div>
 				        <label>Email</label>
 				        <input type="email" name="email" th:value="*{email}"/>
-				        <p th:each="error : ${#fields.errors('email')}" 
+				        <p class="red" th:each="error : ${#fields.errors('email')}" 
 				          th:text="${error}">Validation error</p>
 				    </div>
 				    <div>
 				        <label>Password</label>
 				        <input type="password" name="password" th:value="*{password}"/>
-				        <p th:each="error : ${#fields.errors('password')}" 
+				        <p class="red" th:each="error : ${#fields.errors('password')}" 
 				          th:text="${error}">Validation error</p>
 				    </div>
 				    <div>
 				        <label>Confirm password</label>
 				        <input type="password" name="confirmedPassword" th:value="*{confirmedPassword}"/>
+				        <p class="red" th:each="error : ${#fields.errors('confirmedPassword')}" 
+				          th:text="${error}">Validation error</p>
 				    </div>
 				    <button type="submit">Register</button>
 				</form>
