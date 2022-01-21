@@ -8,8 +8,8 @@ import com.tipikae.paymybuddy.dto.UserDTO;
 public class PasswordMatchesValidator implements ConstraintValidator<PasswordMatches, Object> {
 
 	@Override
-	public boolean isValid(Object value, ConstraintValidatorContext context) {
-		UserDTO userDTO = (UserDTO) value;
+	public boolean isValid(Object obj, ConstraintValidatorContext context) {
+		UserDTO userDTO = (UserDTO) obj;
 		return userDTO.getPassword().equals(userDTO.getConfirmedPassword());
 	}
 

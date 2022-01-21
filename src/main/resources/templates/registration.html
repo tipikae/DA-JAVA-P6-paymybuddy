@@ -44,6 +44,10 @@
 				        <input type="password" name="confirmedPassword" th:value="*{confirmedPassword}"/>
 				        <p class="red" th:each="error : ${#fields.errors('confirmedPassword')}" 
 				          th:text="${error}">Validation error</p>
+				        <p class="red"
+                          th:if="${#fields.hasGlobalErrors()}"
+                          th:each="error : ${#fields.errors('global')}"
+                          th:text="${error}">Validation error</p>
 				    </div>
 				    <button type="submit">Register</button>
 				</form>

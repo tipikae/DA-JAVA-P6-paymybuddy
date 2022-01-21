@@ -16,8 +16,8 @@ import lombok.Data;
  * @version 1.0
  *
  */
-@Data
 @PasswordMatches
+@Data
 public class UserDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;

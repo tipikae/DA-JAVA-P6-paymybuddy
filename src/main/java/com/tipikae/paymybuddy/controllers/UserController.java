@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -39,7 +38,6 @@ public class UserController {
 	public String getRegistrationForm(
 			WebRequest request,
 			Model model) {
-		
 		LOGGER.debug("Get registration page.");
 		
 		UserDTO userDTO = new UserDTO();
@@ -55,7 +53,9 @@ public class UserController {
 			  HttpServletRequest request) {
 		
 		if(errors.hasErrors()) {
-			LOGGER.debug("has errors");
+			StringBuilder sb = new StringBuilder();
+			errors.getAllErrors().stream().forEach(e -> sb.append(e + ", "));
+			LOGGER.debug("has errors:" + sb);
 			return new ModelAndView("registration", "user", userDTO);
 		}
 		
@@ -70,7 +70,7 @@ public class UserController {
 			mav.addObject("message", "An user for that email already exists.");
 	        return mav;
 		} catch(Exception e) {
-			LOGGER.debug("Unable to register.");
+			LOGGER.debug("Unable to register: " + e.getMessage());
 			ModelAndView mav = new ModelAndView("registration", "user", userDTO);
 			mav.addObject("message", "Unable to register.");
 	        return mav;
