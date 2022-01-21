@@ -9,14 +9,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.tipikae.paymybuddy.repositories.UserRepository;
 
 @SpringBootTest
-class UserIT {
+class UserRepositoryIT {
 	
 	@Autowired
 	private UserRepository userRepository;
 
 	@Test
 	void testCount() {
-		assertEquals(3, userRepository.count());
+		assertEquals(5, userRepository.count());
 	}
 
 	@Test

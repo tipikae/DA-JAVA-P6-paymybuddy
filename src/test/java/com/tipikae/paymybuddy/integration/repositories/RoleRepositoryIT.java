@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.tipikae.paymybuddy.repositories.RoleRepository;
 
 @SpringBootTest
-class RoleIT {
+class RoleRepositoryIT {
 
 	@Autowired
 	private RoleRepository roleRepository;

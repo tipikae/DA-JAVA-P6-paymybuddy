@@ -13,7 +13,7 @@ import com.tipikae.paymybuddy.repositories.AccountRepository;
 import com.tipikae.paymybuddy.repositories.OperationRepository;
 
 @SpringBootTest
-class OperationIT {
+class OperationRepositoryIT {
 	
 	@Autowired
 	private OperationRepository operationRepository;

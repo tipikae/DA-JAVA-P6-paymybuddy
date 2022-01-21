@@ -10,14 +10,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tipikae.paymybuddy.repositories.ClientRepository;
 
 @SpringBootTest
-class ClientIT {
+class ClientRepositoryIT {
 	
 	@Autowired
 	private ClientRepository userRepository;
 
 	@Test
 	void testFindAll() {
-		assertEquals(3, userRepository.findAll().size());
+		assertEquals(4, userRepository.findAll().size());
 	}
 
 	@Transactional
