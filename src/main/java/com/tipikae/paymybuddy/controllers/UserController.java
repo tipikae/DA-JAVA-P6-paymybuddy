@@ -17,7 +17,6 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.tipikae.paymybuddy.dto.UserDTO;
-import com.tipikae.paymybuddy.entities.User;
 import com.tipikae.paymybuddy.exceptions.UserAlreadyExistException;
 import com.tipikae.paymybuddy.services.IUserService;
 
@@ -39,6 +38,7 @@ public class UserController {
 	public String getRegistrationForm(
 			WebRequest request,
 			Model model) {
+		
 		LOGGER.debug("Get registration page.");
 		UserDTO userDTO = new UserDTO();
 		model.addAttribute("user", userDTO);
@@ -51,11 +51,12 @@ public class UserController {
 			  @ModelAttribute("user") @Valid UserDTO userDTO,
 			  HttpServletRequest request,
 			  Errors errors) {
-		LOGGER.debug("Registering new user: {}", userDTO);
-		User registered;
 		
+		LOGGER.debug("Registering new user: {}", userDTO);
+		
+		// Register new user
 		try {
-			registered = userService.registerNewUser(userDTO);
+			userService.registerNewUser(userDTO);
 		} catch(UserAlreadyExistException e) {
 			LOGGER.debug("An user for that email already exists.");
 			ModelAndView mav = new ModelAndView("registration", "user", userDTO);
@@ -68,12 +69,13 @@ public class UserController {
 	        return mav;
 		}
 		
+		// Auto-login new user
 		try {
-			request.login(registered.getEmail(), registered.getPassword());
-			return new ModelAndView("home", "", null);
+			request.login(userDTO.getEmail(), userDTO.getPassword());
+			return new ModelAndView("user", "", null);
 		} catch(ServletException e) {
-			LOGGER.debug("Unable to login.");
-			return new ModelAndView("home", "", null);
+			LOGGER.debug("Unable to login: ServletException: " + e.getMessage());
+			return new ModelAndView("user", "", null);
 		}
 	}
 }
