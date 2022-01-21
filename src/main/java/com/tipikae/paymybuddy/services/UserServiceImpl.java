@@ -51,9 +51,12 @@ public class UserServiceImpl implements IUserService {
 	 */
 	@Override
 	public User registerNewUser(UserDTO userDTO) throws UserAlreadyExistException {
+		LOGGER.debug("Registering new user");
 		if(emailExists(userDTO.getEmail())) {
-			throw new UserAlreadyExistException("An account with email address: " + userDTO.getEmail()
-					+ " already exists.");
+			LOGGER.debug("An user with email address: " + userDTO.getEmail()
+				+ " already exists.");
+			throw new UserAlreadyExistException("An user with email address: " + userDTO.getEmail()
+				+ " already exists.");
 		}
 		
 		User user = new User();
@@ -94,6 +97,7 @@ public class UserServiceImpl implements IUserService {
      */
 	@Override
 	public void deleteUser(String email) {
+		LOGGER.debug("Deleting user with email: " + email);
 		int accountId = 0;
 		Optional<Client> optional = clientRepository.findByEmail(email);
 		if(optional.isPresent()) {

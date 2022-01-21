@@ -1,12 +1,24 @@
 package com.tipikae.paymybuddy.controllers;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.tipikae.paymybuddy.dto.UserDTO;
+import com.tipikae.paymybuddy.entities.User;
+import com.tipikae.paymybuddy.exceptions.UserAlreadyExistException;
 import com.tipikae.paymybuddy.services.IUserService;
 
 /**
@@ -17,15 +29,51 @@ import com.tipikae.paymybuddy.services.IUserService;
  */
 @Controller
 public class UserController {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
 	@Autowired
 	private IUserService userService;
 	
 	@GetMapping("/user/registration")
-	public String getRegistrationForm(WebRequest request, Model model) {
+	public String getRegistrationForm(
+			WebRequest request,
+			Model model) {
+		LOGGER.debug("Get registration page.");
 		UserDTO userDTO = new UserDTO();
 		model.addAttribute("user", userDTO);
 		return "registration";
 		
+	}
+	
+	@PostMapping
+	public ModelAndView registerNewUser(
+			  @ModelAttribute("user") @Valid UserDTO userDTO,
+			  HttpServletRequest request,
+			  Errors errors) {
+		LOGGER.debug("Registering new user: {}", userDTO);
+		User registered;
+		
+		try {
+			registered = userService.registerNewUser(userDTO);
+		} catch(UserAlreadyExistException e) {
+			LOGGER.debug("An user for that email already exists.");
+			ModelAndView mav = new ModelAndView("registration", "user", userDTO);
+			mav.addObject("message", "An user for that email already exists.");
+	        return mav;
+		} catch(Exception e) {
+			LOGGER.debug("Unable to register.");
+			ModelAndView mav = new ModelAndView("registration", "user", userDTO);
+			mav.addObject("message", "Unable to register.");
+	        return mav;
+		}
+		
+		try {
+			request.login(registered.getEmail(), registered.getPassword());
+			return new ModelAndView("home", "", null);
+		} catch(ServletException e) {
+			LOGGER.debug("Unable to login.");
+			return new ModelAndView("home", "", null);
+		}
 	}
 }
