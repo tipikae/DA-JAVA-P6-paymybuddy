@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import com.tipikae.paymybuddy.services.MyUserDetailsService;
 
@@ -43,7 +44,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override 
 	public void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable();
-		http.formLogin().loginPage("/login").usernameParameter("email").and().logout();
+		http.formLogin()
+			.loginPage("/login")
+			.usernameParameter("email")
+            .successHandler(myAuthenticationSuccessHandler())
+			.and()
+			.logout();
 		http.authorizeRequests().antMatchers("/user/registration", "/css/**").permitAll();
 		http.authorizeRequests().antMatchers("/home").hasRole("USER");
 		http.authorizeRequests().antMatchers("/admin").hasRole("ADMIN");
@@ -59,4 +65,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		return new BCryptPasswordEncoder();
 	}
 
+	/**
+	 * Set the redirection when login succeed.
+	 * @return MySimpleUrlAuthSuccessHandler
+	 */
+	@Bean
+	public AuthenticationSuccessHandler myAuthenticationSuccessHandler(){
+	    return new MySimpleUrlAuthSuccessHandler();
+	}
 }
