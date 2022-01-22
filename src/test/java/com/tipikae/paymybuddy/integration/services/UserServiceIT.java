@@ -50,7 +50,7 @@ class UserServiceIT {
 	}
 
 	@Test
-	void registerNewUserReturnsUserWhenEmailNotFound() {
+	void registerNewUserReturnsUserWhenEmailNotFound() throws UserAlreadyExistException {
 		cleanDatabase();
 		assertEquals("victor@victor.com", userService.registerNewUser(newUserDTO).getEmail());
 	}

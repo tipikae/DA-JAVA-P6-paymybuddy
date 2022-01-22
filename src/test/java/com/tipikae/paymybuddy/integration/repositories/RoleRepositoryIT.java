@@ -16,7 +16,7 @@ class RoleRepositoryIT {
 	
 	@Test
 	void testCount() {
-		assertEquals(2, roleRepository.count());
+		assertEquals(1, roleRepository.count());
 	}
 
 }
