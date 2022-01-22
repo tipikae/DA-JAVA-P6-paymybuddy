@@ -24,14 +24,14 @@ import lombok.Data;
  */
 @Data
 @Entity
-@Table(name = "accounts")
+@Table(name = "account")
 public class Account implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name = "number")
-	private int number;
+	@Column(name = "email_user")
+	private String emailUser;
 	
 	@Column(name = "date_created")
 	private Date dateCreated;
@@ -41,12 +41,9 @@ public class Account implements Serializable {
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(
-			name = "email_client",
+			name = "email_user",
 			referencedColumnName = "email")
-	private Client client;
-	
-	@OneToMany(mappedBy = "srcAccount")
-	private List<Connection> srcConnections = new ArrayList<>();
+	private User user;
 	
 	@OneToMany(mappedBy = "account")
 	private List<Operation> operations = new ArrayList<>();

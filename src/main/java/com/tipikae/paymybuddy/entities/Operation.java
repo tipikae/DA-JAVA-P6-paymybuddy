@@ -30,8 +30,8 @@ import lombok.Data;
 @DiscriminatorColumn(
 		name = "type",
 		discriminatorType = DiscriminatorType.STRING,
-		length = 4)
-@Table(name = "operations")
+		length = 3)
+@Table(name = "operation")
 public abstract class Operation implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -50,8 +50,11 @@ public abstract class Operation implements Serializable {
 	@Column(name = "description")
 	private String description;
 	
+	@Column(name = "fee")
+	private double fee;
+	
 	@ManyToOne
-	@JoinColumn(name = "number_account")
+	@JoinColumn(name = "email_user")
 	private Account account;
 	
 	public Operation() {
@@ -65,12 +68,13 @@ public abstract class Operation implements Serializable {
 	 * @param description
 	 * @param account
 	 */
-	public Operation(int number, Date dateOperation, double amount, String description, Account account) {
+	public Operation(int number, Date dateOperation, double amount, String description, double fee, Account account) {
 		super();
 		this.number = number;
 		this.dateOperation = dateOperation;
 		this.amount = amount;
 		this.description = description;
+		this.fee = fee;
 		this.account = account;
 	}
 	

@@ -15,16 +15,16 @@ public class ConnectionId implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private int numberSrcAccount;
-	private int numberDestAccount;
+	private String emailUserSrc;
+	private String emailUserDest;
 	
 	/**
-	 * @param numberSrcAccount
-	 * @param numberDestAccount
+	 * @param emailUserSrc
+	 * @param emailUserDest
 	 */
-	public ConnectionId(int numberSrcAccount, int numberDestAccount) {
-		this.numberSrcAccount = numberSrcAccount;
-		this.numberDestAccount = numberDestAccount;
+	public ConnectionId(String emailUserSrc, String emailUserDest) {
+		this.emailUserSrc = emailUserSrc;
+		this.emailUserDest = emailUserDest;
 	}
 	
 	public ConnectionId() {
@@ -39,15 +39,15 @@ public class ConnectionId implements Serializable {
         if (getClass() != obj.getClass())
             return false;
         ConnectionId other = (ConnectionId) obj;
-        if (numberSrcAccount == 0) {
-            if (other.numberSrcAccount != 0)
+        if (emailUserSrc == null) {
+            if (other.emailUserSrc != null)
                 return false;
-        } else if (numberSrcAccount != other.numberSrcAccount)
+        } else if (emailUserSrc != other.emailUserSrc)
             return false;
-        if (numberDestAccount == 0) {
-            if (other.numberDestAccount != 0)
+        if (emailUserDest == null) {
+            if (other.emailUserDest != null)
                 return false;
-        } else if (numberDestAccount != other.numberDestAccount)
+        } else if (emailUserDest != other.emailUserDest)
             return false;
         return true;
 	}
@@ -56,8 +56,8 @@ public class ConnectionId implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
         int result = 1;
-        result = prime * result + ((numberSrcAccount == 0) ? 0 : Integer.valueOf(numberSrcAccount).hashCode());
-        result = prime * result + ((numberDestAccount == 0) ? 0 : Integer.valueOf(numberDestAccount).hashCode());
+        result = prime * result + ((emailUserSrc == null) ? 0 : Integer.valueOf(emailUserSrc).hashCode());
+        result = prime * result + ((emailUserDest == null) ? 0 : Integer.valueOf(emailUserDest).hashCode());
         return result;
 	}
 	

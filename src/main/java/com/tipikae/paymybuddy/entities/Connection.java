@@ -2,7 +2,6 @@ package com.tipikae.paymybuddy.entities;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -20,7 +19,7 @@ import lombok.Data;
  */
 @Data
 @Entity
-@Table(name = "connections")
+@Table(name = "connection")
 public class Connection implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -29,15 +28,12 @@ public class Connection implements Serializable {
 	private ConnectionId id;
 
 	@ManyToOne
-	@MapsId("numberSrcAccount")
-	@JoinColumn(name = "number_src_account")
+	@MapsId("emailUserSrc")
+	@JoinColumn(name = "email_user_src")
 	private Account srcAccount;
 
 	@ManyToOne
-	@MapsId("numberDestAccount")
-	@JoinColumn(name = "number_dest_account")
+	@MapsId("emailUserDest")
+	@JoinColumn(name = "email_user_dest")
 	private Account destAccount;
-
-	@Column(name = "name")
-	private String name;
 }
