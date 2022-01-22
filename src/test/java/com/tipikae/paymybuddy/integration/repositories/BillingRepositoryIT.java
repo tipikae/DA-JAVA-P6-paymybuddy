@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.tipikae.paymybuddy.entities.Operation;
 import com.tipikae.paymybuddy.repositories.BillingRepository;
-import com.tipikae.paymybuddy.repositories.OperationRepository;
+import com.tipikae.paymybuddy.repositories.IOperationRepository;
 
 @SpringBootTest
 class BillingRepositoryIT {
@@ -19,7 +19,7 @@ class BillingRepositoryIT {
 	private BillingRepository billingRepository;
 	
 	@Autowired
-	private OperationRepository operationRepository;
+	private IOperationRepository operationRepository;
 
 	@Test
 	void testFindAll() {

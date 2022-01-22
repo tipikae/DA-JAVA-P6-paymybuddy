@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.tipikae.paymybuddy.entities.Role;
 import com.tipikae.paymybuddy.entities.User;
-import com.tipikae.paymybuddy.repositories.UserRepository;
+import com.tipikae.paymybuddy.repositories.IUserRepository;
 
 /**
  * An implementation of UserDetailsService.
@@ -30,7 +30,7 @@ public class MyUserDetailsService implements UserDetailsService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MyUserDetailsService.class);
 	
 	@Autowired
-	private UserRepository userRepository;
+	private IUserRepository userRepository;
 
 	/**
 	 * {@inheritDoc}

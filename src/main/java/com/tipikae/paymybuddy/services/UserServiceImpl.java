@@ -17,8 +17,8 @@ import com.tipikae.paymybuddy.entities.Account;
 import com.tipikae.paymybuddy.entities.Role;
 import com.tipikae.paymybuddy.entities.User;
 import com.tipikae.paymybuddy.exceptions.UserAlreadyExistException;
-import com.tipikae.paymybuddy.repositories.AccountRepository;
-import com.tipikae.paymybuddy.repositories.UserRepository;
+import com.tipikae.paymybuddy.repositories.IAccountRepository;
+import com.tipikae.paymybuddy.repositories.IUserRepository;
 
 /**
  * Implementation of IUserService.
@@ -33,9 +33,9 @@ public class UserServiceImpl implements IUserService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 	
 	@Autowired
-	private UserRepository userRepository;
+	private IUserRepository userRepository;
 	@Autowired
-	private AccountRepository accountRepository;
+	private IAccountRepository accountRepository;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 

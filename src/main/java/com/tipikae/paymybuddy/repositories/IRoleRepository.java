@@ -12,6 +12,6 @@ import com.tipikae.paymybuddy.entities.Role;
  *
  */
 @Repository
-public interface RoleRepository extends JpaRepository<Role, String> {
+public interface IRoleRepository extends JpaRepository<Role, String> {
 
 }

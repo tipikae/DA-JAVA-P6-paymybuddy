@@ -7,13 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.tipikae.paymybuddy.repositories.AccountRepository;
+import com.tipikae.paymybuddy.repositories.IAccountRepository;
 
 @SpringBootTest
 class AccountRepositoryIT {
 	
 	@Autowired
-	private AccountRepository accountRepository;
+	private IAccountRepository accountRepository;
 
 	@Transactional
 	@Test

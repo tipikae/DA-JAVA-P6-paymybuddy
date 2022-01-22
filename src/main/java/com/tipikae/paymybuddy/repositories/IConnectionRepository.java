@@ -12,6 +12,6 @@ import com.tipikae.paymybuddy.entities.Connection;
  *
  */
 @Repository
-public interface ConnectionRepository extends JpaRepository<Connection, Integer> {
+public interface IConnectionRepository extends JpaRepository<Connection, Integer> {
 
 }

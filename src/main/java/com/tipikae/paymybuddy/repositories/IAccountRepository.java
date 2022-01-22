@@ -14,7 +14,7 @@ import com.tipikae.paymybuddy.entities.Account;
  *
  */
 @Repository
-public interface AccountRepository extends JpaRepository<Account, Integer> {
+public interface IAccountRepository extends JpaRepository<Account, Integer> {
 
 	/**
 	 * Find an account by number.

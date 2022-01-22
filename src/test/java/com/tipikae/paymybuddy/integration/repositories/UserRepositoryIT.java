@@ -6,13 +6,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.tipikae.paymybuddy.repositories.UserRepository;
+import com.tipikae.paymybuddy.repositories.IUserRepository;
 
 @SpringBootTest
 class UserRepositoryIT {
 	
 	@Autowired
-	private UserRepository userRepository;
+	private IUserRepository userRepository;
 
 	@Test
 	void testCount() {

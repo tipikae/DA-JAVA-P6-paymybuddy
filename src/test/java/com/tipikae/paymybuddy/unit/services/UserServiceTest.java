@@ -22,22 +22,22 @@ import com.tipikae.paymybuddy.entities.User;
 import com.tipikae.paymybuddy.entities.Account;
 import com.tipikae.paymybuddy.entities.Client;
 import com.tipikae.paymybuddy.exceptions.UserAlreadyExistException;
-import com.tipikae.paymybuddy.repositories.AccountRepository;
+import com.tipikae.paymybuddy.repositories.IAccountRepository;
 import com.tipikae.paymybuddy.repositories.ClientRepository;
-import com.tipikae.paymybuddy.repositories.UserRepository;
+import com.tipikae.paymybuddy.repositories.IUserRepository;
 import com.tipikae.paymybuddy.services.UserServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 	
 	@Mock
-	private UserRepository userRepository;
+	private IUserRepository userRepository;
 	
 	@Mock
 	private ClientRepository clientRepository;
 	
 	@Mock
-	private AccountRepository accountRepository;
+	private IAccountRepository accountRepository;
 	
 	@Mock
 	private PasswordEncoder passwordEncoder;

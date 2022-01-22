@@ -9,16 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.tipikae.paymybuddy.entities.Account;
-import com.tipikae.paymybuddy.repositories.AccountRepository;
-import com.tipikae.paymybuddy.repositories.OperationRepository;
+import com.tipikae.paymybuddy.repositories.IAccountRepository;
+import com.tipikae.paymybuddy.repositories.IOperationRepository;
 
 @SpringBootTest
 class OperationRepositoryIT {
 	
 	@Autowired
-	private OperationRepository operationRepository;
+	private IOperationRepository operationRepository;
 	@Autowired
-	private AccountRepository accountRepository;
+	private IAccountRepository accountRepository;
 
 	@Test
 	void testFindAll() {
