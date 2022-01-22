@@ -86,27 +86,7 @@ public class UserServiceImpl implements IUserService {
     	Optional<User> optional = userRepository.findByEmail(email);
     	if(optional.isPresent()) {
     		return true;
-    	} else {
-    		return false;
     	}
+		return false;
     }
-
-    /**
-     * {@inheritDoc}
-     * @param {@inheritDoc}
-     */
-	@Override
-	public void deleteUser(String email) {
-		LOGGER.debug("Deleting user with email: " + email);
-		int accountId = 0;
-		Optional<Client> optional = clientRepository.findByEmail(email);
-		if(optional.isPresent()) {
-			accountId = optional.get().getAccount().getNumber();
-			userRepository.deleteByEmail(email);
-			accountRepository.deleteByNumber(accountId);
-			clientRepository.deleteByEmail(email);
-		} else {
-			LOGGER.debug("Client with email: " + email + " not found.");
-		}
-	}
 }

@@ -19,10 +19,4 @@ public interface IUserService {
 	 * @throws UserAlreadyExistException
 	 */
 	User registerNewUser(UserDTO userDTO) throws UserAlreadyExistException;
-
-	/**
-	 * Delete a user by email
-	 * @param email
-	 */
-	void deleteUser(String email);
 }
