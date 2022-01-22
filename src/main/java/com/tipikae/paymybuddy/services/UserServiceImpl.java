@@ -14,12 +14,10 @@ import org.springframework.stereotype.Service;
 
 import com.tipikae.paymybuddy.dto.UserDTO;
 import com.tipikae.paymybuddy.entities.Account;
-import com.tipikae.paymybuddy.entities.Client;
 import com.tipikae.paymybuddy.entities.Role;
 import com.tipikae.paymybuddy.entities.User;
 import com.tipikae.paymybuddy.exceptions.UserAlreadyExistException;
 import com.tipikae.paymybuddy.repositories.AccountRepository;
-import com.tipikae.paymybuddy.repositories.ClientRepository;
 import com.tipikae.paymybuddy.repositories.UserRepository;
 
 /**
@@ -36,8 +34,6 @@ public class UserServiceImpl implements IUserService {
 	
 	@Autowired
 	private UserRepository userRepository;
-	@Autowired
-	private ClientRepository clientRepository;
 	@Autowired
 	private AccountRepository accountRepository;
 	@Autowired
@@ -63,20 +59,15 @@ public class UserServiceImpl implements IUserService {
 		Role role = new Role();
 		role.setRole("USER");
 		user.setEmail(userDTO.getEmail());
+		user.setFirstname(userDTO.getFirstname());
+		user.setLastname(userDTO.getLastname());
 		user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-		user.setActive(true);
 		user.setRoles(Arrays.asList(role));
-		userRepository.save(user);
-		
-		Client client = new Client();
-		client.setEmail(userDTO.getEmail());
-		client.setFirstname(userDTO.getFirstname());
-		client.setLastname(userDTO.getLastname());
 		
 		Account account = new Account();
 		account.setBalance(0);
 		account.setDateCreated(new Date());
-		account.setClient(clientRepository.save(client));
+		account.setUser(userRepository.save(user));
 		accountRepository.save(account);
 		
 		return user;
