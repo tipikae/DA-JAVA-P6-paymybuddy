@@ -16,11 +16,14 @@ import com.tipikae.paymybuddy.logging.CustomRequestLoggingInterceptor;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
+	/**
+	 * Interceptor for logging.
+	 */
 	@Autowired
 	private CustomRequestLoggingInterceptor interceptor;
 
 	/**
-	 * Add custom interceptors.
+	 * {@inheritDoc}
 	 */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

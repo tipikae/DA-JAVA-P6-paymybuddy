@@ -31,9 +31,18 @@ public class UserController {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
+	/**
+	 * UserService interface.
+	 */
 	@Autowired
 	private IUserService userService;
-	
+
+	/**
+	 * Mapping for display registration form.
+	 * @param request
+	 * @param model
+	 * @return String
+	 */
 	@GetMapping("/user/registration")
 	public String getRegistrationForm(
 			WebRequest request,
@@ -45,7 +54,14 @@ public class UserController {
 		return "registration";
 		
 	}
-	
+
+	/**
+	 * Mapping for register a new user.
+	 * @param userDTO
+	 * @param errors
+	 * @param request
+	 * @return ModelAndView
+	 */
 	@PostMapping
 	public ModelAndView registerNewUser(
 			  @ModelAttribute("user") @Valid UserDTO userDTO,

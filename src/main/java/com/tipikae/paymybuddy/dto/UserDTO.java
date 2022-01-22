@@ -22,23 +22,38 @@ public class UserDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Email.
+	 */
 	@ValidEmail
 	@NotNull
 	@NotEmpty
 	private String email;
-	
+
+	/**
+	 * Firstname.
+	 */
 	@NotNull
 	@NotEmpty
 	private String firstname;
-	
+
+	/**
+	 * Lastname.
+	 */
 	@NotNull
 	@NotEmpty
 	private String lastname;
-	
+
+	/**
+	 * Password.
+	 */
 	@NotNull
 	@NotEmpty
 	private String password;
-	
+
+	/**
+	 * ConfirmedPassword.
+	 */
 	@NotNull
 	@NotEmpty
 	private String confirmedPassword;

@@ -25,10 +25,13 @@ import com.tipikae.paymybuddy.repositories.IUserRepository;
  *
  */
 @Service
-public class MyUserDetailsService implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(MyUserDetailsService.class);
-	
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
+
+	/**
+	 * UserRepository interface.
+	 */
 	@Autowired
 	private IUserRepository userRepository;
 

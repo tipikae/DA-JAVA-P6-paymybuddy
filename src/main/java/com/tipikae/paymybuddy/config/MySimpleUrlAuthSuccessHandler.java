@@ -28,9 +28,15 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 public class MySimpleUrlAuthSuccessHandler implements AuthenticationSuccessHandler {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(MySimpleUrlAuthSuccessHandler.class);
-	
+
+	/**
+	 * RedirectStrategy.
+	 */
 	private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
@@ -38,7 +44,7 @@ public class MySimpleUrlAuthSuccessHandler implements AuthenticationSuccessHandl
         clearAuthenticationAttributes(request);
 	}
 	
-	protected void handle(
+	private void handle(
 	        HttpServletRequest request,
 	        HttpServletResponse response, 
 	        Authentication authentication
@@ -56,11 +62,10 @@ public class MySimpleUrlAuthSuccessHandler implements AuthenticationSuccessHandl
 	    redirectStrategy.sendRedirect(request, response, targetUrl);
 	}
 	
-	protected String determineTargetUrl(final Authentication authentication) {
+	private String determineTargetUrl(final Authentication authentication) {
 
 	    Map<String, String> roleTargetUrlMap = new HashMap<>();
 	    roleTargetUrlMap.put("ROLE_USER", "/home");
-	    roleTargetUrlMap.put("ROLE_ADMIN", "/admin");
 
 	    final Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 	    for (final GrantedAuthority grantedAuthority : authorities) {
@@ -73,7 +78,7 @@ public class MySimpleUrlAuthSuccessHandler implements AuthenticationSuccessHandl
 	    throw new IllegalStateException();
 	}
 
-	protected void clearAuthenticationAttributes(HttpServletRequest request) {
+	private void clearAuthenticationAttributes(HttpServletRequest request) {
 	    HttpSession session = request.getSession(false);
 	    if (session == null) {
 	        return;

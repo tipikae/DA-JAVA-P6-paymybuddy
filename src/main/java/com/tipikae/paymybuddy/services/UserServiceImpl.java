@@ -31,11 +31,22 @@ import com.tipikae.paymybuddy.repositories.IUserRepository;
 public class UserServiceImpl implements IUserService {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
-	
+
+	/**
+	 * UserRepository interface.
+	 */
 	@Autowired
 	private IUserRepository userRepository;
+	
+	/**
+	 * AccountRepository interface.
+	 */
 	@Autowired
 	private IAccountRepository accountRepository;
+	
+	/**
+	 * PasswordEncoder bean.
+	 */
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
