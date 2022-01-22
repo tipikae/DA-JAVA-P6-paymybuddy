@@ -26,7 +26,6 @@ import com.tipikae.paymybuddy.repositories.UserRepository;
  * @version 1.0
  *
  */
-@Transactional
 @Service
 public class MyUserDetailsService implements UserDetailsService {
 	
@@ -48,15 +47,9 @@ public class MyUserDetailsService implements UserDetailsService {
 			throw new UsernameNotFoundException("No user found with email: " + email);
 		}
 		User user = optional.get();
-		
-		boolean enabled = true;
-        boolean accountNonExpired = true;
-        boolean credentialsNonExpired = true;
-        boolean accountNonLocked = true;
         
         return new org.springframework.security.core.userdetails.User(
-          user.getEmail(), user.getPassword(), enabled, accountNonExpired,
-          credentialsNonExpired, accountNonLocked, getAuthorities(user.getRoles()));
+          user.getEmail(), user.getPassword(), getAuthorities(user.getRoles()));
 	}
     
     private static List<GrantedAuthority> getAuthorities (List<Role> roles) {
