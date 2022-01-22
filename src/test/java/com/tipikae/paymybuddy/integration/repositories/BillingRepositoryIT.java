@@ -13,7 +13,7 @@ import com.tipikae.paymybuddy.repositories.BillingRepository;
 import com.tipikae.paymybuddy.repositories.OperationRepository;
 
 @SpringBootTest
-class BillingIT {
+class BillingRepositoryIT {
 	
 	@Autowired
 	private BillingRepository billingRepository;

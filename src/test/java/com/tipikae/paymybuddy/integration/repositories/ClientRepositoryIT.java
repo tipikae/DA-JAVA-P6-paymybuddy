@@ -7,17 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.tipikae.paymybuddy.repositories.UserRepository;
+import com.tipikae.paymybuddy.repositories.ClientRepository;
 
 @SpringBootTest
-class UserIT {
+class ClientRepositoryIT {
 	
 	@Autowired
-	private UserRepository userRepository;
+	private ClientRepository userRepository;
 
 	@Test
 	void testFindAll() {
-		assertEquals(3, userRepository.findAll().size());
+		assertEquals(4, userRepository.findAll().size());
 	}
 
 	@Transactional

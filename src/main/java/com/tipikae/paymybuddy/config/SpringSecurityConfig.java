@@ -1,7 +1,5 @@
 package com.tipikae.paymybuddy.config;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +9,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+
+import com.tipikae.paymybuddy.services.MyUserDetailsService;
 
 /**
  * A class configuration for Spring Security.
@@ -24,7 +25,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
 	@Autowired
-	private DataSource datasource;
+	private MyUserDetailsService userDetailsService;
 
 	/**
 	 * {@inheritDoc}
@@ -32,11 +33,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	 */
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.jdbcAuthentication()
-			.dataSource(datasource)
-			.usersByUsernameQuery("SELECT email as principal, password as credential, active FROM users WHERE email = ?")
-			.authoritiesByUsernameQuery("SELECT email_user as principal, role FROM users_roles WHERE email_user = ?")
-			.rolePrefix("ROLE_")
+		auth.userDetailsService(userDetailsService)
 			.passwordEncoder(passwordEncoder());
 	}
 	
@@ -47,9 +44,17 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override 
 	public void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable();
-		http.formLogin().loginPage("/login").usernameParameter("email").and().logout();
+		http.formLogin()
+			.loginPage("/login")
+			.usernameParameter("email")
+            .successHandler(myAuthenticationSuccessHandler())
+			.and()
+			.logout().deleteCookies("JSESSIONID")
+			.and()
+			.rememberMe().key("MySecretRMKey");
 		http.authorizeRequests().antMatchers("/home").hasRole("USER");
 		http.authorizeRequests().antMatchers("/admin").hasRole("ADMIN");
+		http.authorizeRequests().antMatchers("/user/registration").permitAll();
 		http.exceptionHandling().accessDeniedPage("/403");
 	}
 
@@ -62,4 +67,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		return new BCryptPasswordEncoder();
 	}
 
+	/**
+	 * Set the redirection when login succeed, based on role.
+	 * @return MySimpleUrlAuthSuccessHandler
+	 */
+	@Bean
+	public AuthenticationSuccessHandler myAuthenticationSuccessHandler(){
+	    return new MySimpleUrlAuthSuccessHandler();
+	}
 }

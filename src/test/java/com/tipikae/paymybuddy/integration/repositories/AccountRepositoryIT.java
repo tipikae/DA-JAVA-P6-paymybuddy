@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tipikae.paymybuddy.repositories.AccountRepository;
 
 @SpringBootTest
-class AccountIT {
+class AccountRepositoryIT {
 	
 	@Autowired
 	private AccountRepository accountRepository;
