@@ -1,7 +1,6 @@
 package com.tipikae.paymybuddy.entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -29,22 +28,37 @@ public class Account implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * User email.
+	 */
 	@Id
 	@Column(name = "email_user")
 	private String emailUser;
-	
+
+	/**
+	 * Created date.
+	 */
 	@Column(name = "date_created")
 	private Date dateCreated;
-	
+
+	/**
+	 * Balance.
+	 */
 	@Column(name = "balance")
 	private double balance;
-	
+
+	/**
+	 * User object.
+	 */
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(
 			name = "email_user",
 			referencedColumnName = "email")
 	private User user;
-	
+
+	/**
+	 * Operations list.
+	 */
 	@OneToMany(mappedBy = "account")
-	private List<Operation> operations = new ArrayList<>();
+	private List<Operation> operations;
 }

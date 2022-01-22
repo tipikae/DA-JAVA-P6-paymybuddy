@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
@@ -28,26 +27,54 @@ public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Email.
+	 */
 	@Id
 	@Column(name = "email")
 	private String email;
 
+	/**
+	 * Password.
+	 */
 	@Column(name = "password")
 	private String password;
-	
+
+	/**
+	 * Firstname.
+	 */
 	@Column(name = "firstname")
 	private String firstname;
-	
+
+	/**
+	 * Lastname.
+	 */
 	@Column(name = "lastname")
 	private String lastname;
-	
-	@ManyToMany(fetch = FetchType.EAGER)
+
+	/**
+	 * Roles list.
+	 */
+	@ManyToMany
 	@JoinTable(
 			  name = "users_roles", 
 			  joinColumns = @JoinColumn(name = "email_user"), 
 			  inverseJoinColumns = @JoinColumn(name = "role"))
 	private List<Role> roles;
+
+	/**
+	 * Connections list.
+	 */
+	@ManyToMany
+	@JoinTable(
+			name = "connection",
+			joinColumns = @JoinColumn(name = "email_user_src"),
+			inverseJoinColumns = @JoinColumn(name = "email_user_dest"))
+	private List<Connection> connections;
 	
+	/**
+	 * Account object.
+	 */
 	@OneToOne(mappedBy = "user")
 	private Account account;
 }

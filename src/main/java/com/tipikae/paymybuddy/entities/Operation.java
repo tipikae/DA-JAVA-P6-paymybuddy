@@ -36,36 +36,59 @@ public abstract class Operation implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Number.
+	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "number")
 	private int number;
-	
+
+	/**
+	 * Operation date.
+	 */
 	@Column(name = "date_operation")
 	private Date dateOperation;
-	
+
+	/**
+	 * Amount.
+	 */
 	@Column(name = "amount")
 	private double amount;
-	
+
+	/**
+	 * Description.
+	 */
 	@Column(name = "description")
 	private String description;
-	
+
+	/**
+	 * Fee.
+	 */
 	@Column(name = "fee")
 	private double fee;
-	
+
+	/**
+	 * Account.
+	 */
 	@ManyToOne
 	@JoinColumn(name = "email_user")
 	private Account account;
 	
+	/**
+	 * Default constructor.
+	 */
 	public Operation() {
 		super();
 	}
 
 	/**
+	 * Constructor with fields.
 	 * @param number
 	 * @param dateOperation
 	 * @param amount
 	 * @param description
+	 * @param fee
 	 * @param account
 	 */
 	public Operation(int number, Date dateOperation, double amount, String description, double fee, Account account) {

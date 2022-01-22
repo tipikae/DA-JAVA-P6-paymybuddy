@@ -18,18 +18,20 @@ public class Withdrawal extends Operation {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 
+	 * {@inheritDoc}
 	 */
 	public Withdrawal() {
 		super();
 	}
 
 	/**
-	 * @param number
-	 * @param dateOperation
-	 * @param amount
-	 * @param description
-	 * @param account
+	 * {@inheritDoc}
+	 * @param {@inheritDoc}
+	 * @param {@inheritDoc}
+	 * @param {@inheritDoc}
+	 * @param {@inheritDoc}
+	 * @param {@inheritDoc}
+	 * @param {@inheritDoc}
 	 */
 	public Withdrawal(int number, Date dateOperation, double amount, String description, double fee, Account account) {
 		super(number, dateOperation, amount, description, fee, account);

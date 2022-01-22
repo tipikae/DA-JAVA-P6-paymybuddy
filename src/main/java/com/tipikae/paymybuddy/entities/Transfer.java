@@ -8,7 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 /**
- * Abstract class for transfer operations.
+ * Entity class for transfer operations.
  * @author tipikae
  * @version 1.0
  *
@@ -19,26 +19,34 @@ public class Transfer extends Operation {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * The source User object.
+	 */
 	@ManyToOne
-	@JoinColumn(name = "number_src_account_connection")
-	private Account srcAccount;
-	
+	@JoinColumn(name = "email_src_connection")
+	private User srcUser;
+
+	/**
+	 * The destination User object.
+	 */
 	@ManyToOne
-	@JoinColumn(name = "number_dest_account_connection")
-	private Account destAccount;
+	@JoinColumn(name = "email_dest_connection")
+	private User destUser;
 	
 	/**
-	 * 
+	 * {@inheritDoc}
 	 */
 	public Transfer() {
 		super();
 	}
 	/**
-	 * @param number
-	 * @param dateOperation
-	 * @param amount
-	 * @param description
-	 * @param account
+	 * {@inheritDoc}
+	 * @param {@inheritDoc}
+	 * @param {@inheritDoc}
+	 * @param {@inheritDoc}
+	 * @param {@inheritDoc}
+	 * @param {@inheritDoc}
+	 * @param {@inheritDoc}
 	 */
 	public Transfer(int number, Date dateOperation, double amount, String description, double fee, Account account) {
 		super(number, dateOperation, amount, description, fee, account);

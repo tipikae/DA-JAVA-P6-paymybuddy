@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +40,7 @@ public class MyUserDetailsService implements UserDetailsService {
 	 */
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+		LOGGER.debug("loadUserByUsername: email=" + email);
 		Optional<User> optional = userRepository.findByEmail(email);
 		if(!optional.isPresent()) {
 			throw new UsernameNotFoundException("No user found with email: " + email);

@@ -23,17 +23,26 @@ import lombok.Data;
 public class Connection implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
+	/**
+	 * Embedded ConnectionId.
+	 */
 	@EmbeddedId
 	private ConnectionId id;
 
+	/**
+	 * Source User object.
+	 */
 	@ManyToOne
 	@MapsId("emailUserSrc")
 	@JoinColumn(name = "email_user_src")
-	private Account srcAccount;
+	private User srcUser;
 
+	/**
+	 * Destination User object.
+	 */
 	@ManyToOne
 	@MapsId("emailUserDest")
 	@JoinColumn(name = "email_user_dest")
-	private Account destAccount;
+	private User destUser;
 }

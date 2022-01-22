@@ -15,10 +15,24 @@ public class ConnectionId implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Source User email.
+	 */
 	private String emailUserSrc;
+	
+	/**
+	 * Destination User email.
+	 */
 	private String emailUserDest;
 	
 	/**
+	 * Default constructor.
+	 */
+	public ConnectionId() {
+	}
+	
+	/**
+	 * Constructor with fields.
 	 * @param emailUserSrc
 	 * @param emailUserDest
 	 */
@@ -26,10 +40,10 @@ public class ConnectionId implements Serializable {
 		this.emailUserSrc = emailUserSrc;
 		this.emailUserDest = emailUserDest;
 	}
-	
-	public ConnectionId() {
-	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -52,6 +66,9 @@ public class ConnectionId implements Serializable {
         return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
