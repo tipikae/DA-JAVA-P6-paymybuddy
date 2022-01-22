@@ -1,6 +1,6 @@
 package com.tipikae.paymybuddy.exceptions;
 
-public class UserAlreadyExistException extends RuntimeException {
+public class UserAlreadyExistException extends PayMyBuddyException {
 
 	private static final long serialVersionUID = 1L;
 
