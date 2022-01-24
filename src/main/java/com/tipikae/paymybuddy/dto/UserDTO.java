@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.tipikae.paymybuddy.validation.PasswordMatches;
 import com.tipikae.paymybuddy.validation.ValidEmail;
@@ -28,6 +29,7 @@ public class UserDTO implements Serializable {
 	@ValidEmail
 	@NotNull
 	@NotEmpty
+	@Size(max = 50)
 	private String email;
 
 	/**
@@ -35,6 +37,7 @@ public class UserDTO implements Serializable {
 	 */
 	@NotNull
 	@NotEmpty
+	@Size(max = 50)
 	private String firstname;
 
 	/**
@@ -42,6 +45,7 @@ public class UserDTO implements Serializable {
 	 */
 	@NotNull
 	@NotEmpty
+	@Size(max = 50)
 	private String lastname;
 
 	/**
@@ -49,6 +53,7 @@ public class UserDTO implements Serializable {
 	 */
 	@NotNull
 	@NotEmpty
+	@Size(max = 50)
 	private String password;
 
 	/**
@@ -56,5 +61,6 @@ public class UserDTO implements Serializable {
 	 */
 	@NotNull
 	@NotEmpty
+	@Size(max = 50)
 	private String confirmedPassword;
 }
