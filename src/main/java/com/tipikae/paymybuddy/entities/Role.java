@@ -1,12 +1,10 @@
 package com.tipikae.paymybuddy.entities;
 
 import java.io.Serializable;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -27,7 +25,4 @@ public class Role implements Serializable {
 	@Id
 	@Column(name = "role")
 	private String role;
-	
-	@ManyToMany
-	private List<User> users;
 }

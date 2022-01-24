@@ -17,7 +17,6 @@ import com.tipikae.paymybuddy.entities.Account;
 import com.tipikae.paymybuddy.entities.Role;
 import com.tipikae.paymybuddy.entities.User;
 import com.tipikae.paymybuddy.exceptions.UserAlreadyExistException;
-import com.tipikae.paymybuddy.repositories.IAccountRepository;
 import com.tipikae.paymybuddy.repositories.IUserRepository;
 
 /**
@@ -37,12 +36,6 @@ public class UserServiceImpl implements IUserService {
 	 */
 	@Autowired
 	private IUserRepository userRepository;
-	
-	/**
-	 * AccountRepository interface.
-	 */
-	@Autowired
-	private IAccountRepository accountRepository;
 	
 	/**
 	 * PasswordEncoder bean.
@@ -65,21 +58,25 @@ public class UserServiceImpl implements IUserService {
 			throw new UserAlreadyExistException("An user with email address: " + userDTO.getEmail()
 				+ " already exists.");
 		}
-		
+
 		User user = new User();
+		Account account = new Account();
 		Role role = new Role();
+		
 		role.setRole("USER");
+		
 		user.setEmail(userDTO.getEmail());
 		user.setFirstname(userDTO.getFirstname());
 		user.setLastname(userDTO.getLastname());
 		user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 		user.setRoles(Arrays.asList(role));
+		user.setAccount(account);
 		
-		Account account = new Account();
 		account.setBalance(0);
 		account.setDateCreated(new Date());
-		account.setUser(userRepository.save(user));
-		accountRepository.save(account);
+		account.setUser(user);
+		
+		userRepository.save(user);
 		
 		return user;
 	}
