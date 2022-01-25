@@ -33,21 +33,10 @@ public class Transfer extends Operation {
 	@JoinColumn(name = "email_dest_connection")
 	private User destUser;
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	public Transfer() {
 		super();
 	}
-	/**
-	 * {@inheritDoc}
-	 * @param {@inheritDoc}
-	 * @param {@inheritDoc}
-	 * @param {@inheritDoc}
-	 * @param {@inheritDoc}
-	 * @param {@inheritDoc}
-	 * @param {@inheritDoc}
-	 */
+	
 	public Transfer(int number, Date dateOperation, double amount, String description, double fee, Account account) {
 		super(number, dateOperation, amount, description, fee, account);
 	}

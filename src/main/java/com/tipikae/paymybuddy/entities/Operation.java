@@ -75,22 +75,10 @@ public abstract class Operation implements Serializable {
 	@JoinColumn(name = "email_account")
 	private Account account;
 	
-	/**
-	 * Default constructor.
-	 */
 	public Operation() {
 		super();
 	}
 
-	/**
-	 * Constructor with fields.
-	 * @param number
-	 * @param dateOperation
-	 * @param amount
-	 * @param description
-	 * @param fee
-	 * @param account
-	 */
 	public Operation(int number, Date dateOperation, double amount, String description, double fee, Account account) {
 		super();
 		this.number = number;

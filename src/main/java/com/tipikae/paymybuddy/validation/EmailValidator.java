@@ -34,8 +34,6 @@ public class EmailValidator implements ConstraintValidator<ValidEmail, String> {
 
     /**
      * {@inheritDoc}
-     * @param email
-     * @param {{@inheritDoc}}
      */
 	@Override
 	public boolean isValid(String email, ConstraintValidatorContext context) {

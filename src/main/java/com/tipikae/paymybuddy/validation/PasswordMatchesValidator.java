@@ -15,8 +15,6 @@ public class PasswordMatchesValidator implements ConstraintValidator<PasswordMat
 
 	/**
 	 * {@inheritDoc}
-	 * @param Object
-	 * @param {{@inheritDoc}
 	 */
 	@Override
 	public boolean isValid(Object obj, ConstraintValidatorContext context) {

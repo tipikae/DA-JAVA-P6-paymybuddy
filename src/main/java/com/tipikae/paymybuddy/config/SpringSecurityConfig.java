@@ -31,7 +31,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	/**
 	 * {@inheritDoc}
-	 * @param {@inheritDoc}
 	 */
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -41,7 +40,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	/**
 	 * {@inheritDoc}
-	 * @param {@inheritDoc}
 	 */
 	@Override 
 	public void configure(HttpSecurity http) throws Exception {

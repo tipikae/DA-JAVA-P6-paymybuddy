@@ -19,7 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.tipikae.paymybuddy.dto.UserDTO;
 import com.tipikae.paymybuddy.entities.Role;
 import com.tipikae.paymybuddy.entities.User;
-import com.tipikae.paymybuddy.entities.Account;
 import com.tipikae.paymybuddy.exceptions.UserAlreadyExistException;
 import com.tipikae.paymybuddy.repositories.IAccountRepository;
 import com.tipikae.paymybuddy.repositories.IUserRepository;
@@ -73,7 +72,6 @@ class UserServiceTest {
 		when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
 		when(userRepository.save(any(User.class))).thenReturn(user);
 		when(passwordEncoder.encode(anyString())).thenReturn("");
-		when(accountRepository.save(any(Account.class))).thenReturn(new Account());
 		assertEquals("alice@alice.com", userService.registerNewUser(userDTO).getEmail());
 	}
 

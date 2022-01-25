@@ -37,9 +37,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	/**
 	 * {@inheritDoc}
-	 * @param {@inheritDoc}
-	 * @return {@inheritDoc}
-	 * @throws {@inheritDoc}
 	 */
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
