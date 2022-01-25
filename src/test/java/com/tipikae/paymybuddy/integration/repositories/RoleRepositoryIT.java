@@ -6,17 +6,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.tipikae.paymybuddy.repositories.RoleRepository;
+import com.tipikae.paymybuddy.repositories.IRoleRepository;
 
 @SpringBootTest
 class RoleRepositoryIT {
 
 	@Autowired
-	private RoleRepository roleRepository;
+	private IRoleRepository roleRepository;
 	
 	@Test
 	void testCount() {
-		assertEquals(2, roleRepository.count());
+		assertEquals(1, roleRepository.count());
 	}
 
 }

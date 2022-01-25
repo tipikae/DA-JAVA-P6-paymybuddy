@@ -15,7 +15,12 @@ import com.tipikae.paymybuddy.entities.Operation;
  *
  */
 @Repository
-public interface OperationRepository extends JpaRepository<Operation, Integer> {
+public interface IOperationRepository extends JpaRepository<Operation, Integer> {
 
+	/**
+	 * Find operations by account.
+	 * @param account
+	 * @return List
+	 */
 	List<Operation> findByAccount(Account account);
 }

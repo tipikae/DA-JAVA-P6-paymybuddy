@@ -19,25 +19,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.tipikae.paymybuddy.dto.UserDTO;
 import com.tipikae.paymybuddy.entities.Role;
 import com.tipikae.paymybuddy.entities.User;
-import com.tipikae.paymybuddy.entities.Account;
-import com.tipikae.paymybuddy.entities.Client;
 import com.tipikae.paymybuddy.exceptions.UserAlreadyExistException;
-import com.tipikae.paymybuddy.repositories.AccountRepository;
-import com.tipikae.paymybuddy.repositories.ClientRepository;
-import com.tipikae.paymybuddy.repositories.UserRepository;
+import com.tipikae.paymybuddy.repositories.IAccountRepository;
+import com.tipikae.paymybuddy.repositories.IUserRepository;
 import com.tipikae.paymybuddy.services.UserServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 	
 	@Mock
-	private UserRepository userRepository;
+	private IUserRepository userRepository;
 	
 	@Mock
-	private ClientRepository clientRepository;
-	
-	@Mock
-	private AccountRepository accountRepository;
+	private IAccountRepository accountRepository;
 	
 	@Mock
 	private PasswordEncoder passwordEncoder;
@@ -62,7 +56,6 @@ class UserServiceTest {
 		user = new User();
 		user.setEmail("alice@alice.com");
 		user.setPassword("alice");
-		user.setActive(true);
 		Role role = new Role();
 		role.setRole("USER");
 		user.setRoles(Arrays.asList(role));
@@ -75,12 +68,10 @@ class UserServiceTest {
 	}
 
 	@Test
-	void registerNewUserReturnsUserWhenEmailNotFound() {
+	void registerNewUserReturnsUserWhenEmailNotFound() throws UserAlreadyExistException {
 		when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
 		when(userRepository.save(any(User.class))).thenReturn(user);
 		when(passwordEncoder.encode(anyString())).thenReturn("");
-		when(clientRepository.save(any(Client.class))).thenReturn(new Client());
-		when(accountRepository.save(any(Account.class))).thenReturn(new Account());
 		assertEquals("alice@alice.com", userService.registerNewUser(userDTO).getEmail());
 	}
 

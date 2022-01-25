@@ -15,17 +15,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.tipikae.paymybuddy.entities.User;
-import com.tipikae.paymybuddy.repositories.UserRepository;
-import com.tipikae.paymybuddy.services.MyUserDetailsService;
+import com.tipikae.paymybuddy.repositories.IUserRepository;
+import com.tipikae.paymybuddy.services.UserDetailsServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 class UserDetailsServiceTest {
 	
 	@Mock
-	private UserRepository userRepository;
+	private IUserRepository userRepository;
 	
 	@InjectMocks
-	private static MyUserDetailsService userDetailsService;
+	private static UserDetailsServiceImpl userDetailsService;
 	
 	private static String email = "alice@alice.com"; 
 	private static String password = "123456789";
@@ -33,7 +33,7 @@ class UserDetailsServiceTest {
 	
 	@BeforeAll
 	private static void setUp() {
-		userDetailsService = new MyUserDetailsService();
+		userDetailsService = new UserDetailsServiceImpl();
 		user = new User();
 		user.setEmail(email);
 		user.setPassword(password);

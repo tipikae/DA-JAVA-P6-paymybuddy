@@ -2,34 +2,28 @@ package com.tipikae.paymybuddy.integration.repositories;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import javax.transaction.Transactional;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.tipikae.paymybuddy.repositories.AccountRepository;
+import com.tipikae.paymybuddy.repositories.IAccountRepository;
 
+@Transactional
 @SpringBootTest
 class AccountRepositoryIT {
 	
 	@Autowired
-	private AccountRepository accountRepository;
+	private IAccountRepository accountRepository;
 
-	@Transactional
 	@Test
 	void testGetBalance() {
-		assertEquals(1000.0, accountRepository.getById(1).getBalance());
+		assertEquals(1000.0, accountRepository.findByEmailUser("alice@alice.com").get().getBalance());
 	}
 
-	@Transactional
 	@Test
 	void testGetFirstname() {
-		assertEquals("Alice", accountRepository.getById(1).getClient().getFirstname());
-	}
-	
-	@Transactional
-	@Test
-	void testGetConnections() {
-		assertEquals(2, accountRepository.getById(1).getSrcConnections().size());
+		assertEquals("Alice", accountRepository.findByEmailUser("alice@alice.com").get().getUser().getFirstname());
 	}
 }

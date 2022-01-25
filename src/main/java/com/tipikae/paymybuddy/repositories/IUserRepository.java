@@ -14,7 +14,7 @@ import com.tipikae.paymybuddy.entities.User;
  *
  */
 @Repository
-public interface UserRepository extends JpaRepository<User, String> {
+public interface IUserRepository extends JpaRepository<User, String> {
 
 	/**
 	 * Find an user by email.

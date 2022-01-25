@@ -1,6 +1,12 @@
 package com.tipikae.paymybuddy.exceptions;
 
-public class UserAlreadyExistException extends RuntimeException {
+/**
+ * An exception when user already exists.
+ * @author tipikae
+ * @version 1.0
+ *
+ */
+public class UserAlreadyExistException extends PayMyBuddyException {
 
 	private static final long serialVersionUID = 1L;
 
@@ -8,7 +14,7 @@ public class UserAlreadyExistException extends RuntimeException {
         super();
     }
 
-    public UserAlreadyExistException(final String message, final Throwable cause) {
+	public UserAlreadyExistException(final String message, final Throwable cause) {
         super(message, cause);
     }
 

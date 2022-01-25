@@ -30,47 +30,62 @@ import lombok.Data;
 @DiscriminatorColumn(
 		name = "type",
 		discriminatorType = DiscriminatorType.STRING,
-		length = 4)
-@Table(name = "operations")
+		length = 3)
+@Table(name = "operation")
 public abstract class Operation implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Number.
+	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "number")
 	private int number;
-	
+
+	/**
+	 * Operation date.
+	 */
 	@Column(name = "date_operation")
 	private Date dateOperation;
-	
+
+	/**
+	 * Amount.
+	 */
 	@Column(name = "amount")
 	private double amount;
-	
+
+	/**
+	 * Description.
+	 */
 	@Column(name = "description")
 	private String description;
-	
+
+	/**
+	 * Fee.
+	 */
+	@Column(name = "fee")
+	private double fee;
+
+	/**
+	 * Account.
+	 */
 	@ManyToOne
-	@JoinColumn(name = "number_account")
+	@JoinColumn(name = "email_account")
 	private Account account;
 	
 	public Operation() {
 		super();
 	}
 
-	/**
-	 * @param number
-	 * @param dateOperation
-	 * @param amount
-	 * @param description
-	 * @param account
-	 */
-	public Operation(int number, Date dateOperation, double amount, String description, Account account) {
+	public Operation(int number, Date dateOperation, double amount, String description, double fee, Account account) {
 		super();
 		this.number = number;
 		this.dateOperation = dateOperation;
 		this.amount = amount;
 		this.description = description;
+		this.fee = fee;
 		this.account = account;
 	}
 	

@@ -2,6 +2,8 @@ package com.tipikae.paymybuddy.integration.services;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import javax.transaction.Transactional;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ class UserServiceIT {
 	
 	@Autowired
 	private IUserService userService;
+	
 	
 	private static UserDTO existingUserDTO;
 	private static UserDTO newUserDTO;
@@ -39,19 +42,15 @@ class UserServiceIT {
 		newUserDTO.setPassword("victor");
 		newUserDTO.setConfirmedPassword("victor");
 	}
-	
-	private void cleanDatabase() {
-		userService.deleteUser(newUserEmail);
-	}
 
 	@Test
 	void registerNewUserThrowsUserAlreadyExistExceptionWhenEmailExists() {
 		assertThrows(UserAlreadyExistException.class, () -> userService.registerNewUser(existingUserDTO));
 	}
 
+	@Transactional
 	@Test
-	void registerNewUserReturnsUserWhenEmailNotFound() {
-		cleanDatabase();
+	void registerNewUserReturnsUserWhenEmailNotFound() throws UserAlreadyExistException {
 		assertEquals("victor@victor.com", userService.registerNewUser(newUserDTO).getEmail());
 	}
 

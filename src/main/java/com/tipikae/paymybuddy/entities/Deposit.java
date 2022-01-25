@@ -13,26 +13,16 @@ import javax.persistence.Entity;
  */
 @Entity
 @DiscriminatorValue("DEP")
-public class Deposit extends Transfer {
+public class Deposit extends Operation {
 
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 */
 	public Deposit() {
 		super();
 	}
 
-	/**
-	 * @param number
-	 * @param dateOperation
-	 * @param amount
-	 * @param description
-	 * @param account
-	 */
-	public Deposit(int number, Date dateOperation, double amount, String description, Account account) {
-		super(number, dateOperation, amount, description, account);
+	public Deposit(int number, Date dateOperation, double amount, String description, double fee, Account account) {
+		super(number, dateOperation, amount, description, fee, account);
 	}
 
 	

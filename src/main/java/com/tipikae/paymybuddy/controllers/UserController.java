@@ -1,6 +1,5 @@
 package com.tipikae.paymybuddy.controllers;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -31,9 +30,18 @@ public class UserController {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
+	/**
+	 * UserService interface.
+	 */
 	@Autowired
 	private IUserService userService;
-	
+
+	/**
+	 * Mapping for display registration form.
+	 * @param request
+	 * @param model
+	 * @return String
+	 */
 	@GetMapping("/user/registration")
 	public String getRegistrationForm(
 			WebRequest request,
@@ -45,13 +53,21 @@ public class UserController {
 		return "registration";
 		
 	}
-	
-	@PostMapping
+
+	/**
+	 * Mapping for register a new user.
+	 * @param userDTO
+	 * @param errors
+	 * @param request
+	 * @return ModelAndView
+	 */
+	@PostMapping("/user/registration")
 	public ModelAndView registerNewUser(
 			  @ModelAttribute("user") @Valid UserDTO userDTO,
 			  Errors errors,
 			  HttpServletRequest request) {
-		
+
+		LOGGER.debug("Registering new user: {}", userDTO);
 		if(errors.hasErrors()) {
 			StringBuilder sb = new StringBuilder();
 			errors.getAllErrors().stream().forEach(e -> sb.append(e + ", "));
@@ -59,9 +75,6 @@ public class UserController {
 			return new ModelAndView("registration", "user", userDTO);
 		}
 		
-		LOGGER.debug("Registering new user: {}", userDTO);
-		
-		// Register new user
 		try {
 			userService.registerNewUser(userDTO);
 		} catch(UserAlreadyExistException e) {
@@ -75,14 +88,8 @@ public class UserController {
 			mav.addObject("message", "Unable to register.");
 	        return mav;
 		}
-		
-		// Auto-login new user
-		try {
-			request.login(userDTO.getEmail(), userDTO.getPassword());
-			return new ModelAndView("user", "", null);
-		} catch(ServletException e) {
-			LOGGER.debug("Unable to login: ServletException: " + e.getMessage());
-			return new ModelAndView("user", "", null);
-		}
+
+		LOGGER.debug("Registration succeed.");
+		return new ModelAndView("registration_success", "", null);
 	}
 }

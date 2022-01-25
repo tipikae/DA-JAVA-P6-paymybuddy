@@ -11,7 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-import com.tipikae.paymybuddy.services.MyUserDetailsService;
+import com.tipikae.paymybuddy.services.UserDetailsServiceImpl;
 
 /**
  * A class configuration for Spring Security.
@@ -23,13 +23,14 @@ import com.tipikae.paymybuddy.services.MyUserDetailsService;
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
-
+	/**
+	 * UserDetailsServiceImpl object.
+	 */
 	@Autowired
-	private MyUserDetailsService userDetailsService;
+	private UserDetailsServiceImpl userDetailsService;
 
 	/**
 	 * {@inheritDoc}
-	 * @param {@inheritDoc}
 	 */
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -39,7 +40,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	/**
 	 * {@inheritDoc}
-	 * @param {@inheritDoc}
 	 */
 	@Override 
 	public void configure(HttpSecurity http) throws Exception {

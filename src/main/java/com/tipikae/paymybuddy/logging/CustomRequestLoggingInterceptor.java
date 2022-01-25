@@ -21,7 +21,6 @@ public class CustomRequestLoggingInterceptor implements HandlerInterceptor {
 
 	/**
 	 * {@inheritDoc}
-	 * @return boolean
 	 */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

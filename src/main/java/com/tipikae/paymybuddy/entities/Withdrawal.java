@@ -13,26 +13,16 @@ import javax.persistence.Entity;
  */
 @Entity
 @DiscriminatorValue("WIT")
-public class Withdrawal extends Transfer {
+public class Withdrawal extends Operation {
 
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 */
 	public Withdrawal() {
 		super();
 	}
 
-	/**
-	 * @param number
-	 * @param dateOperation
-	 * @param amount
-	 * @param description
-	 * @param account
-	 */
-	public Withdrawal(int number, Date dateOperation, double amount, String description, Account account) {
-		super(number, dateOperation, amount, description, account);
+	public Withdrawal(int number, Date dateOperation, double amount, String description, double fee, Account account) {
+		super(number, dateOperation, amount, description, fee, account);
 	}
 	
 	

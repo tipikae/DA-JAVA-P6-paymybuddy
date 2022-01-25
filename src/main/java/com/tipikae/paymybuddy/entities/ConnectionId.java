@@ -15,21 +15,35 @@ public class ConnectionId implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private int numberSrcAccount;
-	private int numberDestAccount;
+	/**
+	 * Source User email.
+	 */
+	private String emailUserSrc;
 	
 	/**
-	 * @param numberSrcAccount
-	 * @param numberDestAccount
+	 * Destination User email.
 	 */
-	public ConnectionId(int numberSrcAccount, int numberDestAccount) {
-		this.numberSrcAccount = numberSrcAccount;
-		this.numberDestAccount = numberDestAccount;
-	}
+	private String emailUserDest;
 	
+	/**
+	 * Default constructor.
+	 */
 	public ConnectionId() {
 	}
+	
+	/**
+	 * Constructor with fields.
+	 * @param emailUserSrc
+	 * @param emailUserDest
+	 */
+	public ConnectionId(String emailUserSrc, String emailUserDest) {
+		this.emailUserSrc = emailUserSrc;
+		this.emailUserDest = emailUserDest;
+	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -39,25 +53,28 @@ public class ConnectionId implements Serializable {
         if (getClass() != obj.getClass())
             return false;
         ConnectionId other = (ConnectionId) obj;
-        if (numberSrcAccount == 0) {
-            if (other.numberSrcAccount != 0)
+        if (emailUserSrc == null) {
+            if (other.emailUserSrc != null)
                 return false;
-        } else if (numberSrcAccount != other.numberSrcAccount)
+        } else if (emailUserSrc != other.emailUserSrc)
             return false;
-        if (numberDestAccount == 0) {
-            if (other.numberDestAccount != 0)
+        if (emailUserDest == null) {
+            if (other.emailUserDest != null)
                 return false;
-        } else if (numberDestAccount != other.numberDestAccount)
+        } else if (emailUserDest != other.emailUserDest)
             return false;
         return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
         int result = 1;
-        result = prime * result + ((numberSrcAccount == 0) ? 0 : Integer.valueOf(numberSrcAccount).hashCode());
-        result = prime * result + ((numberDestAccount == 0) ? 0 : Integer.valueOf(numberDestAccount).hashCode());
+        result = prime * result + ((emailUserSrc == null) ? 0 : Integer.valueOf(emailUserSrc).hashCode());
+        result = prime * result + ((emailUserDest == null) ? 0 : Integer.valueOf(emailUserDest).hashCode());
         return result;
 	}
 	

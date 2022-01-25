@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.tipikae.paymybuddy.entities.Role;
 import com.tipikae.paymybuddy.entities.User;
-import com.tipikae.paymybuddy.repositories.UserRepository;
+import com.tipikae.paymybuddy.repositories.IUserRepository;
 
 /**
  * An implementation of UserDetailsService.
@@ -26,37 +24,31 @@ import com.tipikae.paymybuddy.repositories.UserRepository;
  * @version 1.0
  *
  */
-@Transactional
 @Service
-public class MyUserDetailsService implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(MyUserDetailsService.class);
-	
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
+
+	/**
+	 * UserRepository interface.
+	 */
 	@Autowired
-	private UserRepository userRepository;
+	private IUserRepository userRepository;
 
 	/**
 	 * {@inheritDoc}
-	 * @param {@inheritDoc}
-	 * @return {@inheritDoc}
-	 * @throws {@inheritDoc}
 	 */
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+		LOGGER.debug("loadUserByUsername: email=" + email);
 		Optional<User> optional = userRepository.findByEmail(email);
 		if(!optional.isPresent()) {
 			throw new UsernameNotFoundException("No user found with email: " + email);
 		}
 		User user = optional.get();
-		
-		boolean enabled = true;
-        boolean accountNonExpired = true;
-        boolean credentialsNonExpired = true;
-        boolean accountNonLocked = true;
         
         return new org.springframework.security.core.userdetails.User(
-          user.getEmail(), user.getPassword(), enabled, accountNonExpired,
-          credentialsNonExpired, accountNonLocked, getAuthorities(user.getRoles()));
+          user.getEmail(), user.getPassword(), getAuthorities(user.getRoles()));
 	}
     
     private static List<GrantedAuthority> getAuthorities (List<Role> roles) {
