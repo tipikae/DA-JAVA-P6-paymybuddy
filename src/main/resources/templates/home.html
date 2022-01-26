@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{template1}">
+<head>
+<meta charset="UTF-8">
+<title>Home</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<section>
+			<div class="col-md-6">
+				<div class="" th:if="home">
+					<div>
+						Welcome <span th:text="${home.email}"></span> !
+					</div>
+					<div>
+						<label>Balance:</label>
+						<label th:text="${home.balance}"></label> €
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<form th:action="@{/saveOperation}" method="post">
+					<div>
+						<input type="radio" id="deposit"
+					           name="typeOperation" value="DEP" checked>
+					    <label for="deposit">"Deposit"</label>
+					    <input type="radio" id="withdrawal"
+					           name="typeOperation" value=WIT>
+					    <label for="withdrawal">Withdrawal</label>
+					</div>
+					<div>
+					  	<label>Amount:</label>
+					  	<input type="text" name="amount">
+					</div>
+					<div class="text-danger" th:text="${#httpServletRequest.getParameter('error')}"></div>
+					<div>
+					    <button type="submit" class="btn btn-primary">Save</button>
+					</div>
+				</form>
+			</div>
+		</section>
+	</div>
+</body>
+</html>

@@ -21,11 +21,6 @@ public class SecurityController {
 		return "login";
 	}
 
-	@GetMapping("/home")
-	public String home() {
-		return "user";
-	}
-
 	@GetMapping("/admin")
 	public String admin() {
 		return "admin";
