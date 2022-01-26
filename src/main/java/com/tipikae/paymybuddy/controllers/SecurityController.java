@@ -33,6 +33,16 @@ public class SecurityController {
 
 	@GetMapping("/403")
 	public String accessDenied() {
-		return "403";
+		return "error/403";
+	}
+
+	@GetMapping("/404")
+	public String notFound() {
+		return "error/404";
+	}
+
+	@GetMapping("/400")
+	public String badRequest() {
+		return "error/400";
 	}
 }

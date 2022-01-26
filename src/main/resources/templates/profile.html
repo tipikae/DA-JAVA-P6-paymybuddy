@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{template1}"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<meta charset="UTF-8">
+<title>Profile</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<section>
+			<div class="col-md-6">
+				<div class="" th:if="profile">
+					<div>
+						<label>Email:</label>
+						<label th:text="${profile.email}"></label>
+					</div>
+					<div>
+						<label>Firstname:</label>
+						<label th:text="${profile.firstname}"></label>
+					</div>
+					<div>
+						<label>Lastname:</label>
+						<label th:text="${profile.lastname}"></label>
+					</div>
+					<div>
+						<label>Registration date:</label>
+						<label th:text="${profile.dateCreated}"></label>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</body>
+</html>
