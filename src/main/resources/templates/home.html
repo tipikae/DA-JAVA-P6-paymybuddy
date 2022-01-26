@@ -17,16 +17,16 @@
 					</div>
 					<div>
 						<label>Balance:</label>
-						<label th:text="${home.balance}"></label> €
+						<label th:text="${home.balance}">€</label>
 					</div>
 				</div>
 			</div>
 			<div class="col-md-6">
-				<form th:action="@{/saveOperation}" method="post">
+				<form th:action="@{/operation}" method="post">
 					<div>
 						<input type="radio" id="deposit"
 					           name="typeOperation" value="DEP" checked>
-					    <label for="deposit">"Deposit"</label>
+					    <label for="deposit">Deposit</label>
 					    <input type="radio" id="withdrawal"
 					           name="typeOperation" value=WIT>
 					    <label for="withdrawal">Withdrawal</label>

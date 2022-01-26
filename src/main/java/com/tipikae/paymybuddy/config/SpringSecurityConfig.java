@@ -49,7 +49,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 			.logout().deleteCookies("JSESSIONID")
 			.and()
 			.rememberMe().key("MySecretRMKey");
-		http.authorizeRequests().antMatchers("/home", "/profile").hasRole("USER");
+		http.authorizeRequests().antMatchers("/home", "/profile", "/operation", "/transfer").hasRole("USER");
 		http.authorizeRequests().antMatchers("/admin").hasRole("ADMIN");
 		http.authorizeRequests().antMatchers("/user/registration").permitAll();
 		http.exceptionHandling().accessDeniedPage("/403");
