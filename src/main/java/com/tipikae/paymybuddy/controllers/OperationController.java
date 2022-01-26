@@ -3,14 +3,17 @@ package com.tipikae.paymybuddy.controllers;
 import java.security.Principal;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.tipikae.paymybuddy.dto.OperationDTO;
 import com.tipikae.paymybuddy.exception.OperationForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.services.IOperationService;
@@ -38,24 +41,38 @@ public class OperationController {
 	 * @return String
 	 */
 	@PostMapping("/operation")
-	public String saveOperation(HttpServletRequest request, Model model, String typeOperation, double amount) {
+	public String saveOperation(
+			@ModelAttribute("operation") @Valid OperationDTO operationDTO,
+			Errors errors,
+			HttpServletRequest request) {
+		
 		LOGGER.debug("Saving operation");
+		if(errors.hasErrors()) {
+			StringBuilder sb = new StringBuilder();
+			errors.getAllErrors().stream().forEach(e -> sb.append(e.getDefaultMessage() + ", "));
+			LOGGER.debug("has errors:" + sb);
+			return "redirect:/home?error=invalid field";
+		}
+		
 		Principal principal = request.getUserPrincipal();
 		try {
-			switch(typeOperation) {
+			switch(operationDTO.getTypeOperation()) {
 				case "DEP":
-					operationService.deposit(principal.getName(), amount);
+					operationService.deposit(principal.getName(), operationDTO.getAmount());
 					break;
 				case "WIT":
-					operationService.withdrawal(principal.getName(), amount);
+					operationService.withdrawal(principal.getName(), operationDTO.getAmount());
 					break;
 			}
 		} catch (UserNotFoundException e) {
-			model.addAttribute("error", e);
-			return "redirect:/home&error=" + e.getMessage();
+			LOGGER.debug("User not found: " + e.getMessage());
+			return "redirect:/home?error=" + e.getMessage();
 		} catch (OperationForbiddenException e) {
-			model.addAttribute("error", e);
-			return "redirect:/home&error=" + e.getMessage();
+			LOGGER.debug("Operation forbidden: " + e.getMessage());
+			return "redirect:/home?error=" + e.getMessage();
+		} catch (Exception e) {
+			LOGGER.debug("Unable to process operation: " + e.getMessage());
+			return "redirect:/home?error=" + e.getMessage();
 		}
 		
 		return "redirect:/home";

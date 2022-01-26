@@ -44,7 +44,7 @@ public class OperationServiceImpl implements IOperationService {
 		Optional<User> optional = userRepository.findByEmail(email);
 		if(!optional.isPresent()) {
 			LOGGER.debug("Deposit: user with email=" + email + " not found.");
-			throw new UserNotFoundException("User with email=" + email + " not found.");
+			throw new UserNotFoundException("User not found.");
 		}
 
 		Account account = optional.get().getAccount();
@@ -69,13 +69,13 @@ public class OperationServiceImpl implements IOperationService {
 		Optional<User> optional = userRepository.findByEmail(email);
 		if(!optional.isPresent()) {
 			LOGGER.debug("Withdrawal: user with email=" + email + " not found.");
-			throw new UserNotFoundException("User with email=" + email + " not found.");
+			throw new UserNotFoundException("User not found.");
 		}
 
 		Account account = optional.get().getAccount();
 		if(amount > account.getBalance()) {
 			LOGGER.debug("Withdrawal: amount(" + amount + ") > balance(" + account.getBalance() + ")");
-			throw new OperationForbiddenException("amount(" + amount + ") > balance(" + account.getBalance() + ")");
+			throw new OperationForbiddenException("Amount can't be more than balance.");
 		}
 		List<Operation> operations = account.getOperations();
 		Withdrawal withdrawal = new Withdrawal();

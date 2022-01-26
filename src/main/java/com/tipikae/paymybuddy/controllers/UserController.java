@@ -70,7 +70,7 @@ public class UserController {
 		LOGGER.debug("Registering new user: {}", userDTO);
 		if(errors.hasErrors()) {
 			StringBuilder sb = new StringBuilder();
-			errors.getAllErrors().stream().forEach(e -> sb.append(e + ", "));
+			errors.getAllErrors().stream().forEach(e -> sb.append(e.getDefaultMessage() + ", "));
 			LOGGER.debug("has errors:" + sb);
 			return new ModelAndView("registration", "user", userDTO);
 		}
