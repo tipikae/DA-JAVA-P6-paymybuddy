@@ -5,6 +5,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import java.util.Date;
 
@@ -31,7 +32,7 @@ class ProfileControllerTest {
 	
 	@WithMockUser
 	@Test
-	void getProfileReturns200WhenFound() throws Exception {
+	void getProfileReturnsProfileWhenFound() throws Exception {
 		ProfileDTO profileDTO = new ProfileDTO();
 		profileDTO.setEmail("bob@bob.com");
 		profileDTO.setFirstname("bob");
@@ -39,7 +40,8 @@ class ProfileControllerTest {
 		profileDTO.setDateCreated(new Date());
 		when(profileService.getProfile(anyString())).thenReturn(profileDTO);
 		mockMvc.perform(get("/profile"))
-			.andExpect(status().isOk());
+			.andExpect(status().isOk())
+			.andExpect(view().name("profile"));
 	}
 	
 	@WithMockUser
@@ -47,15 +49,8 @@ class ProfileControllerTest {
 	void getProfileReturns404WhenNotFound() throws Exception {
 		doThrow(UserNotFoundException.class).when(profileService).getProfile(anyString());
 		mockMvc.perform(get("/profile"))
-			.andExpect(status().is(404));
-	}
-	
-	@WithMockUser
-	@Test
-	void getProfileReturns400WhenException() throws Exception {
-		doThrow(Exception.class).when(profileService).getProfile(anyString());
-		mockMvc.perform(get("/profile"))
-			.andExpect(status().is(400));
+			.andExpect(status().isOk())
+			.andExpect(view().name("error/404"));
 	}
 
 }

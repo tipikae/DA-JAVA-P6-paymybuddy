@@ -7,11 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.tipikae.paymybuddy.dto.ProfileDTO;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
@@ -31,6 +29,12 @@ public class ProfileController {
 	@Autowired
 	private IProfileService profileService;
 	
+	/**
+	 * Get the user profile.
+	 * @param request
+	 * @param model
+	 * @return String
+	 */
 	@GetMapping("/profile")
 	public String getProfile(HttpServletRequest request, Model model) {
 		LOGGER.debug("Get profile");
@@ -40,10 +44,7 @@ public class ProfileController {
 			model.addAttribute("profile", profile);
 		} catch (UserNotFoundException e) {
 			LOGGER.debug("Get profile: UserNotFoundException: " + e.getMessage());
-			//return "error/404";
-			throw new ResponseStatusException(
-					  HttpStatus.NOT_FOUND, "error/404"
-					);
+			return "error/404";
 		} catch(Exception e) {
 			LOGGER.debug("Get profile: Exception: " + e.getMessage());
 			return "error/400";
