@@ -56,7 +56,7 @@ class OperationControllerTest {
 		mockMvc.perform(post("/operation")
 				.flashAttr("operation", rightDepOperationDTO))
 			.andExpect(status().is(302))
-			.andExpect(view().name("redirect:/home"));
+			.andExpect(view().name("redirect:/home?success=Operation succeed."));
 		
 	}
 	
@@ -66,7 +66,7 @@ class OperationControllerTest {
 		mockMvc.perform(post("/operation")
 				.flashAttr("operation", wrongOperationDTO))
 			.andExpect(status().is(302))
-			.andExpect(view().name("redirect:/home?error=invalid field"));
+			.andExpect(view().name("redirect:/home?error=Amount must be positive. "));
 		
 	}
 	

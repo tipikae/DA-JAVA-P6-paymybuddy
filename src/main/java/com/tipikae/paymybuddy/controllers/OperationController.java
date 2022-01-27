@@ -49,9 +49,9 @@ public class OperationController {
 		LOGGER.debug("Saving operation");
 		if(errors.hasErrors()) {
 			StringBuilder sb = new StringBuilder();
-			errors.getAllErrors().stream().forEach(e -> sb.append(e.getDefaultMessage() + ", "));
+			errors.getAllErrors().stream().forEach(e -> sb.append(e.getDefaultMessage() + " "));
 			LOGGER.debug("has errors:" + sb);
-			return "redirect:/home?error=invalid field";
+			return "redirect:/home?error=" + sb;
 		}
 		
 		Principal principal = request.getUserPrincipal();
@@ -75,7 +75,7 @@ public class OperationController {
 			return "redirect:/home?error=" + e.getMessage();
 		}
 		
-		return "redirect:/home";
+		return "redirect:/home?success=Operation succeed.";
 	}
 	
 	@PostMapping("/transfer")

@@ -21,12 +21,12 @@ public class OperationDTO implements Serializable {
 	/**
 	 * Operation type.
 	 */
-	@NotBlank
+	@NotBlank(message = "Type must not be empty.")
 	private String typeOperation;
 	
 	/**
 	 * Operation amount.
 	 */
-	@Positive(message = "Must be positive.")
+	@Positive(message = "Amount must be positive.")
 	private double amount;
 }

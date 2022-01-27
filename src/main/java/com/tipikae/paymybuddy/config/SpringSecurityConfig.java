@@ -23,8 +23,8 @@ import com.tipikae.paymybuddy.services.UserDetailsServiceImpl;
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	//@Autowired
-	private UserDetailsServiceImpl userDetailsService = new UserDetailsServiceImpl();
+	@Autowired
+	private UserDetailsServiceImpl userDetailsService;// = new UserDetailsServiceImpl();
 
 	/**
 	 * {@inheritDoc}
