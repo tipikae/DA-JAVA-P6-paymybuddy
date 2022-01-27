@@ -48,7 +48,7 @@ public class ConnectionServiceImpl implements IConnectionService {
 		
 		User srcUser = optional.get();
 		List<ConnectionDTO> connections = getConnections(srcUser);
-		List<ConnectionDTO> others = getOthers(srcUser);
+		List<ConnectionDTO> others = getOthers(srcUser.getEmail());
 		ContactDTO contactDTO = new ContactDTO();
 		contactDTO.setConnections(connections);
 		contactDTO.setOthers(others);
@@ -69,15 +69,9 @@ public class ConnectionServiceImpl implements IConnectionService {
 		return connections;
 	}
 	
-	private List<ConnectionDTO> getOthers(User srcUser) {
+	private List<ConnectionDTO> getOthers(String srcEmail) {
 		List<ConnectionDTO> others = new ArrayList<>();
-		List<User> existing = new ArrayList<>();
-		for(Connection connection: srcUser.getConnections()) {
-			existing.add(connection.getDestUser());
-		}
-		existing.add(srcUser);
-		List<User> users = userRepository.findAll();
-		users.removeAll(existing);
+		List<User> users = userRepository.getPotentialFriends(srcEmail);
 		for(User user: users) {
 			ConnectionDTO otherDTO = new ConnectionDTO();
 			otherDTO.setEmail(user.getEmail());
@@ -87,6 +81,14 @@ public class ConnectionServiceImpl implements IConnectionService {
 		}
 		
 		return others;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addConnection(String srcEmail, String destEmail) throws UserNotFoundException {
+		
 	}
 
 }

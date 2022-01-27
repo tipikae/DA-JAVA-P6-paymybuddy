@@ -32,7 +32,7 @@
 			<div class="col-md-6">
 				<div class="" th:if="others">
 					<form th:action="@{/saveContact}" method="post">
-						<select>
+						<select name="destEmail">
 							<option value="">Select a contact</option>
 							<option 
 								th:each="o:${others}" 
