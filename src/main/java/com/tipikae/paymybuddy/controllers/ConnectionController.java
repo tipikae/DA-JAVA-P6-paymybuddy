@@ -1,7 +1,6 @@
 package com.tipikae.paymybuddy.controllers;
 
 import java.security.Principal;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -12,7 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.tipikae.paymybuddy.dto.ConnectionDTO;
+import com.tipikae.paymybuddy.dto.ContactDTO;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.services.IConnectionService;
 
@@ -41,8 +40,9 @@ public class ConnectionController {
 		LOGGER.debug("Get contact");
 		Principal principal = request.getUserPrincipal();
 		try {
-			List<ConnectionDTO> connectionsDTO= connectionService.getConnections(principal.getName());
-			model.addAttribute("connections", connectionsDTO);
+			ContactDTO contactDTO= connectionService.getContact(principal.getName());
+			model.addAttribute("connections", contactDTO.getConnections());
+			model.addAttribute("others", contactDTO.getOthers());
 		} catch (UserNotFoundException e) {
 			LOGGER.debug("User not found exception: " + e.getMessage());
 			return "error/404";

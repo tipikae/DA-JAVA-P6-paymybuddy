@@ -1,8 +1,6 @@
 package com.tipikae.paymybuddy.services;
 
-import java.util.List;
-
-import com.tipikae.paymybuddy.dto.ConnectionDTO;
+import com.tipikae.paymybuddy.dto.ContactDTO;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 
 /**
@@ -16,8 +14,10 @@ public interface IConnectionService {
 	/**
 	 * Get all connections of a user.
 	 * @param srcEmail
-	 * @return List<ConnectionDTO>
+	 * @return ContactDTO
 	 * @throws UserNotFoundException
 	 */
-	List<ConnectionDTO> getConnections(String srcEmail) throws UserNotFoundException;
+	ContactDTO getContact(String srcEmail) throws UserNotFoundException;
+	
+	//void addConnection(String srcEmail, String );
 }

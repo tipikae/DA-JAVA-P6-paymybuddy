@@ -12,7 +12,7 @@
 		<section>
 			<div class="col-md-6">
 				<div class="" th:if="connections">
-					<h1>Contact list</h1>
+					<h1>Connection list</h1>
 					<div>
 						<table class="table table-striped">
 							<tr>
@@ -37,7 +37,7 @@
 							<option 
 								th:each="o:${others}" 
 								th:value="${o.email}" 
-								th:text="${o.firstname} ${o.lastname} ${o.email}">
+								th:text="${o.firstname} + ' ' + ${o.lastname} + ' ' + ${o.email}">
 							</option>
 						</select>
 						<div class="red" th:text="${#httpServletRequest.getParameter('error')}"></div>
