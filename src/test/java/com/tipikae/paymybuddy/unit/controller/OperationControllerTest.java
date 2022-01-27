@@ -53,7 +53,7 @@ class OperationControllerTest {
 	@WithMockUser
 	@Test
 	void saveDepositOperationRedirectsHomeWhenOk() throws Exception {
-		mockMvc.perform(post("/operation")
+		mockMvc.perform(post("/saveOperation")
 				.flashAttr("operation", rightDepOperationDTO))
 			.andExpect(status().is(302))
 			.andExpect(view().name("redirect:/home?success=Operation succeed."));
@@ -63,7 +63,7 @@ class OperationControllerTest {
 	@WithMockUser
 	@Test
 	void saveDepositOperationRedirectsHomeWhenInvalid() throws Exception {
-		mockMvc.perform(post("/operation")
+		mockMvc.perform(post("/saveOperation")
 				.flashAttr("operation", wrongOperationDTO))
 			.andExpect(status().is(302))
 			.andExpect(view().name("redirect:/home?error=Amount must be positive. "));
@@ -75,7 +75,7 @@ class OperationControllerTest {
 	void saveDepositOperationRedirectsHomeWhenNotFound() throws Exception {
 		doThrow(new UserNotFoundException("User not found."))
 			.when(operationService).deposit(anyString(), anyDouble());
-		mockMvc.perform(post("/operation")
+		mockMvc.perform(post("/saveOperation")
 				.flashAttr("operation", rightDepOperationDTO))
 			.andExpect(status().is(302))
 			.andExpect(view().name("redirect:/home?error=User not found."));
@@ -87,7 +87,7 @@ class OperationControllerTest {
 	void saveDepositOperationRedirectsHomeWhenForbidden() throws Exception {
 		doThrow(new OperationForbiddenException("Amount can't be more than balance."))
 			.when(operationService).withdrawal(anyString(), anyDouble());
-		mockMvc.perform(post("/operation")
+		mockMvc.perform(post("/saveOperation")
 				.flashAttr("operation", rightWitOperationDTO))
 			.andExpect(status().is(302))
 			.andExpect(view().name("redirect:/home?error=Amount can't be more than balance."));

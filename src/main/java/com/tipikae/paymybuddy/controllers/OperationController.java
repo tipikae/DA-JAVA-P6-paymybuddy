@@ -40,7 +40,7 @@ public class OperationController {
 	 * @param amount
 	 * @return String
 	 */
-	@PostMapping("/operation")
+	@PostMapping("/saveOperation")
 	public String saveOperation(
 			@ModelAttribute("operation") @Valid OperationDTO operationDTO,
 			Errors errors,

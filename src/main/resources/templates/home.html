@@ -12,9 +12,7 @@
 		<section>
 			<div class="col-md-6">
 				<div class="" th:if="home">
-					<div>
-						Welcome <span th:text="${home.email}"></span> !
-					</div>
+					<h1>Welcome <span th:text="${home.email}"></span> !</h1>
 					<div>
 						<label>Balance:</label>
 						<label th:text="${home.balance}">€</label>
@@ -22,7 +20,7 @@
 				</div>
 			</div>
 			<div class="col-md-6">
-				<form th:action="@{/operation}" method="post">
+				<form th:action="@{/saveOperation}" method="post">
 					<div>
 						<input type="radio" id="deposit"
 					           name="typeOperation" value="DEP" checked>
