@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -58,6 +59,8 @@ public class Account implements Serializable {
 	/**
 	 * Operations list.
 	 */
-	@OneToMany(mappedBy = "account")
+	@OneToMany(
+			mappedBy = "account",
+			cascade = CascadeType.ALL)
 	private List<Operation> operations;
 }
