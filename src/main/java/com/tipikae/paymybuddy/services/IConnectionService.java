@@ -1,6 +1,7 @@
 package com.tipikae.paymybuddy.services;
 
 import com.tipikae.paymybuddy.dto.ContactDTO;
+import com.tipikae.paymybuddy.exception.ConnectionForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 
 /**
@@ -24,6 +25,8 @@ public interface IConnectionService {
 	 * @param srcEmail
 	 * @param destEmail
 	 * @throws UserNotFoundException
+	 * @throws ConnectionForbiddenException 
 	 */
-	void addConnection(String srcEmail, String destEmail) throws UserNotFoundException;
+	void addConnection(String srcEmail, String destEmail) 
+			throws UserNotFoundException, ConnectionForbiddenException;
 }

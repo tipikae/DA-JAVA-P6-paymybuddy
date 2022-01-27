@@ -24,7 +24,6 @@ import com.tipikae.paymybuddy.services.IOperationService;
 @WebMvcTest(controllers = OperationController.class)
 class OperationControllerTest {
 
-
 	@Autowired
 	private MockMvc mockMvc;
 	

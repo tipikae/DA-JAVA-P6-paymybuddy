@@ -23,8 +23,8 @@ import com.tipikae.paymybuddy.services.UserDetailsServiceImpl;
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	@Autowired
-	private UserDetailsServiceImpl userDetailsService;// = new UserDetailsServiceImpl();
+	//@Autowired
+	private UserDetailsServiceImpl userDetailsService = new UserDetailsServiceImpl();
 
 	/**
 	 * {@inheritDoc}
@@ -49,7 +49,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 			.logout().deleteCookies("JSESSIONID")
 			.and()
 			.rememberMe().key("MySecretRMKey");
-		http.authorizeRequests().antMatchers("/home", "/profile", "/operation", "/transfer").hasRole("USER");
+		http.authorizeRequests()
+			.antMatchers("/home", "/profile", "/transfer", "contact", "/saveContact", "/saveOperation")
+			.hasRole("USER");
 		http.authorizeRequests().antMatchers("/admin").hasRole("ADMIN");
 		http.authorizeRequests().antMatchers("/user/registration").permitAll();
 		http.exceptionHandling().accessDeniedPage("/403");

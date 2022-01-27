@@ -3,15 +3,21 @@ package com.tipikae.paymybuddy.controllers;
 import java.security.Principal;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import com.tipikae.paymybuddy.dto.ContactDTO;
+import com.tipikae.paymybuddy.dto.NewContactDTO;
+import com.tipikae.paymybuddy.exception.ConnectionForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.services.IConnectionService;
 
@@ -52,5 +58,35 @@ public class ConnectionController {
 		}
 		
 		return "contact";
+	}
+	
+	@PostMapping("/saveContact")
+	public String addContact(
+			@ModelAttribute("contact") @Valid NewContactDTO newContactDTO,
+			Errors errors,
+			HttpServletRequest request) {
+		LOGGER.debug("Add new connection");
+		if(errors.hasErrors()) {
+			StringBuilder sb = new StringBuilder();
+			errors.getAllErrors().stream().forEach(e -> sb.append(e.getDefaultMessage() + " "));
+			LOGGER.debug("has errors:" + sb);
+			return "redirect:/contact?error=" + sb;
+		}
+		
+		Principal principal = request.getUserPrincipal();
+		try {
+			connectionService.addConnection(principal.getName(), newContactDTO.getDestEmail());
+		} catch (UserNotFoundException e) {
+			LOGGER.debug("User not found: " + e.getMessage());
+			return "redirect:/contact?error=User not found.";
+		} catch (ConnectionForbiddenException e) {
+			LOGGER.debug("Connection forbidden : " + e.getMessage());
+			return "redirect:/contact?error=Connection forbidden.";
+		} catch (Exception e) {
+			LOGGER.debug("Unable to process new connection : " + e.getMessage());
+			return "redirect:/contact?error=Unable to process new connection.";
+		}
+		
+		return "redirect:/contact?success=New connection succeed.";
 	}
 }

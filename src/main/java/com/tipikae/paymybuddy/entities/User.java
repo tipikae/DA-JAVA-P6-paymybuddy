@@ -69,7 +69,9 @@ public class User implements Serializable {
 	/**
 	 * Connections list.
 	 */
-	@OneToMany(mappedBy = "srcUser")
+	@OneToMany(
+			mappedBy = "srcUser",
+			cascade = CascadeType.ALL)
 	private List<Connection> connections;
 	
 	/**

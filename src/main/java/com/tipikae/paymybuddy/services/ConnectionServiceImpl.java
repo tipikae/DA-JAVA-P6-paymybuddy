@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 import com.tipikae.paymybuddy.dto.ConnectionDTO;
 import com.tipikae.paymybuddy.dto.ContactDTO;
 import com.tipikae.paymybuddy.entities.Connection;
+import com.tipikae.paymybuddy.entities.ConnectionId;
 import com.tipikae.paymybuddy.entities.User;
+import com.tipikae.paymybuddy.exception.ConnectionForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.repositories.IConnectionRepository;
 import com.tipikae.paymybuddy.repositories.IUserRepository;
@@ -87,8 +89,31 @@ public class ConnectionServiceImpl implements IConnectionService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void addConnection(String srcEmail, String destEmail) throws UserNotFoundException {
+	public void addConnection(String srcEmail, String destEmail) 
+			throws UserNotFoundException, ConnectionForbiddenException {
+		LOGGER.debug("Adding connection: source email=" + srcEmail + " dest email=" + destEmail);
+		if(srcEmail.equals(destEmail)) {
+			LOGGER.debug("AddConnection: source and dest are identical.");
+			throw new ConnectionForbiddenException("Source and dest are identical.");
+		}
 		
+		Optional<User> optionalSrc = userRepository.findByEmail(srcEmail);
+		Optional<User> optionalDest = userRepository.findByEmail(destEmail);
+		if(!optionalSrc.isPresent()) {
+			LOGGER.debug("AddConnection: user src with email=" + srcEmail + " not found.");
+			throw new UserNotFoundException("User not found.");
+		}
+		if(!optionalDest.isPresent()) {
+			LOGGER.debug("AddConnection: user dest with email=" + destEmail + " not found.");
+			throw new UserNotFoundException("User not found.");
+		}
+		
+		ConnectionId connectionId = new ConnectionId(optionalSrc.get().getEmail(), optionalDest.get().getEmail());
+		Connection connection = new Connection();
+		connection.setId(connectionId);
+		connection.setSrcUser(optionalSrc.get());
+		connection.setDestUser(optionalDest.get());
+		connectionRepository.save(connection);
 	}
 
 }
