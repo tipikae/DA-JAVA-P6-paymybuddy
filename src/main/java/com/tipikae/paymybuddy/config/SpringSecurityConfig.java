@@ -1,5 +1,6 @@
 package com.tipikae.paymybuddy.config;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,11 +8,11 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-import com.tipikae.paymybuddy.services.UserDetailsServiceImpl;
 
 /**
  * A class configuration for Spring Security.
@@ -23,8 +24,8 @@ import com.tipikae.paymybuddy.services.UserDetailsServiceImpl;
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	//@Autowired
-	private UserDetailsServiceImpl userDetailsService = new UserDetailsServiceImpl();
+	@Autowired
+	protected UserDetailsService userDetailsService;
 
 	/**
 	 * {@inheritDoc}
