@@ -32,16 +32,18 @@ class TransferServiceTest {
 	private TransferServiceImpl transferService;
 
 	@Test
-	void getTransfersThrowsExceptionWhenEmailNotFound() {
+	void getTransferThrowsExceptionWhenEmailNotFound() {
 		when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
-		assertThrows(UserNotFoundException.class, () -> transferService.getTransfers("alice@alice.com"));
+		assertThrows(UserNotFoundException.class, () -> transferService.getTransfer("alice@alice.com"));
 	}
 	
 	@Test
-	void getTransfersReturnsDTOswhenOk() throws UserNotFoundException {
-		when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(new User()));
+	void getTransferReturnsDTOswhenOk() throws UserNotFoundException {
+		User user = new User();
+		user.setConnections(new ArrayList<>());
+		when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
 		when(operationRepository.findTransfersByEmailSrc(anyString())).thenReturn(new ArrayList<>());
-		assertEquals(0, transferService.getTransfers("alice@alice.com").size());
+		assertEquals(0, transferService.getTransfer("alice@alice.com").getTransactions().size());
 	}
 
 }

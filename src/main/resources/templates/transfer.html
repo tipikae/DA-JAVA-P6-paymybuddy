@@ -9,23 +9,26 @@
 </head>
 <body>
 	<div layout:fragment="content">
-		<section>
+		<section  th:object="${transfer}">
 			<div class="col-md-12">
 				<div>
 					<a th:href="@{/contact}" class="btn btn-primary">Add a connection</a>
 				</div>
-				<div>
+				<div th:if="*{connections}">
 					<h2>Send money</h2>
 					<form th:action="@{/saveTransfer}" method="post">
 						<select name="destEmail">
 							<option value="">Select a connection</option>
 							<option 
-								th:each="c:connections" 
+								th:each="c:*{connections}" 
 								th:value="${c.email}" 
 								th:text="${c.firstname} + ' ' + ${c.lastname} + ' ' + ${c.email}">
 							</option>
 						</select>
-						<input type="number" name = "amount" min="0" step="1">
+						<label for="amout">Amount</label>
+						<input type="number" name="amount" min="0" step="1">
+						<label for="description">Description</label>
+						<input type="text" name="description">
 						<div class="red" th:text="${#httpServletRequest.getParameter('error')}"></div>
 						<div class="green" th:text="${#httpServletRequest.getParameter('success')}"></div>
 						<div>
@@ -33,7 +36,7 @@
 						</div>
 					</form>
 				</div>
-				<div class="" th:if="transfers">
+				<div class="" th:if="*{transactions}">
 					<h2>My transactions</h2>
 					<div>
 						<table class="table table-striped">
@@ -42,7 +45,7 @@
 								<th>Description</th>
 								<th>Amount</th>
 							</tr>
-							<tr th:each="t:transfers">
+							<tr th:each="t:*{transactions}">
 								<td th:text="${t.connection}"></td>
 								<td th:text="${t.description}"></td>
 								<td th:text="${t.amount}"></td>

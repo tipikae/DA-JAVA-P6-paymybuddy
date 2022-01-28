@@ -1,6 +1,7 @@
 package com.tipikae.paymybuddy.dto;
 
 import java.io.Serializable;
+import java.util.List;
 
 import lombok.Data;
 
@@ -16,17 +17,12 @@ public class TransferDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Connection name;
+	 * Connections list.
 	 */
-	private String connection;
+	private List<ConnectionDTO> connections;
 	
 	/**
-	 * Description.
+	 * Transactions list.
 	 */
-	private String description;
-	
-	/**
-	 * Amount
-	 */
-	private double amount;
+	private List<TransactionDTO> transactions;
 }

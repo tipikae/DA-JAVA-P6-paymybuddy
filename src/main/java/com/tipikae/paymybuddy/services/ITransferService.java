@@ -1,7 +1,5 @@
 package com.tipikae.paymybuddy.services;
 
-import java.util.List;
-
 import com.tipikae.paymybuddy.dto.TransferDTO;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 
@@ -16,8 +14,8 @@ public interface ITransferService {
 	/**
 	 * Get all transfers.
 	 * @param srcEmail
-	 * @return List<TransferDTO>
+	 * @return TransferDTO
 	 * @throws UserNotFoundException
 	 */
-	List<TransferDTO> getTransfers(String srcEmail) throws UserNotFoundException;
+	TransferDTO getTransfer(String srcEmail) throws UserNotFoundException;
 }

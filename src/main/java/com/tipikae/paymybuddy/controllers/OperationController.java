@@ -13,8 +13,8 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.tipikae.paymybuddy.dto.NewTransferDTO;
 import com.tipikae.paymybuddy.dto.OperationDTO;
-import com.tipikae.paymybuddy.dto.TransferDTO;
 import com.tipikae.paymybuddy.exception.OperationForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.services.IOperationService;
@@ -81,11 +81,33 @@ public class OperationController {
 	
 	@PostMapping("/saveTransfer")
 	public String saveTransfer(
-			@ModelAttribute("transfer") @Valid TransferDTO transferDTO,
+			@ModelAttribute("transfer") @Valid NewTransferDTO newTransferDTO,
 			Errors errors,
 			HttpServletRequest request) {
+		
 		LOGGER.debug("Saving transfer");
-		return null;
+		if(errors.hasErrors()) {
+			StringBuilder sb = new StringBuilder();
+			errors.getAllErrors().stream().forEach(e -> sb.append(e.getDefaultMessage() + " "));
+			LOGGER.debug("has errors:" + sb);
+			return "redirect:/home?error=" + sb;
+		}
+		
+		Principal principal = request.getUserPrincipal();
+		try {
+			operationService.transfer(principal.getName(), newTransferDTO);
+		} catch (UserNotFoundException e) {
+			LOGGER.debug("User not found: " + e.getMessage());
+			return "redirect:/transfer?error=User not found";
+		} catch (OperationForbiddenException e) {
+			LOGGER.debug("Operation forbidden: " + e.getMessage());
+			return "redirect:/transfer?error=Operation forbidden.";
+		} catch (Exception e) {
+			LOGGER.debug("Unable to process operation: " + e.getMessage());
+			return "redirect:/transfer?error=Unable to process transfer.";
+		}
+		
+		return "redirect:/transfer?success=Operation succeed.";
 		
 	}
 }

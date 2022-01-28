@@ -9,7 +9,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tipikae.paymybuddy.dto.ConnectionDTO;
+import com.tipikae.paymybuddy.dto.TransactionDTO;
 import com.tipikae.paymybuddy.dto.TransferDTO;
+import com.tipikae.paymybuddy.entities.Connection;
 import com.tipikae.paymybuddy.entities.Transfer;
 import com.tipikae.paymybuddy.entities.User;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
@@ -37,25 +40,49 @@ public class TransferServiceImpl implements ITransferService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<TransferDTO> getTransfers(String srcEmail) throws UserNotFoundException {
-		LOGGER.debug("Getting transfers for " + srcEmail);
+	public TransferDTO getTransfer(String srcEmail) throws UserNotFoundException {
+		LOGGER.debug("Getting transfer for " + srcEmail);
 		Optional<User> optional = userRepository.findByEmail(srcEmail);
 		if(!optional.isPresent()) {
-			LOGGER.debug("GetProfile: user with email=" + srcEmail + " not found.");
+			LOGGER.debug("GetTransfer: user with email=" + srcEmail + " not found.");
 			throw new UserNotFoundException("User not found.");
 		}
 		
-		List<TransferDTO> transfersDTO = new ArrayList<>();
-		List<Transfer> transfers = operationRepository.findTransfersByEmailSrc(srcEmail);
-		for(Transfer transfer: transfers) {
-			TransferDTO transferDTO = new TransferDTO();
-			transferDTO.setConnection(transfer.getDestUser().getFirstname());
-			transferDTO.setDescription(transfer.getDescription());
-			transferDTO.setAmount(transfer.getAmount());
-			transfersDTO.add(transferDTO);
+		List<ConnectionDTO> connections = getConnections(optional.get());
+		List<TransactionDTO> transactions = getTransactions(srcEmail);
+		TransferDTO transferDTO = new TransferDTO();
+		transferDTO.setConnections(connections);
+		transferDTO.setTransactions(transactions);
+		
+		return transferDTO;
+	}
+	
+	private List<ConnectionDTO> getConnections(User srcUser) {
+		List<ConnectionDTO> connections = new ArrayList<>();
+		for(Connection connection: srcUser.getConnections()) {
+			User destUser = connection.getDestUser();
+			ConnectionDTO connectionDTO = new ConnectionDTO();
+			connectionDTO.setEmail(destUser.getEmail());
+			connectionDTO.setFirstname(destUser.getFirstname());
+			connectionDTO.setLastname(destUser.getLastname());
+			connections.add(connectionDTO);
 		}
 		
-		return transfersDTO;
+		return connections;
+	}
+	
+	private List<TransactionDTO> getTransactions(String srcEmail) {
+		List<TransactionDTO> transactions = new ArrayList<>();
+		List<Transfer> transfers = operationRepository.findTransfersByEmailSrc(srcEmail);
+		for(Transfer transfer: transfers) {
+			TransactionDTO transactionDTO = new TransactionDTO();
+			transactionDTO.setConnection(transfer.getDestUser().getFirstname());
+			transactionDTO.setDescription(transfer.getDescription());
+			transactionDTO.setAmount(transfer.getAmount());
+			transactions.add(transactionDTO);
+		}
+		
+		return transactions;
 	}
 
 }
