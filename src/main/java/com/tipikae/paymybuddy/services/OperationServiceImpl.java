@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tipikae.paymybuddy.dto.OperationDTO;
 import com.tipikae.paymybuddy.entities.Account;
 import com.tipikae.paymybuddy.entities.Deposit;
 import com.tipikae.paymybuddy.entities.Operation;
@@ -39,7 +40,8 @@ public class OperationServiceImpl implements IOperationService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void deposit(String email, double amount) throws UserNotFoundException {
+	public void deposit(String email, OperationDTO operationDTO) throws UserNotFoundException {
+		double amount = operationDTO.getAmount();
 		LOGGER.debug("Deposit: email=" + email + " amount=" + amount);
 		Optional<User> optional = userRepository.findByEmail(email);
 		if(!optional.isPresent()) {
@@ -63,8 +65,9 @@ public class OperationServiceImpl implements IOperationService {
 	 * {@inheritDoc} 
 	 */
 	@Override
-	public void withdrawal(String email, double amount) 
+	public void withdrawal(String email, OperationDTO operationDTO) 
 			throws UserNotFoundException, OperationForbiddenException {
+		double amount = operationDTO.getAmount();
 		LOGGER.debug("Withdrawal: email=" + email + " amount=" + amount);
 		Optional<User> optional = userRepository.findByEmail(email);
 		if(!optional.isPresent()) {

@@ -56,4 +56,9 @@ class UserRepositoryIT {
 	void testGetConnectionsById() {
 		assertEquals(2, userRepository.getById("alice@alice.com").getConnections().size());
 	}
+	
+	@Test
+	void testGetPotentialFriends() {
+		assertEquals(1, userRepository.getPotentialFriends("alice@alice.com").size());
+	}
 }

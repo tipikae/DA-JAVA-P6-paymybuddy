@@ -40,7 +40,7 @@ public class OperationController {
 	 * @param amount
 	 * @return String
 	 */
-	@PostMapping("/operation")
+	@PostMapping("/saveOperation")
 	public String saveOperation(
 			@ModelAttribute("operation") @Valid OperationDTO operationDTO,
 			Errors errors,
@@ -58,10 +58,10 @@ public class OperationController {
 		try {
 			switch(operationDTO.getTypeOperation()) {
 				case "DEP":
-					operationService.deposit(principal.getName(), operationDTO.getAmount());
+					operationService.deposit(principal.getName(), operationDTO);
 					break;
 				case "WIT":
-					operationService.withdrawal(principal.getName(), operationDTO.getAmount());
+					operationService.withdrawal(principal.getName(), operationDTO);
 					break;
 			}
 		} catch (UserNotFoundException e) {

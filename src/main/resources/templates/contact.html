@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{template1}">
+<head>
+<meta charset="UTF-8">
+<title>Contact</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<section  th:object="${contact}">
+			<div class="col-md-6">
+				<div class="" th:if="*{connections}">
+					<h1>Connection list</h1>
+					<div>
+						<table class="table table-striped">
+							<tr>
+								<th>Firstname</th>
+								<th>Lastname</th>
+								<th>Email</th>
+							</tr>
+							<tr th:each="c:*{connections}">
+								<td th:text="${c.firstname}"></td>
+								<td th:text="${c.lastname}"></td>
+								<td th:text="${c.email}"></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="" th:if="*{others}">
+					<form th:action="@{/saveContact}" method="post">
+						<select name="destEmail">
+							<option value="">Select a contact</option>
+							<option 
+								th:each="o:*{others}" 
+								th:value="${o.email}" 
+								th:text="${o.firstname} + ' ' + ${o.lastname} + ' ' + ${o.email}">
+							</option>
+						</select>
+						<div class="red" th:text="${#httpServletRequest.getParameter('error')}"></div>
+						<div class="green" th:text="${#httpServletRequest.getParameter('success')}"></div>
+						<div>
+						    <button type="submit" class="btn btn-primary">Add a connection</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</section>
+	</div>
+</body>
+</html>
