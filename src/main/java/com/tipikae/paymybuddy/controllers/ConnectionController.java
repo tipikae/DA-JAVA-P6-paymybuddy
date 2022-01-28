@@ -44,11 +44,10 @@ public class ConnectionController {
 	@GetMapping("/contact")
 	public String getContact(HttpServletRequest request, Model model) {
 		LOGGER.debug("Get contact");
-		Principal principal = request.getUserPrincipal();
 		try {
+			Principal principal = request.getUserPrincipal();
 			ContactDTO contactDTO= connectionService.getContact(principal.getName());
-			model.addAttribute("connections", contactDTO.getConnections());
-			model.addAttribute("others", contactDTO.getOthers());
+			model.addAttribute("contact", contactDTO);
 		} catch (UserNotFoundException e) {
 			LOGGER.debug("User not found exception: " + e.getMessage());
 			return "error/404";
@@ -65,6 +64,7 @@ public class ConnectionController {
 			@ModelAttribute("contact") @Valid NewContactDTO newContactDTO,
 			Errors errors,
 			HttpServletRequest request) {
+		
 		LOGGER.debug("Add new connection");
 		if(errors.hasErrors()) {
 			StringBuilder sb = new StringBuilder();
@@ -73,9 +73,9 @@ public class ConnectionController {
 			return "redirect:/contact?error=" + sb;
 		}
 		
-		Principal principal = request.getUserPrincipal();
 		try {
-			connectionService.addConnection(principal.getName(), newContactDTO.getDestEmail());
+			Principal principal = request.getUserPrincipal();
+			connectionService.addConnection(principal.getName(), newContactDTO);
 		} catch (UserNotFoundException e) {
 			LOGGER.debug("User not found: " + e.getMessage());
 			return "redirect:/contact?error=User not found.";
@@ -86,7 +86,7 @@ public class ConnectionController {
 			LOGGER.debug("Unable to process new connection : " + e.getMessage());
 			return "redirect:/contact?error=Unable to process new connection.";
 		}
-		
+
 		return "redirect:/contact?success=New connection succeed.";
 	}
 }

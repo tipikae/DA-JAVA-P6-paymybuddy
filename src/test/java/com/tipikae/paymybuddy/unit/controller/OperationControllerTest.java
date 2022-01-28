@@ -1,6 +1,6 @@
 package com.tipikae.paymybuddy.unit.controller;
 
-import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -73,7 +73,7 @@ class OperationControllerTest {
 	@Test
 	void saveDepositOperationRedirectsHomeWhenNotFound() throws Exception {
 		doThrow(new UserNotFoundException("User not found."))
-			.when(operationService).deposit(anyString(), anyDouble());
+			.when(operationService).deposit(anyString(), any(OperationDTO.class));
 		mockMvc.perform(post("/saveOperation")
 				.flashAttr("operation", rightDepOperationDTO))
 			.andExpect(status().is(302))
@@ -85,7 +85,7 @@ class OperationControllerTest {
 	@Test
 	void saveDepositOperationRedirectsHomeWhenForbidden() throws Exception {
 		doThrow(new OperationForbiddenException("Amount can't be more than balance."))
-			.when(operationService).withdrawal(anyString(), anyDouble());
+			.when(operationService).withdrawal(anyString(), any(OperationDTO.class));
 		mockMvc.perform(post("/saveOperation")
 				.flashAttr("operation", rightWitOperationDTO))
 			.andExpect(status().is(302))

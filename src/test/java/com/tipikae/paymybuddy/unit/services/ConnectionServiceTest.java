@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.tipikae.paymybuddy.dto.NewContactDTO;
 import com.tipikae.paymybuddy.entities.Connection;
 import com.tipikae.paymybuddy.entities.User;
 import com.tipikae.paymybuddy.exception.ConnectionForbiddenException;
@@ -64,29 +65,37 @@ class ConnectionServiceTest {
 		alice.setEmail("alice@alice.com");
 		User bob = new User();
 		bob.setEmail("bob@bob.com");
+		NewContactDTO newContactDTO = new NewContactDTO();
+		newContactDTO.setDestEmail("bob@bob.com");
 		when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(alice), Optional.of(bob));
-		connectionService.addConnection("alice@alice.com", "bob@bob.com");
+		connectionService.addConnection("alice@alice.com", newContactDTO);
 		verify(connectionRepository, Mockito.times(1)).save(any(Connection.class));
 	}
 	
 	@Test
 	void addConnectionThrowsConnectionForbiddenExceptionWhenEmailsEquals() {
+		NewContactDTO newContactDTO = new NewContactDTO();
+		newContactDTO.setDestEmail("alice@alice.com");
 		assertThrows(ConnectionForbiddenException.class, 
-				() -> connectionService.addConnection("alice@alice.com", "alice@alice.com"));
+				() -> connectionService.addConnection("alice@alice.com", newContactDTO));
 	}
 	
 	@Test
 	void addConnectionThrowsUserNotFoundExceptionWhenSrcNotFound() {
+		NewContactDTO newContactDTO = new NewContactDTO();
+		newContactDTO.setDestEmail("bob@bob.com");
 		when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty(), Optional.of(new User()));
 		assertThrows(UserNotFoundException.class, 
-				() -> connectionService.addConnection("alice@alice.com", "bob@bob.com"));
+				() -> connectionService.addConnection("alice@alice.com", newContactDTO));
 	}
 	
 	@Test
 	void addConnectionThrowsUserNotFoundExceptionWhenDestNotFound() {
+		NewContactDTO newContactDTO = new NewContactDTO();
+		newContactDTO.setDestEmail("bob@bob.com");
 		when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(new User()), Optional.empty());
 		assertThrows(UserNotFoundException.class, 
-				() -> connectionService.addConnection("alice@alice.com", "bob@bob.com"));
+				() -> connectionService.addConnection("alice@alice.com", newContactDTO));
 	}
 
 }

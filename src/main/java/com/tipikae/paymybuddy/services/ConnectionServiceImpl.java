@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.tipikae.paymybuddy.dto.ConnectionDTO;
 import com.tipikae.paymybuddy.dto.ContactDTO;
+import com.tipikae.paymybuddy.dto.NewContactDTO;
 import com.tipikae.paymybuddy.entities.Connection;
 import com.tipikae.paymybuddy.entities.ConnectionId;
 import com.tipikae.paymybuddy.entities.User;
@@ -89,8 +90,9 @@ public class ConnectionServiceImpl implements IConnectionService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void addConnection(String srcEmail, String destEmail) 
+	public void addConnection(String srcEmail, NewContactDTO newContactDTO) 
 			throws UserNotFoundException, ConnectionForbiddenException {
+		String destEmail = newContactDTO.getDestEmail();
 		LOGGER.debug("Adding connection: source email=" + srcEmail + " dest email=" + destEmail);
 		if(srcEmail.equals(destEmail)) {
 			LOGGER.debug("AddConnection: source and dest are identical.");

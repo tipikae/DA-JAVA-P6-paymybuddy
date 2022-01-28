@@ -58,10 +58,10 @@ public class OperationController {
 		try {
 			switch(operationDTO.getTypeOperation()) {
 				case "DEP":
-					operationService.deposit(principal.getName(), operationDTO.getAmount());
+					operationService.deposit(principal.getName(), operationDTO);
 					break;
 				case "WIT":
-					operationService.withdrawal(principal.getName(), operationDTO.getAmount());
+					operationService.withdrawal(principal.getName(), operationDTO);
 					break;
 			}
 		} catch (UserNotFoundException e) {

@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.tipikae.paymybuddy.dto.OperationDTO;
 import com.tipikae.paymybuddy.entities.Account;
 import com.tipikae.paymybuddy.entities.User;
 import com.tipikae.paymybuddy.exception.OperationForbiddenException;
@@ -37,48 +38,59 @@ class OperationServiceTest {
 
 	@Test
 	void depositThrowsUserNotFoundExceptionWhenEmailNotFound() {
+		OperationDTO operationDTO = new OperationDTO();
+		operationDTO.setAmount(1000.0);
 		when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
-		assertThrows(UserNotFoundException.class, () -> operationService.deposit("bob@bob.com", 1000));
+		assertThrows(UserNotFoundException.class, () -> operationService.deposit("bob@bob.com", operationDTO));
 	}
 
 	@Test
 	void depositCallSaveWhenEmailFound() throws UserNotFoundException {
+		OperationDTO operationDTO = new OperationDTO();
+		operationDTO.setAmount(1000.0);
 		Account account = new Account();
 		account.setOperations(new ArrayList<>());
 		User user = new User();
 		user.setAccount(account);
 		when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
-		operationService.deposit("bob@bob.com", 1000);
+		operationService.deposit("bob@bob.com", operationDTO);
 		verify(accountRepository, Mockito.times(1)).save(any(Account.class));
 	}
 
 	@Test
 	void withdrawalThrowsUserNotFoundExceptionWhenEmailNotFound() {
+		OperationDTO operationDTO = new OperationDTO();
+		operationDTO.setAmount(1000.0);
 		when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
-		assertThrows(UserNotFoundException.class, () -> operationService.withdrawal("bob@bob.com", 1000));
+		assertThrows(UserNotFoundException.class, () -> operationService.withdrawal("bob@bob.com", operationDTO));
 	}
 
 	@Test
 	void withdrawalCallSaveWhenEmailFound() throws UserNotFoundException, OperationForbiddenException {
+		OperationDTO operationDTO = new OperationDTO();
+		operationDTO.setAmount(1000.0);
 		Account account = new Account();
 		account.setBalance(2000);
 		account.setOperations(new ArrayList<>());
 		User user = new User();
 		user.setAccount(account);
 		when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
-		operationService.withdrawal("bob@bob.com", 1000);
+		operationService.withdrawal("bob@bob.com", operationDTO);
 		verify(accountRepository, Mockito.times(1)).save(any(Account.class));
 	}
 
 	@Test
-	void withdrawalThrowsOperationForbiddenExceptionWhenBalanceNotEnough() throws UserNotFoundException, OperationForbiddenException {
+	void withdrawalThrowsOperationForbiddenExceptionWhenBalanceNotEnough() 
+			throws UserNotFoundException, OperationForbiddenException {
+		OperationDTO operationDTO = new OperationDTO();
+		operationDTO.setAmount(1000.0);
 		Account account = new Account();
 		account.setBalance(500);
 		account.setOperations(new ArrayList<>());
 		User user = new User();
 		user.setAccount(account);
 		when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
-		assertThrows(OperationForbiddenException.class, () -> operationService.withdrawal("bob@bob.com", 1000));
+		assertThrows(OperationForbiddenException.class, () -> operationService.withdrawal("bob@bob.com", operationDTO));
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.tipikae.paymybuddy.unit.controller;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
@@ -42,6 +43,7 @@ class ConnectionControllerTest {
 		rightNewContactDTO = new NewContactDTO();
 		rightNewContactDTO.setDestEmail("bob@bob.com");
 		wrongNewContactDTO = new NewContactDTO();
+		wrongNewContactDTO.setDestEmail(null);
 	}
 
 	@WithMockUser
@@ -86,7 +88,8 @@ class ConnectionControllerTest {
 	@WithMockUser
 	@Test
 	void addContactReturnsErrorWhenEmailNotFound() throws Exception {
-		doThrow(UserNotFoundException.class).when(connectionService).addConnection(anyString(), anyString());
+		doThrow(UserNotFoundException.class)
+			.when(connectionService).addConnection(anyString(), any(NewContactDTO.class));
 		mockMvc.perform(post("/saveContact")
 				.flashAttr("newContactDTO", rightNewContactDTO))
 			.andExpect(status().is(302))
@@ -96,7 +99,8 @@ class ConnectionControllerTest {
 	@WithMockUser
 	@Test
 	void addContactReturnsErrorWhenEmailEquals() throws Exception {
-		doThrow(ConnectionForbiddenException.class).when(connectionService).addConnection(anyString(), anyString());
+		doThrow(ConnectionForbiddenException.class)
+			.when(connectionService).addConnection(anyString(), any(NewContactDTO.class));
 		mockMvc.perform(post("/saveContact")
 				.flashAttr("newContactDTO", rightNewContactDTO))
 			.andExpect(status().is(302))
