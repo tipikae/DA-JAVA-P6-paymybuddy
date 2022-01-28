@@ -17,7 +17,7 @@ import com.tipikae.paymybuddy.entities.Operation;
 import com.tipikae.paymybuddy.entities.Transfer;
 import com.tipikae.paymybuddy.entities.User;
 import com.tipikae.paymybuddy.entities.Withdrawal;
-import com.tipikae.paymybuddy.exception.OperationForbiddenException;
+import com.tipikae.paymybuddy.exceptions.OperationForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.repositories.IAccountRepository;
 import com.tipikae.paymybuddy.repositories.IUserRepository;

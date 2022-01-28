@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.tipikae.paymybuddy.controllers.OperationController;
 import com.tipikae.paymybuddy.dto.OperationDTO;
-import com.tipikae.paymybuddy.exception.OperationForbiddenException;
+import com.tipikae.paymybuddy.exceptions.OperationForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.services.IOperationService;
 

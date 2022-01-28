@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.tipikae.paymybuddy.controllers.ConnectionController;
 import com.tipikae.paymybuddy.dto.ContactDTO;
 import com.tipikae.paymybuddy.dto.NewContactDTO;
-import com.tipikae.paymybuddy.exception.ConnectionForbiddenException;
+import com.tipikae.paymybuddy.exceptions.ConnectionForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.services.IConnectionService;
 

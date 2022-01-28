@@ -2,7 +2,7 @@ package com.tipikae.paymybuddy.services;
 
 import com.tipikae.paymybuddy.dto.ContactDTO;
 import com.tipikae.paymybuddy.dto.NewContactDTO;
-import com.tipikae.paymybuddy.exception.ConnectionForbiddenException;
+import com.tipikae.paymybuddy.exceptions.ConnectionForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 
 /**

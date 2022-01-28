@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.tipikae.paymybuddy.dto.NewTransferDTO;
 import com.tipikae.paymybuddy.dto.OperationDTO;
-import com.tipikae.paymybuddy.exception.OperationForbiddenException;
+import com.tipikae.paymybuddy.exceptions.OperationForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.services.IOperationService;
 
