@@ -9,10 +9,10 @@
 </head>
 <body>
 	<div layout:fragment="content">
-		<section  th:object="${contact}">
+		<section th:object="${contact}">
 			<div class="col-md-6">
 				<div class="" th:if="*{connections}">
-					<h1>Connection list</h1>
+					<h2>Connection list</h2>
 					<div>
 						<table class="table table-striped">
 							<tr>
@@ -31,6 +31,7 @@
 			</div>
 			<div class="col-md-6">
 				<div class="" th:if="*{others}">
+					<h2>Add a connection</h2>
 					<form th:action="@{/saveContact}" method="post">
 						<select name="destEmail">
 							<option value="">Select a contact</option>

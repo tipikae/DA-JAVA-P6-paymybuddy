@@ -21,16 +21,6 @@ class UserRepositoryIT {
 	private IUserRepository userRepository;
 
 	@Test
-	void testCount() {
-		assertEquals(3, userRepository.count());
-	}
-
-	@Test
-	void testFindAll() {
-		assertEquals(3, userRepository.findAll().size());
-	}
-
-	@Test
 	void testFindByEmail() {
 		Optional<User> optional = userRepository.findByEmail("alice@alice.com");
 		assertTrue(optional.isPresent());

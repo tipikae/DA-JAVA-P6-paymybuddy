@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.tipikae.paymybuddy.dto.OperationDTO;
+import com.tipikae.paymybuddy.dto.TransferDTO;
 import com.tipikae.paymybuddy.exception.OperationForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.services.IOperationService;
@@ -78,8 +79,11 @@ public class OperationController {
 		return "redirect:/home?success=Operation succeed.";
 	}
 	
-	@PostMapping("/transfer")
-	public String saveTransfer() {
+	@PostMapping("/saveTransfer")
+	public String saveTransfer(
+			@ModelAttribute("transfer") @Valid TransferDTO transferDTO,
+			Errors errors,
+			HttpServletRequest request) {
 		LOGGER.debug("Saving transfer");
 		return null;
 		
