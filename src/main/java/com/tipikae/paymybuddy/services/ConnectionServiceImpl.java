@@ -41,7 +41,7 @@ public class ConnectionServiceImpl implements IConnectionService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ContactDTO getContact(String srcEmail) throws UserNotFoundException {
+	public ContactDTO getAllConnections(String srcEmail) throws UserNotFoundException {
 		LOGGER.debug("Getting connections: source email=" + srcEmail);
 		Optional<User> optional = userRepository.findByEmail(srcEmail);
 		if(!optional.isPresent()) {
@@ -51,7 +51,7 @@ public class ConnectionServiceImpl implements IConnectionService {
 		
 		User srcUser = optional.get();
 		List<ConnectionDTO> connections = getConnections(srcUser);
-		List<ConnectionDTO> others = getOthers(srcUser.getEmail());
+		List<ConnectionDTO> others = getOthers(srcUser);
 		ContactDTO contactDTO = new ContactDTO();
 		contactDTO.setConnections(connections);
 		contactDTO.setOthers(others);
@@ -72,9 +72,9 @@ public class ConnectionServiceImpl implements IConnectionService {
 		return connections;
 	}
 	
-	private List<ConnectionDTO> getOthers(String srcEmail) {
+	private List<ConnectionDTO> getOthers(User srcUser) {
 		List<ConnectionDTO> others = new ArrayList<>();
-		List<User> users = userRepository.getPotentialFriends(srcEmail);
+		List<User> users = userRepository.getPotentialConnections(srcUser.getId());
 		for(User user: users) {
 			ConnectionDTO otherDTO = new ConnectionDTO();
 			otherDTO.setEmail(user.getEmail());
@@ -110,7 +110,7 @@ public class ConnectionServiceImpl implements IConnectionService {
 			throw new UserNotFoundException("User not found.");
 		}
 		
-		ConnectionId connectionId = new ConnectionId(optionalSrc.get().getEmail(), optionalDest.get().getEmail());
+		ConnectionId connectionId = new ConnectionId(optionalSrc.get().getId(), optionalDest.get().getId());
 		Connection connection = new Connection();
 		connection.setId(connectionId);
 		connection.setSrcUser(optionalSrc.get());

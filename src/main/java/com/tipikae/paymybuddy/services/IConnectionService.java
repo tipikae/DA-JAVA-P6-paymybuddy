@@ -19,7 +19,7 @@ public interface IConnectionService {
 	 * @return ContactDTO
 	 * @throws UserNotFoundException
 	 */
-	ContactDTO getContact(String srcEmail) throws UserNotFoundException;
+	ContactDTO getAllConnections(String srcEmail) throws UserNotFoundException;
 	
 	/**
 	 * Add a new Connection.
