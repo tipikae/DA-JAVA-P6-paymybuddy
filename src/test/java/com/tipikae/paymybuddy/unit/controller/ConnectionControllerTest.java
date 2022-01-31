@@ -1,11 +1,9 @@
 package com.tipikae.paymybuddy.unit.controller;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -16,23 +14,24 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.tipikae.paymybuddy.controllers.ConnectionController;
 import com.tipikae.paymybuddy.dto.ContactDTO;
 import com.tipikae.paymybuddy.dto.NewContactDTO;
-import com.tipikae.paymybuddy.exceptions.ConnectionForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.services.IConnectionService;
 
 @WebMvcTest(controllers = ConnectionController.class)
 class ConnectionControllerTest {
-	
-	@Autowired
+
+    @Autowired
 	private MockMvc mockMvc;
-	
+    
+    @MockBean
+	private UserDetailsService userDetailsService;
 	@MockBean
 	private IConnectionService connectionService;
 	
