@@ -29,6 +29,6 @@ public interface IConnectionRepository extends JpaRepository<Connection, Connect
 		value = "SELECT * FROM connection WHERE id_user_src = :idSrc AND id_user_dest = :idDest",
 		nativeQuery = true)
 	Optional<Connection> findByConnectionId(
-			@Param("idSrc") String idSrc, 
-			@Param("idDest") String idDest);
+			@Param("idSrc") int idSrc, 
+			@Param("idDest") int idDest);
 }

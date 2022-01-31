@@ -53,7 +53,7 @@ class ConnectionControllerTest {
 		ContactDTO contactDTO = new ContactDTO();
 		contactDTO.setConnections(new ArrayList<>());
 		contactDTO.setOthers(new ArrayList<>());
-		when(connectionService.getContact(anyString())).thenReturn(contactDTO);
+		when(connectionService.getAllConnections(anyString())).thenReturn(contactDTO);
 		mockMvc.perform(get("/contact"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("contact"));
@@ -62,7 +62,7 @@ class ConnectionControllerTest {
 	@WithMockUser
 	@Test
 	void getContactReturnsErrorWhenEmailNotFound() throws Exception {
-		doThrow(UserNotFoundException.class).when(connectionService).getContact(anyString());
+		doThrow(UserNotFoundException.class).when(connectionService).getAllConnections(anyString());
 		mockMvc.perform(get("/contact"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("error/404"));

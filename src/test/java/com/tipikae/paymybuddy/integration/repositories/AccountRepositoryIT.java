@@ -19,11 +19,11 @@ class AccountRepositoryIT {
 
 	@Test
 	void testGetBalance() {
-		assertEquals(1000.0, accountRepository.findByEmailUser("alice@alice.com").get().getBalance());
+		assertEquals(1000.0, accountRepository.findByIdUser(1).get().getBalance());
 	}
 
 	@Test
 	void testGetFirstname() {
-		assertEquals("Alice", accountRepository.findByEmailUser("alice@alice.com").get().getUser().getFirstname());
+		assertEquals("Alice", accountRepository.findByIdUser(1).get().getUser().getFirstname());
 	}
 }

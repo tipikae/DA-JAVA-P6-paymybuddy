@@ -50,13 +50,13 @@ class ConnectionServiceTest {
 		connections.add(connection);
 		alice.setConnections(connections);
 		when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(alice));
-		assertEquals("bob@bob.com", connectionService.getContact("alice@alice.com").getConnections().get(0).getEmail());
+		assertEquals("bob@bob.com", connectionService.getAllConnections("alice@alice.com").getConnections().get(0).getEmail());
 	}
 
 	@Test
 	void getConnectionsThrowsUserNotFoundExceptionWhenEmailNotFound() {
 		when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
-		assertThrows(UserNotFoundException.class, () -> connectionService.getContact("bob@bob.com"));
+		assertThrows(UserNotFoundException.class, () -> connectionService.getAllConnections("bob@bob.com"));
 	}
 	
 	@Test

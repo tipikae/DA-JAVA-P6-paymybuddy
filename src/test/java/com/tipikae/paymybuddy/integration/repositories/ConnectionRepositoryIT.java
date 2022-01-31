@@ -19,10 +19,10 @@ class ConnectionRepositoryIT {
 
 	@Test
 	void testFindByConnectionId() {
-		String emailSrc = "alice@alice.com";
-		String emailDest = "bob@bob.com";
-		assertEquals(emailSrc, 
-				connectionRepository.findByConnectionId(emailSrc, emailDest).get().getSrcUser().getEmail());
+		int idSrc = 1;
+		int idDest = 2;
+		assertEquals(idSrc, 
+				connectionRepository.findByConnectionId(idSrc, idDest).get().getSrcUser().getId());
 	}
 
 }

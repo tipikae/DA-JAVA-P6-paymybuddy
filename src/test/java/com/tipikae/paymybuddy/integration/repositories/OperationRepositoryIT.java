@@ -25,13 +25,13 @@ class OperationRepositoryIT {
 
 	@Test
 	void testFindByAccount() {
-		Optional<Account> account = accountRepository.findByEmailUser("alice@alice.com");
-		assertEquals("alice@alice.com", account.get().getEmailUser());
+		Optional<Account> account = accountRepository.findByIdUser(1);
+		assertEquals(1, account.get().getIdUser());
 		assertEquals(3, operationRepository.findByAccount(account.get()).size());
 	}
 	
 	@Test
 	void testFindTransfersByEmailSrc() {
-		assertEquals(2, operationRepository.findTransfersByEmailSrc("alice@alice.com").size());
+		assertEquals(2, operationRepository.findTransfersByIdSrc(1).size());
 	}
 }
