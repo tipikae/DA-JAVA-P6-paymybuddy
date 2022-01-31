@@ -44,7 +44,7 @@ public class ConnectionServiceImpl implements IConnectionService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ContactDTO getAllConnections(String srcEmail) throws UserNotFoundException {
+	public ContactDTO getConnectionsByEmail(String srcEmail) throws UserNotFoundException {
 		LOGGER.debug("Getting connections: source email=" + srcEmail);
 		Optional<User> optional = userRepository.findByEmail(srcEmail);
 		if(!optional.isPresent()) {
