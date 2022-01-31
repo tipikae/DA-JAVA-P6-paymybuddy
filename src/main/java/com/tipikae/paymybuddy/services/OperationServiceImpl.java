@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.tipikae.paymybuddy.dto.NewTransferDTO;
@@ -23,7 +24,6 @@ import com.tipikae.paymybuddy.exceptions.OperationForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.repositories.IAccountRepository;
 import com.tipikae.paymybuddy.repositories.IUserRepository;
-import com.tipikae.paymybuddy.util.Constant;
 
 /**
  * Operation Service implementation.
@@ -37,10 +37,23 @@ public class OperationServiceImpl implements IOperationService {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(OperationServiceImpl.class);
 	
+	/**
+	 * User repository.
+	 */
 	@Autowired
 	private IUserRepository userRepository;
+	
+	/**
+	 * Account repository.
+	 */
 	@Autowired
 	private IAccountRepository accountRepository;
+	
+	/**
+	 * Rate property from application.properties.
+	 */
+	@Value("#{systemProperties['paymybuddy.rate']}")
+	private double rate;
 
 	/**
 	 * {@inheritDoc}
@@ -125,11 +138,11 @@ public class OperationServiceImpl implements IOperationService {
 			throw new UserNotFoundException("User not found.");
 		}
 
-		Account account = optionalSrc.get().getAccount();
-		List<Operation> operations = account.getOperations();
-		double fee = amount * Constant.RATE;
+		Account accountSrc = optionalSrc.get().getAccount();
+		List<Operation> operations = accountSrc.getOperations();
+		double fee = amount * rate;
 		Transfer transfer = new Transfer();
-		transfer.setAccount(account);
+		transfer.setAccount(accountSrc);
 		transfer.setAmount(amount);
 		transfer.setDateOperation(new Date());
 		transfer.setDescription(description);
@@ -137,9 +150,11 @@ public class OperationServiceImpl implements IOperationService {
 		transfer.setSrcUser(optionalSrc.get());
 		transfer.setFee(fee);
 		operations.add(transfer);
-		account.setOperations(operations);
-		account.setBalance(account.getBalance() - amount - fee);
-		accountRepository.save(account);
+		accountSrc.setOperations(operations);
+		accountSrc.setBalance(accountSrc.getBalance() - amount - fee);
+		accountRepository.save(accountSrc);
+		// TODO
+		// add amount to dest account
 	}
 
 }
