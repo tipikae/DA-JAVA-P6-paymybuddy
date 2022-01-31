@@ -29,7 +29,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
-	/**
+    /**
 	 * UserRepository interface.
 	 */
 	@Autowired

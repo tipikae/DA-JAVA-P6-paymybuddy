@@ -1,6 +1,5 @@
 package com.tipikae.paymybuddy.config;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,9 +23,9 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	@Autowired
-	protected UserDetailsService userDetailsService;
-
+    @Autowired
+	private UserDetailsService userDetailsService;
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -53,8 +52,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 			.antMatchers("/home", "/profile", "/transfer", "contact", "/saveContact", "/saveOperation")
 			.hasRole("USER");
-		http.authorizeRequests().antMatchers("/admin").hasRole("ADMIN");
-		http.authorizeRequests().antMatchers("/user/registration").permitAll();
+		http.authorizeRequests().antMatchers("/admin")
+			.hasRole("ADMIN");
+		http.authorizeRequests().antMatchers("/user/registration")
+			.permitAll();
 		http.exceptionHandling().accessDeniedPage("/403");
 	}
 
