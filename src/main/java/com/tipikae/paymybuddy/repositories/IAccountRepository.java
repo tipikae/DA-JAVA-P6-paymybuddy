@@ -17,15 +17,15 @@ import com.tipikae.paymybuddy.entities.Account;
 public interface IAccountRepository extends JpaRepository<Account, Integer> {
 
 	/**
-	 * Find an account by email.
-	 * @param email
+	 * Find an account by user id.
+	 * @param id
 	 * @return Optional<Account>
 	 */
-	Optional<Account> findByEmailUser(String email);
+	Optional<Account> findByIdUser(int id);
 	
 	/**
-	 * Delete an account by email.
-	 * @param email
+	 * Delete an account by user id.
+	 * @param id
 	 */
-	void deleteByEmailUser(String email);
+	void deleteByIdUser(int id);
 }

@@ -21,14 +21,14 @@ public interface IConnectionRepository extends JpaRepository<Connection, Connect
 
 	/**
 	 * Find a connection
-	 * @param emailSrc
-	 * @param emailDest
+	 * @param idSrc
+	 * @param idDest
 	 * @return Optional<ConnectionId>
 	 */
 	@Query(
-		value = "SELECT * FROM connection WHERE email_user_src = :emailSrc AND email_user_dest = :emailDest",
+		value = "SELECT * FROM connection WHERE id_user_src = :idSrc AND id_user_dest = :idDest",
 		nativeQuery = true)
 	Optional<Connection> findByConnectionId(
-			@Param("emailSrc") String emailSrc, 
-			@Param("emailDest") String emailDest);
+			@Param("idSrc") String idSrc, 
+			@Param("idDest") String idDest);
 }
