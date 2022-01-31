@@ -1,5 +1,7 @@
 package com.tipikae.paymybuddy.controllers;
 
+import java.security.Principal;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -15,8 +17,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.tipikae.paymybuddy.dto.HomeDTO;
+import com.tipikae.paymybuddy.dto.ProfileDTO;
+import com.tipikae.paymybuddy.dto.TransferDTO;
 import com.tipikae.paymybuddy.dto.UserDTO;
 import com.tipikae.paymybuddy.exceptions.UserAlreadyExistException;
+import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.services.IUserService;
 
 /**
@@ -91,5 +97,75 @@ public class UserController {
 
 		LOGGER.debug("Registration succeed.");
 		return new ModelAndView("registration_success", "", null);
+	}
+	
+	/**
+	 * Get the user profile page.
+	 * @param request
+	 * @param model
+	 * @return String
+	 */
+	@GetMapping("/profile")
+	public String getProfile(HttpServletRequest request, Model model) {
+		LOGGER.debug("Get profile");
+		Principal principal = request.getUserPrincipal();
+		try {
+			ProfileDTO profile = userService.getProfileDetails(principal.getName());
+			model.addAttribute("profile", profile);
+		} catch (UserNotFoundException e) {
+			LOGGER.debug("Get profile: UserNotFoundException: " + e.getMessage());
+			return "error/404";
+		} catch(Exception e) {
+			LOGGER.debug("Get profile: Exception: " + e.getMessage());
+			return "error/400";
+		}
+		return "profile";
+	}
+	
+	/**
+	 * Get transfers page.
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@GetMapping("/transfer")
+	public String getTransfer(HttpServletRequest request, Model model) {
+		LOGGER.debug("Get transfer");
+		try {
+			Principal principal = request.getUserPrincipal();
+			TransferDTO transferDTO = userService.getTransfersDetails(principal.getName());
+			model.addAttribute("transfer", transferDTO);
+		} catch (UserNotFoundException e) {
+			LOGGER.debug("User not found: " + e.getMessage());
+			return "error/404";
+		} catch (Exception e) {
+			LOGGER.debug("Unable to process getTransfer: " + e.getMessage());
+			return "error/400";
+		}
+		return ("transfer");
+	}
+	
+	/**
+	 * Get home mapping.
+	 * @param request
+	 * @param model
+	 * @return String
+	 */
+	@GetMapping("/home")
+	public String getHome(HttpServletRequest request, Model model) {
+		LOGGER.debug("getHome");
+		Principal principal = request.getUserPrincipal();
+		try {
+			HomeDTO homeDTO = userService.getHomeDetails(principal.getName());
+			model.addAttribute("home", homeDTO);
+		} catch (UserNotFoundException e) {
+			LOGGER.debug("Get home: UserNotFoundException: " + e.getMessage());
+			return "error/404";
+		} catch(Exception e) {
+			LOGGER.debug("Get home: Exception: " + e.getMessage());
+			return "error/400";
+		}
+		
+		return "home";
 	}
 }

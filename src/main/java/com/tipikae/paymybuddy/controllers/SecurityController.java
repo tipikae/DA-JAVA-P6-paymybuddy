@@ -21,11 +21,6 @@ public class SecurityController {
 		return "login";
 	}
 
-	@GetMapping("/admin")
-	public String admin() {
-		return "admin";
-	}
-
 	@GetMapping("/403")
 	public String accessDenied() {
 		return "error/403";
