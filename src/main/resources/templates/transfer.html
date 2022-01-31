@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{template1}">
+<head>
+<meta charset="UTF-8">
+<title>Transfer</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<section  th:object="${transfer}">
+			<div class="col-md-12">
+				<div>
+					<a th:href="@{/contact}" class="btn btn-primary">Add a connection</a>
+				</div>
+				<div th:if="*{connections}">
+					<h2>Send money</h2>
+					<form th:action="@{/saveTransfer}" method="post">
+						<select name="destEmail">
+							<option value="">Select a connection</option>
+							<option 
+								th:each="c:*{connections}" 
+								th:value="${c.email}" 
+								th:text="${c.firstname} + ' ' + ${c.lastname} + ' ' + ${c.email}">
+							</option>
+						</select>
+						<label for="amout">Amount</label>
+						<input type="number" name="amount" min="0" step="1">
+						<label for="description">Description</label>
+						<input type="text" name="description">
+						<div class="red" th:text="${#httpServletRequest.getParameter('error')}"></div>
+						<div class="green" th:text="${#httpServletRequest.getParameter('success')}"></div>
+						<div>
+						    <button type="submit" class="btn btn-primary">Pay</button>
+						</div>
+					</form>
+				</div>
+				<div class="" th:if="*{transactions}">
+					<h2>My transactions</h2>
+					<div>
+						<table class="table table-striped">
+							<tr>
+								<th>Connections</th>
+								<th>Description</th>
+								<th>Amount</th>
+							</tr>
+							<tr th:each="t:*{transactions}">
+								<td th:text="${t.connection}"></td>
+								<td th:text="${t.description}"></td>
+								<td th:text="${t.amount}"></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</body>
+</html>

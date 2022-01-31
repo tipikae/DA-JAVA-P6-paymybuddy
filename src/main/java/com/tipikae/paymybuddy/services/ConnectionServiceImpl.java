@@ -15,7 +15,7 @@ import com.tipikae.paymybuddy.dto.NewContactDTO;
 import com.tipikae.paymybuddy.entities.Connection;
 import com.tipikae.paymybuddy.entities.ConnectionId;
 import com.tipikae.paymybuddy.entities.User;
-import com.tipikae.paymybuddy.exception.ConnectionForbiddenException;
+import com.tipikae.paymybuddy.exceptions.ConnectionForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.repositories.IConnectionRepository;
 import com.tipikae.paymybuddy.repositories.IUserRepository;

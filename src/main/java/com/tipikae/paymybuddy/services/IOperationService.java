@@ -1,7 +1,8 @@
 package com.tipikae.paymybuddy.services;
 
+import com.tipikae.paymybuddy.dto.NewTransferDTO;
 import com.tipikae.paymybuddy.dto.OperationDTO;
-import com.tipikae.paymybuddy.exception.OperationForbiddenException;
+import com.tipikae.paymybuddy.exceptions.OperationForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 
 /**
@@ -26,13 +27,14 @@ public interface IOperationService {
 	 * @param operationDTO
 	 * @throws UserNotFoundException, OperationForbiddenException
 	 */
-	void withdrawal(String email, OperationDTO operationDTO) throws UserNotFoundException, OperationForbiddenException;
+	void withdrawal(String email, OperationDTO operationDTO) 
+			throws UserNotFoundException, OperationForbiddenException;
 	
 	/**
 	 * Transfer money between friends.
 	 * @param emailSrc
-	 * @param emailDest
-	 * @param amount
+	 * @param newTransferDTO
 	 */
-	void transfer(String emailSrc, String emailDest, double amount);
+	void transfer(String emailSrc, NewTransferDTO newTransferDTO) 
+			throws UserNotFoundException, OperationForbiddenException;
 }

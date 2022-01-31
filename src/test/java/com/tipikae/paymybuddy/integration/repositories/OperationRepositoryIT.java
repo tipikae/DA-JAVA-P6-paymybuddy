@@ -24,14 +24,14 @@ class OperationRepositoryIT {
 	private IAccountRepository accountRepository;
 
 	@Test
-	void testFindAll() {
-		assertEquals(5, operationRepository.findAll().size());
-	}
-
-	@Test
 	void testFindByAccount() {
 		Optional<Account> account = accountRepository.findByEmailUser("alice@alice.com");
 		assertEquals("alice@alice.com", account.get().getEmailUser());
 		assertEquals(3, operationRepository.findByAccount(account.get()).size());
+	}
+	
+	@Test
+	void testFindTransfersByEmailSrc() {
+		assertEquals(2, operationRepository.findTransfersByEmailSrc("alice@alice.com").size());
 	}
 }

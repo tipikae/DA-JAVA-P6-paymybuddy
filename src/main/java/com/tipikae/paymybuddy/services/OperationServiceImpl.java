@@ -9,16 +9,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tipikae.paymybuddy.dto.NewTransferDTO;
 import com.tipikae.paymybuddy.dto.OperationDTO;
 import com.tipikae.paymybuddy.entities.Account;
 import com.tipikae.paymybuddy.entities.Deposit;
 import com.tipikae.paymybuddy.entities.Operation;
+import com.tipikae.paymybuddy.entities.Transfer;
 import com.tipikae.paymybuddy.entities.User;
 import com.tipikae.paymybuddy.entities.Withdrawal;
-import com.tipikae.paymybuddy.exception.OperationForbiddenException;
+import com.tipikae.paymybuddy.exceptions.OperationForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.repositories.IAccountRepository;
 import com.tipikae.paymybuddy.repositories.IUserRepository;
+import com.tipikae.paymybuddy.util.Constant;
 
 /**
  * Operation Service implementation.
@@ -95,9 +98,45 @@ public class OperationServiceImpl implements IOperationService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void transfer(String emailSrc, String emailDest, double amount) {
+	public void transfer(String emailSrc, NewTransferDTO newTransferDTO) 
+			throws UserNotFoundException, OperationForbiddenException {
+		String emailDest = newTransferDTO.getDestEmail();
+		String description = newTransferDTO.getDescription();
+		double amount = newTransferDTO.getAmount();
+		LOGGER.debug("Transfer: emailSrc=" + emailSrc + " emailDest=" + emailDest + " amount=" + amount);
 		
+		if(emailSrc.equals(emailDest)) {
+			LOGGER.debug("EmailSrc and emailDest are identical");
+			throw new OperationForbiddenException("EmailSrc and emailDest are identical");
+		}
+		
+		Optional<User> optionalSrc = userRepository.findByEmail(emailSrc);
+		if(!optionalSrc.isPresent()) {
+			LOGGER.debug("Transfer: userSrc with email=" + emailSrc + " not found.");
+			throw new UserNotFoundException("User not found.");
+		}
+		
+		Optional<User> optionalDest = userRepository.findByEmail(emailDest);
+		if(!optionalDest.isPresent()) {
+			LOGGER.debug("Transfer: userDest with email=" + emailDest + " not found.");
+			throw new UserNotFoundException("User not found.");
+		}
 
+		Account account = optionalSrc.get().getAccount();
+		List<Operation> operations = account.getOperations();
+		double fee = amount * Constant.RATE;
+		Transfer transfer = new Transfer();
+		transfer.setAccount(account);
+		transfer.setAmount(amount);
+		transfer.setDateOperation(new Date());
+		transfer.setDescription(description);
+		transfer.setDestUser(optionalDest.get());
+		transfer.setSrcUser(optionalSrc.get());
+		transfer.setFee(fee);
+		operations.add(transfer);
+		account.setOperations(operations);
+		account.setBalance(account.getBalance() - amount - fee);
+		accountRepository.save(account);
 	}
 
 }

@@ -7,12 +7,17 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 /**
  * Entity class for transfer operations.
  * @author tipikae
  * @version 1.0
  *
  */
+@Data
+@EqualsAndHashCode(callSuper=false)
 @Entity
 @DiscriminatorValue("TRA")
 public class Transfer extends Operation {
@@ -37,7 +42,10 @@ public class Transfer extends Operation {
 		super();
 	}
 	
-	public Transfer(int number, Date dateOperation, double amount, String description, double fee, Account account) {
+	public Transfer(int number, Date dateOperation, double amount, String description, 
+			double fee, Account account, User scrUser, User destUSer) {
 		super(number, dateOperation, amount, description, fee, account);
+		this.srcUser = scrUser;
+		this.destUser = destUSer;
 	}
 }
