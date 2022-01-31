@@ -28,14 +28,14 @@ public class Transfer extends Operation {
 	 * The source User object.
 	 */
 	@ManyToOne
-	@JoinColumn(name = "email_src_connection")
+	@JoinColumn(name = "id_src_connection")
 	private User srcUser;
 
 	/**
 	 * The destination User object.
 	 */
 	@ManyToOne
-	@JoinColumn(name = "email_dest_connection")
+	@JoinColumn(name = "id_dest_connection")
 	private User destUser;
 	
 	public Transfer() {

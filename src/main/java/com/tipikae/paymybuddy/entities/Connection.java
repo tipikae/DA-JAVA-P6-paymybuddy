@@ -34,15 +34,15 @@ public class Connection implements Serializable {
 	 * Source User object.
 	 */
 	@ManyToOne
-	@MapsId("emailUserSrc")
-	@JoinColumn(name = "email_user_src")
+	@MapsId("idUserSrc")
+	@JoinColumn(name = "id_user_src")
 	private User srcUser;
 
 	/**
 	 * Destination User object.
 	 */
 	@ManyToOne
-	@MapsId("emailUserDest")
-	@JoinColumn(name = "email_user_dest")
+	@MapsId("idUserDest")
+	@JoinColumn(name = "id_user_dest")
 	private User destUser;
 }

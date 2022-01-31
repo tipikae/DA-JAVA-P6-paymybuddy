@@ -30,12 +30,20 @@ import lombok.Data;
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Id
+	 */
+	@Id
+	@Column(name = "id")
+	private int id;
 
 	/**
 	 * Email.
 	 */
-	@Id
-	@Column(name = "email")
+	@Column(
+			name = "email",
+			unique = true)
 	private String email;
 
 	/**
@@ -62,7 +70,7 @@ public class User implements Serializable {
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 			  name = "users_roles", 
-			  joinColumns = @JoinColumn(name = "email_user"), 
+			  joinColumns = @JoinColumn(name = "id_user"), 
 			  inverseJoinColumns = @JoinColumn(name = "role"))
 	private List<Role> roles;
 

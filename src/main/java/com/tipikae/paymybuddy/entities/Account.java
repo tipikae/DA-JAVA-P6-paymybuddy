@@ -30,11 +30,11 @@ public class Account implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * User email.
+	 * User id.
 	 */
 	@Id
-	@Column(name = "email_user")
-	private String emailUser;
+	@Column(name = "id_user")
+	private int idUser;
 
 	/**
 	 * Created date.
@@ -53,7 +53,7 @@ public class Account implements Serializable {
 	 */
 	@OneToOne
 	@MapsId
-	@JoinColumn(name = "email_user")
+	@JoinColumn(name = "id_user")
 	private User user;
 
 	/**

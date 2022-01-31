@@ -72,7 +72,7 @@ public abstract class Operation implements Serializable {
 	 * Account.
 	 */
 	@ManyToOne
-	@JoinColumn(name = "email_account")
+	@JoinColumn(name = "id_account")
 	private Account account;
 	
 	public Operation() {
