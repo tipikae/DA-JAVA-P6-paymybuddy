@@ -3,7 +3,7 @@ package com.tipikae.paymybuddy.validation;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import com.tipikae.paymybuddy.dto.UserDTO;
+import com.tipikae.paymybuddy.dto.NewUserDTO;
 
 /**
  * PasswordMatchesValidator implementation of ConstraintValidator<A,T>
@@ -18,7 +18,7 @@ public class PasswordMatchesValidator implements ConstraintValidator<PasswordMat
 	 */
 	@Override
 	public boolean isValid(Object obj, ConstraintValidatorContext context) {
-		UserDTO userDTO = (UserDTO) obj;
+		NewUserDTO userDTO = (NewUserDTO) obj;
 		return userDTO.getPassword().equals(userDTO.getConfirmedPassword());
 	}
 

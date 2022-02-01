@@ -14,7 +14,7 @@ import lombok.Data;
  *
  */
 @Data
-public class OperationDTO implements Serializable {
+public class NewOperationDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 

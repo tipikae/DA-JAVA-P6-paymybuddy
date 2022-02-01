@@ -19,7 +19,7 @@ import com.tipikae.paymybuddy.dto.HomeDTO;
 import com.tipikae.paymybuddy.dto.ProfileDTO;
 import com.tipikae.paymybuddy.dto.TransactionDTO;
 import com.tipikae.paymybuddy.dto.TransferDTO;
-import com.tipikae.paymybuddy.dto.UserDTO;
+import com.tipikae.paymybuddy.dto.NewUserDTO;
 import com.tipikae.paymybuddy.entities.Account;
 import com.tipikae.paymybuddy.entities.Connection;
 import com.tipikae.paymybuddy.entities.Role;
@@ -43,12 +43,13 @@ public class UserServiceImpl implements IUserService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
 	/**
-	 * UserRepository interface.
+	 * UserRepository.
 	 */
 	@Autowired
 	private IUserRepository userRepository;
+	
 	/**
-	 * OperationRepository interface.
+	 * OperationRepository.
 	 */
 	@Autowired
 	private IOperationRepository operationRepository;
@@ -63,7 +64,7 @@ public class UserServiceImpl implements IUserService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public User registerNewUser(UserDTO userDTO) throws UserAlreadyExistException {
+	public User registerNewUser(NewUserDTO userDTO) throws UserAlreadyExistException {
 		LOGGER.debug("Registering new user");
 		if(emailExists(userDTO.getEmail())) {
 			LOGGER.debug("An user with email address: " + userDTO.getEmail()

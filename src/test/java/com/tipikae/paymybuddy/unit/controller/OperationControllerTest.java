@@ -17,7 +17,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.tipikae.paymybuddy.controllers.OperationController;
-import com.tipikae.paymybuddy.dto.OperationDTO;
+import com.tipikae.paymybuddy.dto.NewOperationDTO;
 import com.tipikae.paymybuddy.exceptions.OperationForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.services.IOperationService;
@@ -33,21 +33,21 @@ class OperationControllerTest {
 	@MockBean
 	private IOperationService operationService;
 	
-	private static OperationDTO rightDepOperationDTO;
-	private static OperationDTO rightWitOperationDTO;
-	private static OperationDTO wrongOperationDTO;
+	private static NewOperationDTO rightDepOperationDTO;
+	private static NewOperationDTO rightWitOperationDTO;
+	private static NewOperationDTO wrongOperationDTO;
 	
 	@BeforeAll
 	private static void setUp() {
-		rightDepOperationDTO = new OperationDTO();
+		rightDepOperationDTO = new NewOperationDTO();
 		rightDepOperationDTO.setTypeOperation("DEP");
 		rightDepOperationDTO.setAmount(1000.0);
 		
-		rightWitOperationDTO = new OperationDTO();
+		rightWitOperationDTO = new NewOperationDTO();
 		rightWitOperationDTO.setTypeOperation("WIT");
 		rightWitOperationDTO.setAmount(500.0);
 		
-		wrongOperationDTO = new OperationDTO();
+		wrongOperationDTO = new NewOperationDTO();
 		wrongOperationDTO.setTypeOperation("DEP");
 		wrongOperationDTO.setAmount(-1000.0);
 	}
@@ -76,7 +76,7 @@ class OperationControllerTest {
 	@Test
 	void saveDepositOperationRedirectsHomeWhenNotFound() throws Exception {
 		doThrow(new UserNotFoundException("User not found."))
-			.when(operationService).deposit(anyString(), any(OperationDTO.class));
+			.when(operationService).deposit(anyString(), any(NewOperationDTO.class));
 		mockMvc.perform(post("/saveOperation")
 				.flashAttr("operation", rightDepOperationDTO))
 			.andExpect(status().is(302))
@@ -88,7 +88,7 @@ class OperationControllerTest {
 	@Test
 	void saveDepositOperationRedirectsHomeWhenForbidden() throws Exception {
 		doThrow(new OperationForbiddenException("Amount can't be more than balance."))
-			.when(operationService).withdrawal(anyString(), any(OperationDTO.class));
+			.when(operationService).withdrawal(anyString(), any(NewOperationDTO.class));
 		mockMvc.perform(post("/saveOperation")
 				.flashAttr("operation", rightWitOperationDTO))
 			.andExpect(status().is(302))

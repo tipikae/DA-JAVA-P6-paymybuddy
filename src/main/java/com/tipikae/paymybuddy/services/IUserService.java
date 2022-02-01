@@ -3,7 +3,7 @@ package com.tipikae.paymybuddy.services;
 import com.tipikae.paymybuddy.dto.HomeDTO;
 import com.tipikae.paymybuddy.dto.ProfileDTO;
 import com.tipikae.paymybuddy.dto.TransferDTO;
-import com.tipikae.paymybuddy.dto.UserDTO;
+import com.tipikae.paymybuddy.dto.NewUserDTO;
 import com.tipikae.paymybuddy.entities.User;
 import com.tipikae.paymybuddy.exceptions.UserAlreadyExistException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
@@ -22,7 +22,7 @@ public interface IUserService {
 	 * @return User
 	 * @throws UserAlreadyExistException
 	 */
-	User registerNewUser(UserDTO userDTO) throws UserAlreadyExistException;
+	User registerNewUser(NewUserDTO userDTO) throws UserAlreadyExistException;
 	
 	/**
 	 * Get home details.

@@ -16,7 +16,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.tipikae.paymybuddy.dto.OperationDTO;
+import com.tipikae.paymybuddy.dto.NewOperationDTO;
 import com.tipikae.paymybuddy.entities.Account;
 import com.tipikae.paymybuddy.entities.User;
 import com.tipikae.paymybuddy.exceptions.OperationForbiddenException;
@@ -38,7 +38,7 @@ class OperationServiceTest {
 
 	@Test
 	void depositThrowsUserNotFoundExceptionWhenEmailNotFound() {
-		OperationDTO operationDTO = new OperationDTO();
+		NewOperationDTO operationDTO = new NewOperationDTO();
 		operationDTO.setAmount(1000.0);
 		when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
 		assertThrows(UserNotFoundException.class, () -> operationService.deposit("bob@bob.com", operationDTO));
@@ -46,7 +46,7 @@ class OperationServiceTest {
 
 	@Test
 	void depositCallSaveWhenEmailFound() throws UserNotFoundException {
-		OperationDTO operationDTO = new OperationDTO();
+		NewOperationDTO operationDTO = new NewOperationDTO();
 		operationDTO.setAmount(1000.0);
 		Account account = new Account();
 		account.setOperations(new ArrayList<>());
@@ -59,7 +59,7 @@ class OperationServiceTest {
 
 	@Test
 	void withdrawalThrowsUserNotFoundExceptionWhenEmailNotFound() {
-		OperationDTO operationDTO = new OperationDTO();
+		NewOperationDTO operationDTO = new NewOperationDTO();
 		operationDTO.setAmount(1000.0);
 		when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
 		assertThrows(UserNotFoundException.class, () -> operationService.withdrawal("bob@bob.com", operationDTO));
@@ -67,7 +67,7 @@ class OperationServiceTest {
 
 	@Test
 	void withdrawalCallSaveWhenEmailFound() throws UserNotFoundException, OperationForbiddenException {
-		OperationDTO operationDTO = new OperationDTO();
+		NewOperationDTO operationDTO = new NewOperationDTO();
 		operationDTO.setAmount(1000.0);
 		Account account = new Account();
 		account.setBalance(2000);
@@ -82,7 +82,7 @@ class OperationServiceTest {
 	@Test
 	void withdrawalThrowsOperationForbiddenExceptionWhenBalanceNotEnough() 
 			throws UserNotFoundException, OperationForbiddenException {
-		OperationDTO operationDTO = new OperationDTO();
+		NewOperationDTO operationDTO = new NewOperationDTO();
 		operationDTO.setAmount(1000.0);
 		Account account = new Account();
 		account.setBalance(500);

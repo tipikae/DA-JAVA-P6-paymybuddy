@@ -34,9 +34,15 @@ public class ConnectionServiceImpl implements IConnectionService {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionServiceImpl.class);
 	
+	/**
+	 * User repository.
+	 */
 	@Autowired
 	private IUserRepository userRepository;
 	
+	/**
+	 * Connection repository.
+	 */
 	@Autowired
 	private IConnectionRepository connectionRepository;
 
@@ -60,33 +66,6 @@ public class ConnectionServiceImpl implements IConnectionService {
 		contactDTO.setOthers(others);
 		
 		return contactDTO;
-	}
-	
-	private List<ConnectionDTO> getConnections(User srcUser) {
-		List<ConnectionDTO> connections = new ArrayList<>();
-		for(Connection connection: srcUser.getConnections()) {
-			User destUser = connection.getDestUser();
-			ConnectionDTO connectionDTO = new ConnectionDTO();
-			connectionDTO.setEmail(destUser.getEmail());
-			connectionDTO.setFirstname(destUser.getFirstname());
-			connectionDTO.setLastname(destUser.getLastname());
-			connections.add(connectionDTO);
-		}
-		return connections;
-	}
-	
-	private List<ConnectionDTO> getOthers(User srcUser) {
-		List<ConnectionDTO> others = new ArrayList<>();
-		List<User> users = userRepository.getPotentialConnections(srcUser.getId());
-		for(User user: users) {
-			ConnectionDTO otherDTO = new ConnectionDTO();
-			otherDTO.setEmail(user.getEmail());
-			otherDTO.setFirstname(user.getFirstname());
-			otherDTO.setLastname(user.getLastname());
-			others.add(otherDTO);
-		}
-		
-		return others;
 	}
 
 	/**
@@ -119,6 +98,33 @@ public class ConnectionServiceImpl implements IConnectionService {
 		connection.setSrcUser(optionalSrc.get());
 		connection.setDestUser(optionalDest.get());
 		connectionRepository.save(connection);
+	}
+	
+	private List<ConnectionDTO> getConnections(User srcUser) {
+		List<ConnectionDTO> connections = new ArrayList<>();
+		for(Connection connection: srcUser.getConnections()) {
+			User destUser = connection.getDestUser();
+			ConnectionDTO connectionDTO = new ConnectionDTO();
+			connectionDTO.setEmail(destUser.getEmail());
+			connectionDTO.setFirstname(destUser.getFirstname());
+			connectionDTO.setLastname(destUser.getLastname());
+			connections.add(connectionDTO);
+		}
+		return connections;
+	}
+	
+	private List<ConnectionDTO> getOthers(User srcUser) {
+		List<ConnectionDTO> others = new ArrayList<>();
+		List<User> users = userRepository.getPotentialConnections(srcUser.getId());
+		for(User user: users) {
+			ConnectionDTO otherDTO = new ConnectionDTO();
+			otherDTO.setEmail(user.getEmail());
+			otherDTO.setFirstname(user.getFirstname());
+			otherDTO.setLastname(user.getLastname());
+			others.add(otherDTO);
+		}
+		
+		return others;
 	}
 
 }

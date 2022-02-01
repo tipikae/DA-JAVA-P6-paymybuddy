@@ -25,7 +25,7 @@ import com.tipikae.paymybuddy.controllers.UserController;
 import com.tipikae.paymybuddy.dto.HomeDTO;
 import com.tipikae.paymybuddy.dto.ProfileDTO;
 import com.tipikae.paymybuddy.dto.TransferDTO;
-import com.tipikae.paymybuddy.dto.UserDTO;
+import com.tipikae.paymybuddy.dto.NewUserDTO;
 import com.tipikae.paymybuddy.entities.User;
 import com.tipikae.paymybuddy.exceptions.UserAlreadyExistException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
@@ -42,19 +42,19 @@ class UserControllerTest {
 	@MockBean
 	private IUserService userService;
 	
-	private static UserDTO rightUserDTO;
-	private static UserDTO wrongUserDTO;
+	private static NewUserDTO rightUserDTO;
+	private static NewUserDTO wrongUserDTO;
 	
 	@BeforeAll
 	private static void setUp() {
-		rightUserDTO = new UserDTO();
+		rightUserDTO = new NewUserDTO();
 		rightUserDTO.setEmail("bob@bob.com");
 		rightUserDTO.setFirstname("Bob");
 		rightUserDTO.setLastname("BOB");
 		rightUserDTO.setPassword("bob");
 		rightUserDTO.setConfirmedPassword("bob");
 		
-		wrongUserDTO = new UserDTO();
+		wrongUserDTO = new NewUserDTO();
 		wrongUserDTO.setEmail("bob@bob");
 		wrongUserDTO.setFirstname("Bob");
 		wrongUserDTO.setLastname("BOB");
@@ -71,7 +71,7 @@ class UserControllerTest {
 
 	@Test
 	void registerNewUserReturnsSuccessWhenOk() throws Exception {
-		when(userService.registerNewUser(any(UserDTO.class))).thenReturn(new User());
+		when(userService.registerNewUser(any(NewUserDTO.class))).thenReturn(new User());
 		mockMvc.perform(post("/user/registration")
 				.flashAttr("user", rightUserDTO))
 			.andExpect(status().isOk())
@@ -80,7 +80,7 @@ class UserControllerTest {
 
 	@Test
 	void registerNewUserReturnsRegistrationWhenInvalid() throws Exception {
-		when(userService.registerNewUser(any(UserDTO.class))).thenReturn(new User());
+		when(userService.registerNewUser(any(NewUserDTO.class))).thenReturn(new User());
 		mockMvc.perform(post("/user/registration")
 				.flashAttr("user", wrongUserDTO))
 			.andExpect(status().isOk())
@@ -89,7 +89,7 @@ class UserControllerTest {
 
 	@Test
 	void registerNewUserReturnsRegistrationWhenUserAlreadyExistException() throws Exception {
-		doThrow(UserAlreadyExistException.class).when(userService).registerNewUser(any(UserDTO.class));
+		doThrow(UserAlreadyExistException.class).when(userService).registerNewUser(any(NewUserDTO.class));
 		mockMvc.perform(post("/user/registration")
 				.flashAttr("user", rightUserDTO))
 			.andExpect(status().isOk())

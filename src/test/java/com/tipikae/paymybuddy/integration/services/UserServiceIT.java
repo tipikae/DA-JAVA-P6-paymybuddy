@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.tipikae.paymybuddy.dto.UserDTO;
+import com.tipikae.paymybuddy.dto.NewUserDTO;
 import com.tipikae.paymybuddy.exceptions.UserAlreadyExistException;
 import com.tipikae.paymybuddy.services.IUserService;
 
@@ -20,13 +20,13 @@ class UserServiceIT {
 	private IUserService userService;
 	
 	
-	private static UserDTO existingUserDTO;
-	private static UserDTO newUserDTO;
+	private static NewUserDTO existingUserDTO;
+	private static NewUserDTO newUserDTO;
 	private static String newUserEmail;
 	
 	@BeforeAll
 	private static void setUp() {
-		existingUserDTO = new UserDTO();
+		existingUserDTO = new NewUserDTO();
 		existingUserDTO.setEmail("alice@alice.com");
 		existingUserDTO.setFirstname("Alice");
 		existingUserDTO.setLastname("ALICE");
@@ -35,7 +35,7 @@ class UserServiceIT {
 		
 		newUserEmail = "victor@victor.com";
 
-		newUserDTO = new UserDTO();
+		newUserDTO = new NewUserDTO();
 		newUserDTO.setEmail(newUserEmail);
 		newUserDTO.setFirstname("Victor");
 		newUserDTO.setLastname("VICTOR");

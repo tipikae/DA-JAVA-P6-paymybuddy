@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.tipikae.paymybuddy.dto.NewTransferDTO;
-import com.tipikae.paymybuddy.dto.OperationDTO;
+import com.tipikae.paymybuddy.dto.NewOperationDTO;
 import com.tipikae.paymybuddy.exceptions.OperationForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.services.IOperationService;
@@ -43,7 +43,7 @@ public class OperationController {
 	 */
 	@PostMapping("/saveOperation")
 	public String saveOperation(
-			@ModelAttribute("operation") @Valid OperationDTO operationDTO,
+			@ModelAttribute("operation") @Valid NewOperationDTO operationDTO,
 			Errors errors,
 			HttpServletRequest request) {
 		

@@ -20,7 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.tipikae.paymybuddy.dto.HomeDTO;
 import com.tipikae.paymybuddy.dto.ProfileDTO;
 import com.tipikae.paymybuddy.dto.TransferDTO;
-import com.tipikae.paymybuddy.dto.UserDTO;
+import com.tipikae.paymybuddy.dto.NewUserDTO;
 import com.tipikae.paymybuddy.exceptions.UserAlreadyExistException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.services.IUserService;
@@ -54,7 +54,7 @@ public class UserController {
 			Model model) {
 		LOGGER.debug("Get registration page.");
 		
-		UserDTO userDTO = new UserDTO();
+		NewUserDTO userDTO = new NewUserDTO();
 		model.addAttribute("user", userDTO);
 		return "registration";
 		
@@ -69,7 +69,7 @@ public class UserController {
 	 */
 	@PostMapping("/user/registration")
 	public ModelAndView registerNewUser(
-			  @ModelAttribute("user") @Valid UserDTO userDTO,
+			  @ModelAttribute("user") @Valid NewUserDTO userDTO,
 			  Errors errors,
 			  HttpServletRequest request) {
 

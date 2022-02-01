@@ -19,7 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.tipikae.paymybuddy.dto.UserDTO;
+import com.tipikae.paymybuddy.dto.NewUserDTO;
 import com.tipikae.paymybuddy.entities.Account;
 import com.tipikae.paymybuddy.entities.Role;
 import com.tipikae.paymybuddy.entities.User;
@@ -45,14 +45,14 @@ class UserServiceTest {
 	@InjectMocks
 	private static UserServiceImpl userService;
 	
-	private static UserDTO userDTO;
+	private static NewUserDTO userDTO;
 	private static User user;
 	
 	@BeforeAll
 	private static void setUp() {
 		userService = new UserServiceImpl();
 		
-		userDTO = new UserDTO();
+		userDTO = new NewUserDTO();
 		userDTO.setEmail("alice@alice.com");
 		userDTO.setFirstname("Alice");
 		userDTO.setLastname("ALICE");
