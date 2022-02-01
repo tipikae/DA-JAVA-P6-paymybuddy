@@ -24,5 +24,10 @@ class ConnectionRepositoryIT {
 		assertEquals(idSrc, 
 				connectionRepository.findByConnectionId(idSrc, idDest).get().getSrcUser().getId());
 	}
+	
+	@Test
+	void testGetPotentialFriends() {
+		assertEquals(0, connectionRepository.getPotentialConnections(1).size());
+	}
 
 }

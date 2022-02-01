@@ -18,7 +18,6 @@ import com.tipikae.paymybuddy.exceptions.ConnectionForbiddenException;
 import com.tipikae.paymybuddy.exceptions.ConverterException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.repositories.IConnectionRepository;
-import com.tipikae.paymybuddy.repositories.IUserRepository;
 
 /**
  * Connection Service implementation.
@@ -34,12 +33,6 @@ public class ConnectionServiceImpl implements IConnectionService {
 	
 	@Autowired
 	private IUserService userService;
-	
-	/**
-	 * User repository.
-	 */
-	@Autowired
-	private IUserRepository userRepository;
 	
 	/**
 	 * Connection repository.
@@ -97,7 +90,7 @@ public class ConnectionServiceImpl implements IConnectionService {
 		contactDTO.setConnections(
 				converterConnectionToConnectionDTO.convertToListDTOs(user.getConnections()));
 		contactDTO.setOthers(
-				converterUserToConnectionDTO.convertToListDTOs(userRepository.getPotentialConnections(user.getId())));
+				converterUserToConnectionDTO.convertToListDTOs(connectionRepository.getPotentialConnections(user.getId())));
 		
 		return contactDTO;
 	}
