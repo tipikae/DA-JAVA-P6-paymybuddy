@@ -4,6 +4,7 @@ import com.tipikae.paymybuddy.dto.HomeDTO;
 import com.tipikae.paymybuddy.dto.ProfileDTO;
 import com.tipikae.paymybuddy.dto.NewUserDTO;
 import com.tipikae.paymybuddy.entities.User;
+import com.tipikae.paymybuddy.exceptions.ConverterException;
 import com.tipikae.paymybuddy.exceptions.UserAlreadyExistException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 
@@ -28,16 +29,18 @@ public interface IUserService {
 	 * @param email
 	 * @return HomeDTO
 	 * @throws UserNotFoundException
+	 * @throws ConverterException 
 	 */
-	HomeDTO getHomeDetails(String email) throws UserNotFoundException;
+	HomeDTO getHomeDetails(String email) throws UserNotFoundException, ConverterException;
 	
 	/**
 	 * Get profile details.
 	 * @param email
 	 * @return ProfileDTO
 	 * @throws UserNotFoundException
+	 * @throws ConverterException 
 	 */
-	ProfileDTO getProfileDetails(String email) throws UserNotFoundException;
+	ProfileDTO getProfileDetails(String email) throws UserNotFoundException, ConverterException;
 
 	/**
 	 * Check if a user exists or not. Only for others services.

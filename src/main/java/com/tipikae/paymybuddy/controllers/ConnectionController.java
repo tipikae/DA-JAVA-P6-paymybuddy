@@ -46,7 +46,7 @@ public class ConnectionController {
 		LOGGER.debug("Get contact");
 		try {
 			Principal principal = request.getUserPrincipal();
-			ContactDTO contactDTO= connectionService.getConnectionsByEmail(principal.getName());
+			ContactDTO contactDTO= connectionService.getConnectionsDetails(principal.getName());
 			model.addAttribute("contact", contactDTO);
 		} catch (UserNotFoundException e) {
 			LOGGER.debug("User not found exception: " + e.getMessage());

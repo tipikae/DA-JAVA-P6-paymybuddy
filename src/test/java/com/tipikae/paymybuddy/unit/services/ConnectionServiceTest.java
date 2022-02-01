@@ -52,13 +52,13 @@ class ConnectionServiceTest {
 		connections.add(connection);
 		alice.setConnections(connections);
 		when(userService.isUserExists(anyString())).thenReturn(alice);
-		assertEquals("bob@bob.com", connectionService.getConnectionsByEmail("alice@alice.com").getConnections().get(0).getEmail());
+		assertEquals("bob@bob.com", connectionService.getConnectionsDetails("alice@alice.com").getConnections().get(0).getEmail());
 	}
 
 	@Test
 	void getConnectionsThrowsUserNotFoundExceptionWhenEmailNotFound() throws UserNotFoundException {
 		when(userService.isUserExists(anyString())).thenThrow(UserNotFoundException.class);
-		assertThrows(UserNotFoundException.class, () -> connectionService.getConnectionsByEmail("bob@bob.com"));
+		assertThrows(UserNotFoundException.class, () -> connectionService.getConnectionsDetails("bob@bob.com"));
 	}
 	
 	@Test

@@ -2,7 +2,7 @@ package com.tipikae.paymybuddy.converters;
 
 import java.util.List;
 
-import com.tipikae.paymybuddy.exception.ConverterException;
+import com.tipikae.paymybuddy.exceptions.ConverterException;
 
 /**
  * Generic DTO converter.

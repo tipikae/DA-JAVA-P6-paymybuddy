@@ -12,12 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.tipikae.paymybuddy.converters.IConverterUserToHomeDTO;
+import com.tipikae.paymybuddy.converters.IConverterUserToProfileDTO;
 import com.tipikae.paymybuddy.dto.HomeDTO;
 import com.tipikae.paymybuddy.dto.ProfileDTO;
 import com.tipikae.paymybuddy.dto.NewUserDTO;
 import com.tipikae.paymybuddy.entities.Account;
 import com.tipikae.paymybuddy.entities.Role;
 import com.tipikae.paymybuddy.entities.User;
+import com.tipikae.paymybuddy.exceptions.ConverterException;
 import com.tipikae.paymybuddy.exceptions.UserAlreadyExistException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.repositories.IUserRepository;
@@ -45,6 +48,12 @@ public class UserServiceImpl implements IUserService {
 	 */
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private IConverterUserToHomeDTO converterUserToHomeDTO;
+	
+	@Autowired
+	private IConverterUserToProfileDTO converterUserToProfileDTO;
 
 	/**
 	 * {@inheritDoc}
@@ -85,32 +94,22 @@ public class UserServiceImpl implements IUserService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public HomeDTO getHomeDetails(String email) throws UserNotFoundException {
+	public HomeDTO getHomeDetails(String email) throws UserNotFoundException, ConverterException {
 		LOGGER.debug("GetHomeDetails: email=" + email);
 		User user = isUserExists(email);
 		
-		HomeDTO homeDTO = new HomeDTO();
-		homeDTO.setEmail(email);
-		homeDTO.setBalance(user.getAccount().getBalance());
-		
-		return homeDTO;
+		return converterUserToHomeDTO.convertToDTO(user);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ProfileDTO getProfileDetails(String email) throws UserNotFoundException {
+	public ProfileDTO getProfileDetails(String email) throws UserNotFoundException, ConverterException {
 		LOGGER.debug("GetProfile: email=" + email);
 		User user = isUserExists(email);
 		
-		ProfileDTO profileDTO = new ProfileDTO();
-		profileDTO.setEmail(email);
-		profileDTO.setFirstname(user.getFirstname());
-		profileDTO.setLastname(user.getLastname());
-		profileDTO.setDateCreated(user.getAccount().getDateCreated());
-		
-		return profileDTO;
+		return converterUserToProfileDTO.convertToDTO(user);
 	}
 
     private boolean emailExists(String email) {

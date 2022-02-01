@@ -1,6 +1,4 @@
-package com.tipikae.paymybuddy.exception;
-
-import com.tipikae.paymybuddy.exceptions.PayMyBuddyException;
+package com.tipikae.paymybuddy.exceptions;
 
 /**
  * Converter exception.

@@ -6,7 +6,7 @@ import java.util.List;
 import com.tipikae.paymybuddy.dto.ConnectionDTO;
 import com.tipikae.paymybuddy.entities.Connection;
 import com.tipikae.paymybuddy.entities.User;
-import com.tipikae.paymybuddy.exception.ConverterException;
+import com.tipikae.paymybuddy.exceptions.ConverterException;
 
 /**
  * Connection converter implementation.

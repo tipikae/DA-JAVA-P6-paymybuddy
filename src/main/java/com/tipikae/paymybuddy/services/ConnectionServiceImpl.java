@@ -52,24 +52,7 @@ public class ConnectionServiceImpl implements IConnectionService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ContactDTO getConnectionsByEmail(String srcEmail) throws UserNotFoundException {
-		LOGGER.debug("Getting connections: source email=" + srcEmail);
-		User user = userService.isUserExists(srcEmail);
-		
-		List<ConnectionDTO> connections = getConnections(user);
-		List<ConnectionDTO> others = getOthers(user);
-		ContactDTO contactDTO = new ContactDTO();
-		contactDTO.setConnections(connections);
-		contactDTO.setOthers(others);
-		
-		return contactDTO;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void addConnection(String srcEmail, NewContactDTO newContactDTO) 
+	public Connection addConnection(String srcEmail, NewContactDTO newContactDTO) 
 			throws UserNotFoundException, ConnectionForbiddenException {
 		String destEmail = newContactDTO.getDestEmail();
 		LOGGER.debug("Adding connection: source email=" + srcEmail + " dest email=" + destEmail);
@@ -87,6 +70,25 @@ public class ConnectionServiceImpl implements IConnectionService {
 		connection.setSrcUser(userSrc);
 		connection.setDestUser(userDest);
 		connectionRepository.save(connection);
+		
+		return connection;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ContactDTO getConnectionsDetails(String srcEmail) throws UserNotFoundException {
+		LOGGER.debug("Getting connections: source email=" + srcEmail);
+		User user = userService.isUserExists(srcEmail);
+		
+		List<ConnectionDTO> connections = getConnections(user);
+		List<ConnectionDTO> others = getOthers(user);
+		ContactDTO contactDTO = new ContactDTO();
+		contactDTO.setConnections(connections);
+		contactDTO.setOthers(others);
+		
+		return contactDTO;
 	}
 	
 	private List<ConnectionDTO> getConnections(User srcUser) {
