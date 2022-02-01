@@ -3,6 +3,7 @@ package com.tipikae.paymybuddy.services;
 import com.tipikae.paymybuddy.dto.NewTransferDTO;
 import com.tipikae.paymybuddy.dto.TransferDTO;
 import com.tipikae.paymybuddy.dto.NewOperationDTO;
+import com.tipikae.paymybuddy.exceptions.ConverterException;
 import com.tipikae.paymybuddy.exceptions.OperationForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 
@@ -19,8 +20,9 @@ public interface IOperationService {
 	 * @param srcEmail
 	 * @return TransferDTO
 	 * @throws UserNotFoundException
+	 * @throws ConverterException 
 	 */
-	TransferDTO getTransfersDetails(String srcEmail) throws UserNotFoundException;
+	TransferDTO getTransfersDetails(String srcEmail) throws UserNotFoundException, ConverterException;
 
 	/**
 	 * Deposit money from bank account.

@@ -4,6 +4,7 @@ import com.tipikae.paymybuddy.dto.ContactDTO;
 import com.tipikae.paymybuddy.dto.NewContactDTO;
 import com.tipikae.paymybuddy.entities.Connection;
 import com.tipikae.paymybuddy.exceptions.ConnectionForbiddenException;
+import com.tipikae.paymybuddy.exceptions.ConverterException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 
 /**
@@ -19,8 +20,9 @@ public interface IConnectionService {
 	 * @param srcEmail
 	 * @return ContactDTO
 	 * @throws UserNotFoundException
+	 * @throws ConverterException 
 	 */
-	ContactDTO getConnectionsDetails(String srcEmail) throws UserNotFoundException;
+	ContactDTO getConnectionsDetails(String srcEmail) throws UserNotFoundException, ConverterException;
 	
 	/**
 	 * Add a new Connection.

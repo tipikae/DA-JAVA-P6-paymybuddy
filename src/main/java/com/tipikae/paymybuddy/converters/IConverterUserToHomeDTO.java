@@ -4,7 +4,7 @@ import com.tipikae.paymybuddy.dto.HomeDTO;
 import com.tipikae.paymybuddy.entities.User;
 
 /**
- * Converter interface User to HomeDTO
+ * Converter interface User to HomeDTO.
  * @author tipikae
  * @version 1.0
  *

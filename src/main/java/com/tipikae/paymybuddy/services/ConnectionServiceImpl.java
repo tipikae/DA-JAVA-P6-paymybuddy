@@ -1,8 +1,5 @@
 package com.tipikae.paymybuddy.services;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
@@ -10,13 +7,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.tipikae.paymybuddy.dto.ConnectionDTO;
+import com.tipikae.paymybuddy.converters.IConverterListConnectionToConnectionDTO;
+import com.tipikae.paymybuddy.converters.IConverterListUserToConnectionDTO;
 import com.tipikae.paymybuddy.dto.ContactDTO;
 import com.tipikae.paymybuddy.dto.NewContactDTO;
 import com.tipikae.paymybuddy.entities.Connection;
 import com.tipikae.paymybuddy.entities.ConnectionId;
 import com.tipikae.paymybuddy.entities.User;
 import com.tipikae.paymybuddy.exceptions.ConnectionForbiddenException;
+import com.tipikae.paymybuddy.exceptions.ConverterException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.repositories.IConnectionRepository;
 import com.tipikae.paymybuddy.repositories.IUserRepository;
@@ -47,6 +46,18 @@ public class ConnectionServiceImpl implements IConnectionService {
 	 */
 	@Autowired
 	private IConnectionRepository connectionRepository;
+	
+	/**
+	 * Converter Connection to ConnectionDTO.
+	 */
+	@Autowired
+	private IConverterListConnectionToConnectionDTO converterConnectionToConnectionDTO;
+	
+	/**
+	 * Converter User to ConnectionDTO.
+	 */
+	@Autowired
+	private IConverterListUserToConnectionDTO converterUserToConnectionDTO;
 
 	/**
 	 * {@inheritDoc}
@@ -78,44 +89,16 @@ public class ConnectionServiceImpl implements IConnectionService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ContactDTO getConnectionsDetails(String srcEmail) throws UserNotFoundException {
+	public ContactDTO getConnectionsDetails(String srcEmail) throws UserNotFoundException, ConverterException {
 		LOGGER.debug("Getting connections: source email=" + srcEmail);
 		User user = userService.isUserExists(srcEmail);
 		
-		List<ConnectionDTO> connections = getConnections(user);
-		List<ConnectionDTO> others = getOthers(user);
 		ContactDTO contactDTO = new ContactDTO();
-		contactDTO.setConnections(connections);
-		contactDTO.setOthers(others);
+		contactDTO.setConnections(
+				converterConnectionToConnectionDTO.convertToListDTOs(user.getConnections()));
+		contactDTO.setOthers(
+				converterUserToConnectionDTO.convertToListDTOs(userRepository.getPotentialConnections(user.getId())));
 		
 		return contactDTO;
 	}
-	
-	private List<ConnectionDTO> getConnections(User srcUser) {
-		List<ConnectionDTO> connections = new ArrayList<>();
-		for(Connection connection: srcUser.getConnections()) {
-			User destUser = connection.getDestUser();
-			ConnectionDTO connectionDTO = new ConnectionDTO();
-			connectionDTO.setEmail(destUser.getEmail());
-			connectionDTO.setFirstname(destUser.getFirstname());
-			connectionDTO.setLastname(destUser.getLastname());
-			connections.add(connectionDTO);
-		}
-		return connections;
-	}
-	
-	private List<ConnectionDTO> getOthers(User srcUser) {
-		List<ConnectionDTO> others = new ArrayList<>();
-		List<User> users = userRepository.getPotentialConnections(srcUser.getId());
-		for(User user: users) {
-			ConnectionDTO otherDTO = new ConnectionDTO();
-			otherDTO.setEmail(user.getEmail());
-			otherDTO.setFirstname(user.getFirstname());
-			otherDTO.setLastname(user.getLastname());
-			others.add(otherDTO);
-		}
-		
-		return others;
-	}
-
 }

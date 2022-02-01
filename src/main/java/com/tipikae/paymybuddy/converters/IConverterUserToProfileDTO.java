@@ -4,7 +4,7 @@ import com.tipikae.paymybuddy.dto.ProfileDTO;
 import com.tipikae.paymybuddy.entities.User;
 
 /**
- * Converter interface User to ProfileDTO
+ * Converter interface User to ProfileDTO.
  * @author tipikae
  * @version 1.0
  *

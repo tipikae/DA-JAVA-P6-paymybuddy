@@ -1,6 +1,5 @@
 package com.tipikae.paymybuddy.services;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -13,17 +12,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.tipikae.paymybuddy.dto.NewTransferDTO;
-import com.tipikae.paymybuddy.dto.TransactionDTO;
 import com.tipikae.paymybuddy.dto.TransferDTO;
-import com.tipikae.paymybuddy.dto.ConnectionDTO;
+import com.tipikae.paymybuddy.converters.IConverterListConnectionToConnectionDTO;
+import com.tipikae.paymybuddy.converters.IConverterListTransferToTransactionDTO;
 import com.tipikae.paymybuddy.dto.NewOperationDTO;
 import com.tipikae.paymybuddy.entities.Account;
-import com.tipikae.paymybuddy.entities.Connection;
 import com.tipikae.paymybuddy.entities.Deposit;
 import com.tipikae.paymybuddy.entities.Operation;
 import com.tipikae.paymybuddy.entities.Transfer;
 import com.tipikae.paymybuddy.entities.User;
 import com.tipikae.paymybuddy.entities.Withdrawal;
+import com.tipikae.paymybuddy.exceptions.ConverterException;
 import com.tipikae.paymybuddy.exceptions.OperationForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.repositories.IAccountRepository;
@@ -58,6 +57,16 @@ public class OperationServiceImpl implements IOperationService {
 	 */
 	@Autowired
 	private IAccountRepository accountRepository;
+	
+	/**
+	 * Converter Connection list to ConnectionDTO list.
+	 */
+	private IConverterListConnectionToConnectionDTO converterConnectionToConnectionDTO;
+	
+	/**
+	 * Converter Transfer list to TransactionDTO list.
+	 */
+	private IConverterListTransferToTransactionDTO converterTransferToTransactionDTO;
 	
 	/**
 	 * Rate property from application.properties.
@@ -154,45 +163,18 @@ public class OperationServiceImpl implements IOperationService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public TransferDTO getTransfersDetails(String srcEmail) throws UserNotFoundException {
+	public TransferDTO getTransfersDetails(String srcEmail) throws UserNotFoundException, ConverterException {
 		LOGGER.debug("Getting transfer for " + srcEmail);
 		User user = userService.isUserExists(srcEmail);
 		
-		List<ConnectionDTO> connections = getConnections(user);
-		List<TransactionDTO> transactions = getTransactions(user);
 		TransferDTO transferDTO = new TransferDTO();
-		transferDTO.setConnections(connections);
-		transferDTO.setTransactions(transactions);
+		transferDTO.setConnections(
+				converterConnectionToConnectionDTO.convertToListDTOs(user.getConnections()));
+		transferDTO.setTransactions(
+				converterTransferToTransactionDTO.convertToListDTOs(
+						operationRepository.findTransfersByIdSrc(user.getId())));
 		
 		return transferDTO;
-	}
-	
-	private List<ConnectionDTO> getConnections(User srcUser) {
-		List<ConnectionDTO> connections = new ArrayList<>();
-		for(Connection connection: srcUser.getConnections()) {
-			User destUser = connection.getDestUser();
-			ConnectionDTO connectionDTO = new ConnectionDTO();
-			connectionDTO.setEmail(destUser.getEmail());
-			connectionDTO.setFirstname(destUser.getFirstname());
-			connectionDTO.setLastname(destUser.getLastname());
-			connections.add(connectionDTO);
-		}
-		
-		return connections;
-	}
-	
-	private List<TransactionDTO> getTransactions(User srcUser) {
-		List<TransactionDTO> transactions = new ArrayList<>();
-		List<Transfer> transfers = operationRepository.findTransfersByIdSrc(srcUser.getId());
-		for(Transfer transfer: transfers) {
-			TransactionDTO transactionDTO = new TransactionDTO();
-			transactionDTO.setConnection(transfer.getDestUser().getFirstname());
-			transactionDTO.setDescription(transfer.getDescription());
-			transactionDTO.setAmount(transfer.getAmount());
-			transactions.add(transactionDTO);
-		}
-		
-		return transactions;
 	}
 
 }
