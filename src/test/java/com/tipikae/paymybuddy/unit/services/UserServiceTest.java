@@ -17,10 +17,15 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.tipikae.paymybuddy.converters.IConverterUserToHomeDTO;
+import com.tipikae.paymybuddy.converters.IConverterUserToProfileDTO;
+import com.tipikae.paymybuddy.dto.HomeDTO;
 import com.tipikae.paymybuddy.dto.NewUserDTO;
+import com.tipikae.paymybuddy.dto.ProfileDTO;
 import com.tipikae.paymybuddy.entities.Account;
 import com.tipikae.paymybuddy.entities.Role;
 import com.tipikae.paymybuddy.entities.User;
+import com.tipikae.paymybuddy.exceptions.ConverterException;
 import com.tipikae.paymybuddy.exceptions.UserAlreadyExistException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.repositories.IUserRepository;
@@ -33,6 +38,10 @@ class UserServiceTest {
 	private IUserRepository userRepository;
 	@Mock
 	private PasswordEncoder passwordEncoder;
+	@Mock
+	private IConverterUserToHomeDTO converterUserToHomeDTO;
+	@Mock
+	private IConverterUserToProfileDTO converterUserToProfileDTO;
 	
 	@InjectMocks
 	private static UserServiceImpl userService;
@@ -80,7 +89,7 @@ class UserServiceTest {
 	}
 
 	@Test
-	void getProfileReturnsProfileDTOWhenEmailFound() throws UserNotFoundException {
+	void getProfileReturnsProfileDTOWhenEmailFound() throws UserNotFoundException, ConverterException {
 		String email = "bob@bob.com";
 		Account account = new Account();
 		account.setDateCreated(new Date());
@@ -89,18 +98,24 @@ class UserServiceTest {
 		user.setFirstname("bob");
 		user.setLastname("Bob");
 		user.setAccount(account);
+		ProfileDTO profileDTO = new ProfileDTO();
+		profileDTO.setEmail(user.getEmail());
 		
 		when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
+		when(converterUserToProfileDTO.convertToDTO(user)).thenReturn(profileDTO);
 		assertEquals(email, userService.getProfileDetails(email).getEmail());
 	}
 
 	@Test
-	void getHomeReturnsHomeDTOWhenEmailFound() throws UserNotFoundException {
+	void getHomeReturnsHomeDTOWhenEmailFound() throws UserNotFoundException, ConverterException {
 		Account account = new Account();
 		account.setBalance(1000.0);
 		User user = new User();
 		user.setAccount(account);
+		HomeDTO homeDTO = new HomeDTO();
+		homeDTO.setBalance(account.getBalance());
 		when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
+		when(converterUserToHomeDTO.convertToDTO(any(User.class))).thenReturn(homeDTO);
 		assertEquals(1000.0, userService.getHomeDetails("bob@bob.com").getBalance());
 	}
 

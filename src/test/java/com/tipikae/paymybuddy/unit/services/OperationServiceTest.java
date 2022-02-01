@@ -3,6 +3,7 @@ package com.tipikae.paymybuddy.unit.services;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -16,9 +17,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.tipikae.paymybuddy.converters.IConverterListConnectionToConnectionDTO;
+import com.tipikae.paymybuddy.converters.IConverterListTransferToTransactionDTO;
 import com.tipikae.paymybuddy.dto.NewOperationDTO;
 import com.tipikae.paymybuddy.entities.Account;
 import com.tipikae.paymybuddy.entities.User;
+import com.tipikae.paymybuddy.exceptions.ConverterException;
 import com.tipikae.paymybuddy.exceptions.OperationForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.repositories.IAccountRepository;
@@ -38,6 +42,10 @@ class OperationServiceTest {
 	private IAccountRepository accountRepository;
 	@Mock
 	private IOperationRepository operationRepository;
+	@Mock
+	private IConverterListConnectionToConnectionDTO converterConnectionToConnectionDTO;
+	@Mock
+	private IConverterListTransferToTransactionDTO converterTransferToTransactionDTO;
 	
 	@InjectMocks
 	private OperationServiceImpl operationService;
@@ -106,12 +114,14 @@ class OperationServiceTest {
 	}
 	
 	@Test
-	void getTransferReturnsDTOswhenOk() throws UserNotFoundException {
+	void getTransferReturnsDTOswhenOk() throws UserNotFoundException, ConverterException {
 		User user = new User();
 		user.setConnections(new ArrayList<>());
 		when(userService.isUserExists(anyString())).thenReturn(user);
 		when(operationRepository.findTransfersByIdSrc(anyInt())).thenReturn(new ArrayList<>());
-		assertEquals(0, operationService.getTransfersDetails("alice@alice.com").getTransactions().size());
+		when(converterConnectionToConnectionDTO.convertToListDTOs(anyList())).thenReturn(new ArrayList<>());
+		when(converterTransferToTransactionDTO.convertToListDTOs(anyList())).thenReturn(new ArrayList<>());
+		assertEquals(0, operationService.getTransfersDetails("alice@alice.com").getConnections().size());
 	}
 
 }

@@ -16,10 +16,14 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.tipikae.paymybuddy.converters.IConverterListConnectionToConnectionDTO;
+import com.tipikae.paymybuddy.converters.IConverterListUserToConnectionDTO;
+import com.tipikae.paymybuddy.dto.ConnectionDTO;
 import com.tipikae.paymybuddy.dto.NewContactDTO;
 import com.tipikae.paymybuddy.entities.Connection;
 import com.tipikae.paymybuddy.entities.User;
 import com.tipikae.paymybuddy.exceptions.ConnectionForbiddenException;
+import com.tipikae.paymybuddy.exceptions.ConverterException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.repositories.IConnectionRepository;
 import com.tipikae.paymybuddy.repositories.IUserRepository;
@@ -35,12 +39,16 @@ class ConnectionServiceTest {
 	private IUserRepository userRepository;
 	@Mock
 	private IConnectionRepository connectionRepository;
+	@Mock
+	private IConverterListConnectionToConnectionDTO converterConnectionToConnectionDTO;
+	@Mock
+	private IConverterListUserToConnectionDTO converterUserToConnectionDTO;
 	
 	@InjectMocks
 	private ConnectionServiceImpl connectionService;
 
 	@Test
-	void getConnectionsReturnsListWhenEmailFound() throws UserNotFoundException {
+	void getConnectionsReturnsListWhenEmailFound() throws UserNotFoundException, ConverterException {
 		User alice = new User();
 		alice.setEmail("alice@alice.com");
 		User bob = new User();
@@ -51,8 +59,14 @@ class ConnectionServiceTest {
 		List<Connection> connections = new ArrayList<>();
 		connections.add(connection);
 		alice.setConnections(connections);
+		ConnectionDTO connectionDTO = new ConnectionDTO();
+		connectionDTO.setEmail(bob.getEmail());
+		List<ConnectionDTO> connectionsDTO = new ArrayList<ConnectionDTO>();
+		connectionsDTO.add(connectionDTO);
 		when(userService.isUserExists(anyString())).thenReturn(alice);
-		assertEquals("bob@bob.com", connectionService.getConnectionsDetails("alice@alice.com").getConnections().get(0).getEmail());
+		when(converterConnectionToConnectionDTO.convertToListDTOs(connections)).thenReturn(connectionsDTO);
+		assertEquals("bob@bob.com", 
+				connectionService.getConnectionsDetails("alice@alice.com").getConnections().get(0).getEmail());
 	}
 
 	@Test
