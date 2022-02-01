@@ -25,7 +25,6 @@ import com.tipikae.paymybuddy.repositories.IConnectionRepository;
  * @version 1.0
  *
  */
-@Transactional
 @Service
 public class ConnectionServiceImpl implements IConnectionService {
 	
@@ -55,6 +54,7 @@ public class ConnectionServiceImpl implements IConnectionService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Transactional
 	@Override
 	public Connection addConnection(String srcEmail, NewContactDTO newContactDTO) 
 			throws UserNotFoundException, ConnectionForbiddenException {

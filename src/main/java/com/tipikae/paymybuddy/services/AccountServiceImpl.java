@@ -3,6 +3,8 @@ package com.tipikae.paymybuddy.services;
 import java.util.Date;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,7 @@ import com.tipikae.paymybuddy.repositories.IAccountRepository;
  * @version 1.0
  *
  */
+@Transactional
 @Service
 public class AccountServiceImpl implements IAccountService {
 	
@@ -54,11 +57,24 @@ public class AccountServiceImpl implements IAccountService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void deposit(String email, NewOperationDTO operationDTO) throws UserNotFoundException {
+	public void operation(String email, NewOperationDTO operationDTO)
+			throws UserNotFoundException, OperationForbiddenException {
 		double amount = operationDTO.getAmount();
-		LOGGER.debug("Deposit: email=" + email + " amount=" + amount);
+		String type = operationDTO.getTypeOperation();
+		LOGGER.debug("Operation: email=" + email + " type=" + type + " amount=" + amount);
 		User user = userService.isUserExists(email);
+		
+		switch(type) {
+			case "DEP":
+				deposit(user, amount);
+				break;
+			case "WIT":
+				withdrawal(user, amount);
+				break;
+		}
+	}
 
+	private void deposit(User user, double amount) {
 		Account account = user.getAccount();
 		List<Operation> operations = account.getOperations();
 		Deposit deposit = new Deposit();
@@ -71,16 +87,7 @@ public class AccountServiceImpl implements IAccountService {
 		accountRepository.save(account);
 	}
 
-	/**
-	 * {@inheritDoc} 
-	 */
-	@Override
-	public void withdrawal(String email, NewOperationDTO operationDTO) 
-			throws UserNotFoundException, OperationForbiddenException {
-		double amount = operationDTO.getAmount();
-		LOGGER.debug("Withdrawal: email=" + email + " amount=" + amount);
-		User user = userService.isUserExists(email);
-
+	private void withdrawal(User user, double amount) throws OperationForbiddenException {
 		Account account = user.getAccount();
 		if(amount > account.getBalance()) {
 			LOGGER.debug("Withdrawal: amount(" + amount + ") > balance(" + account.getBalance() + ")");

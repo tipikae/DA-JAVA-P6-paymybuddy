@@ -57,14 +57,7 @@ public class AccountController {
 		
 		Principal principal = request.getUserPrincipal();
 		try {
-			switch(operationDTO.getTypeOperation()) {
-				case "DEP":
-					accountService.deposit(principal.getName(), operationDTO);
-					break;
-				case "WIT":
-					accountService.withdrawal(principal.getName(), operationDTO);
-					break;
-			}
+			accountService.operation(principal.getName(), operationDTO);
 		} catch (UserNotFoundException e) {
 			LOGGER.debug("User not found: " + e.getMessage());
 			return "redirect:/home?error=" + e.getMessage();

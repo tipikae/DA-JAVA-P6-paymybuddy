@@ -31,7 +31,6 @@ import com.tipikae.paymybuddy.repositories.IUserRepository;
  * @version 1.0
  *
  */
-@Transactional
 @Service
 public class UserServiceImpl implements IUserService {
 	
@@ -58,6 +57,7 @@ public class UserServiceImpl implements IUserService {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Transactional
 	@Override
 	public User registerNewUser(NewUserDTO userDTO) throws UserAlreadyExistException {
 		LOGGER.debug("Registering new user");

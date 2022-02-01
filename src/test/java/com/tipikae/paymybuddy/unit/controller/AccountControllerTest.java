@@ -76,7 +76,7 @@ class AccountControllerTest {
 	@Test
 	void saveDepositOperationRedirectsHomeWhenNotFound() throws Exception {
 		doThrow(new UserNotFoundException("User not found."))
-			.when(accountService).deposit(anyString(), any(NewOperationDTO.class));
+			.when(accountService).operation(anyString(), any(NewOperationDTO.class));
 		mockMvc.perform(post("/saveOperation")
 				.flashAttr("operation", rightDepOperationDTO))
 			.andExpect(status().is(302))
@@ -88,7 +88,7 @@ class AccountControllerTest {
 	@Test
 	void saveDepositOperationRedirectsHomeWhenForbidden() throws Exception {
 		doThrow(new OperationForbiddenException("Amount can't be more than balance."))
-			.when(accountService).withdrawal(anyString(), any(NewOperationDTO.class));
+			.when(accountService).operation(anyString(), any(NewOperationDTO.class));
 		mockMvc.perform(post("/saveOperation")
 				.flashAttr("operation", rightWitOperationDTO))
 			.andExpect(status().is(302))

@@ -12,26 +12,19 @@ import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
  *
  */
 public interface IAccountService {
-
+	
 	/**
-	 * Deposit money from bank account.
+	 * Save a deposit or withdrawal operation.
 	 * @param email
 	 * @param operationDTO
 	 * @throws UserNotFoundException
+	 * @throws OperationForbiddenException
 	 */
-	void deposit(String email, NewOperationDTO operationDTO) throws UserNotFoundException;
-	
-	/**
-	 * Withdrawal money to bank account.
-	 * @param email
-	 * @param operationDTO
-	 * @throws UserNotFoundException, OperationForbiddenException
-	 */
-	void withdrawal(String email, NewOperationDTO operationDTO) 
+	void operation(String email, NewOperationDTO operationDTO) 
 			throws UserNotFoundException, OperationForbiddenException;
-	
+
 	/**
-	 * Transfer money between friends.
+	 * Transfer money between users.
 	 * @param emailSrc
 	 * @param newTransferDTO
 	 */
