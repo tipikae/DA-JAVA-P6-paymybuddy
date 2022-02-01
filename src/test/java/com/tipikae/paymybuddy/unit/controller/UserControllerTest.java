@@ -9,7 +9,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -24,7 +23,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.tipikae.paymybuddy.controllers.UserController;
 import com.tipikae.paymybuddy.dto.HomeDTO;
 import com.tipikae.paymybuddy.dto.ProfileDTO;
-import com.tipikae.paymybuddy.dto.TransferDTO;
 import com.tipikae.paymybuddy.dto.NewUserDTO;
 import com.tipikae.paymybuddy.entities.User;
 import com.tipikae.paymybuddy.exceptions.UserAlreadyExistException;
@@ -94,27 +92,6 @@ class UserControllerTest {
 				.flashAttr("user", rightUserDTO))
 			.andExpect(status().isOk())
 			.andExpect(view().name("registration"));
-	}
-	
-	@WithMockUser
-	@Test
-	void getTransferReturnsErrorWhenUserNotFoundException() throws Exception {
-		doThrow(UserNotFoundException.class).when(userService).getTransfersDetails(anyString());
-		mockMvc.perform(get("/transfer"))
-			.andExpect(status().isOk())
-			.andExpect(view().name("error/404"));
-	}
-	
-	@WithMockUser
-	@Test
-	void getTransferReturnsTransferWhenOk() throws Exception {
-		TransferDTO transferDTO = new TransferDTO();
-		transferDTO.setConnections(new ArrayList<>());
-		transferDTO.setTransactions(new ArrayList<>());
-		when(userService.getTransfersDetails(anyString())).thenReturn(transferDTO);
-		mockMvc.perform(get("/transfer"))
-			.andExpect(status().isOk())
-			.andExpect(view().name("transfer"));
 	}
 	
 	@WithMockUser

@@ -1,8 +1,8 @@
 package com.tipikae.paymybuddy.services;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -13,8 +13,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.tipikae.paymybuddy.dto.NewTransferDTO;
+import com.tipikae.paymybuddy.dto.TransactionDTO;
+import com.tipikae.paymybuddy.dto.TransferDTO;
+import com.tipikae.paymybuddy.dto.ConnectionDTO;
 import com.tipikae.paymybuddy.dto.NewOperationDTO;
 import com.tipikae.paymybuddy.entities.Account;
+import com.tipikae.paymybuddy.entities.Connection;
 import com.tipikae.paymybuddy.entities.Deposit;
 import com.tipikae.paymybuddy.entities.Operation;
 import com.tipikae.paymybuddy.entities.Transfer;
@@ -23,7 +27,7 @@ import com.tipikae.paymybuddy.entities.Withdrawal;
 import com.tipikae.paymybuddy.exceptions.OperationForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.repositories.IAccountRepository;
-import com.tipikae.paymybuddy.repositories.IUserRepository;
+import com.tipikae.paymybuddy.repositories.IOperationRepository;
 
 /**
  * Operation Service implementation.
@@ -38,10 +42,16 @@ public class OperationServiceImpl implements IOperationService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(OperationServiceImpl.class);
 	
 	/**
-	 * User repository.
+	 * User Service.
 	 */
 	@Autowired
-	private IUserRepository userRepository;
+	private IUserService userService;
+	
+	/**
+	 * OperationRepository.
+	 */
+	@Autowired
+	private IOperationRepository operationRepository;
 	
 	/**
 	 * Account repository.
@@ -52,7 +62,7 @@ public class OperationServiceImpl implements IOperationService {
 	/**
 	 * Rate property from application.properties.
 	 */
-	@Value("#{systemProperties['paymybuddy.rate']}")
+	@Value("${paymybuddy.rate}")
 	private double rate;
 
 	/**
@@ -62,13 +72,9 @@ public class OperationServiceImpl implements IOperationService {
 	public void deposit(String email, NewOperationDTO operationDTO) throws UserNotFoundException {
 		double amount = operationDTO.getAmount();
 		LOGGER.debug("Deposit: email=" + email + " amount=" + amount);
-		Optional<User> optional = userRepository.findByEmail(email);
-		if(!optional.isPresent()) {
-			LOGGER.debug("Deposit: user with email=" + email + " not found.");
-			throw new UserNotFoundException("User not found.");
-		}
+		User user = userService.isUserExists(email);
 
-		Account account = optional.get().getAccount();
+		Account account = user.getAccount();
 		List<Operation> operations = account.getOperations();
 		Deposit deposit = new Deposit();
 		deposit.setAccount(account);
@@ -88,13 +94,9 @@ public class OperationServiceImpl implements IOperationService {
 			throws UserNotFoundException, OperationForbiddenException {
 		double amount = operationDTO.getAmount();
 		LOGGER.debug("Withdrawal: email=" + email + " amount=" + amount);
-		Optional<User> optional = userRepository.findByEmail(email);
-		if(!optional.isPresent()) {
-			LOGGER.debug("Withdrawal: user with email=" + email + " not found.");
-			throw new UserNotFoundException("User not found.");
-		}
+		User user = userService.isUserExists(email);
 
-		Account account = optional.get().getAccount();
+		Account account = user.getAccount();
 		if(amount > account.getBalance()) {
 			LOGGER.debug("Withdrawal: amount(" + amount + ") > balance(" + account.getBalance() + ")");
 			throw new OperationForbiddenException("Amount can't be more than balance.");
@@ -126,19 +128,10 @@ public class OperationServiceImpl implements IOperationService {
 			throw new OperationForbiddenException("EmailSrc and emailDest are identical");
 		}
 		
-		Optional<User> optionalSrc = userRepository.findByEmail(emailSrc);
-		if(!optionalSrc.isPresent()) {
-			LOGGER.debug("Transfer: userSrc with email=" + emailSrc + " not found.");
-			throw new UserNotFoundException("User not found.");
-		}
-		
-		Optional<User> optionalDest = userRepository.findByEmail(emailDest);
-		if(!optionalDest.isPresent()) {
-			LOGGER.debug("Transfer: userDest with email=" + emailDest + " not found.");
-			throw new UserNotFoundException("User not found.");
-		}
+		User userSrc = userService.isUserExists(emailSrc);
+		User userDest = userService.isUserExists(emailDest);
 
-		Account accountSrc = optionalSrc.get().getAccount();
+		Account accountSrc = userSrc.getAccount();
 		List<Operation> operations = accountSrc.getOperations();
 		double fee = amount * rate;
 		Transfer transfer = new Transfer();
@@ -146,8 +139,8 @@ public class OperationServiceImpl implements IOperationService {
 		transfer.setAmount(amount);
 		transfer.setDateOperation(new Date());
 		transfer.setDescription(description);
-		transfer.setDestUser(optionalDest.get());
-		transfer.setSrcUser(optionalSrc.get());
+		transfer.setDestUser(userDest);
+		transfer.setSrcUser(userSrc);
 		transfer.setFee(fee);
 		operations.add(transfer);
 		accountSrc.setOperations(operations);
@@ -155,6 +148,51 @@ public class OperationServiceImpl implements IOperationService {
 		accountRepository.save(accountSrc);
 		// TODO
 		// add amount to dest account
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public TransferDTO getTransfersDetails(String srcEmail) throws UserNotFoundException {
+		LOGGER.debug("Getting transfer for " + srcEmail);
+		User user = userService.isUserExists(srcEmail);
+		
+		List<ConnectionDTO> connections = getConnections(user);
+		List<TransactionDTO> transactions = getTransactions(user);
+		TransferDTO transferDTO = new TransferDTO();
+		transferDTO.setConnections(connections);
+		transferDTO.setTransactions(transactions);
+		
+		return transferDTO;
+	}
+	
+	private List<ConnectionDTO> getConnections(User srcUser) {
+		List<ConnectionDTO> connections = new ArrayList<>();
+		for(Connection connection: srcUser.getConnections()) {
+			User destUser = connection.getDestUser();
+			ConnectionDTO connectionDTO = new ConnectionDTO();
+			connectionDTO.setEmail(destUser.getEmail());
+			connectionDTO.setFirstname(destUser.getFirstname());
+			connectionDTO.setLastname(destUser.getLastname());
+			connections.add(connectionDTO);
+		}
+		
+		return connections;
+	}
+	
+	private List<TransactionDTO> getTransactions(User srcUser) {
+		List<TransactionDTO> transactions = new ArrayList<>();
+		List<Transfer> transfers = operationRepository.findTransfersByIdSrc(srcUser.getId());
+		for(Transfer transfer: transfers) {
+			TransactionDTO transactionDTO = new TransactionDTO();
+			transactionDTO.setConnection(transfer.getDestUser().getFirstname());
+			transactionDTO.setDescription(transfer.getDescription());
+			transactionDTO.setAmount(transfer.getAmount());
+			transactions.add(transactionDTO);
+		}
+		
+		return transactions;
 	}
 
 }

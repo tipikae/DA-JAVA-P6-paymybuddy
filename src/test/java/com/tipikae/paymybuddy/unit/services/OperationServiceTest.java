@@ -2,12 +2,12 @@ package com.tipikae.paymybuddy.unit.services;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,25 +22,31 @@ import com.tipikae.paymybuddy.entities.User;
 import com.tipikae.paymybuddy.exceptions.OperationForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.repositories.IAccountRepository;
+import com.tipikae.paymybuddy.repositories.IOperationRepository;
 import com.tipikae.paymybuddy.repositories.IUserRepository;
+import com.tipikae.paymybuddy.services.IUserService;
 import com.tipikae.paymybuddy.services.OperationServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 class OperationServiceTest {
 	
 	@Mock
+	private IUserService userService;
+	@Mock
 	private IUserRepository userRepository;
 	@Mock
 	private IAccountRepository accountRepository;
+	@Mock
+	private IOperationRepository operationRepository;
 	
 	@InjectMocks
 	private OperationServiceImpl operationService;
 
 	@Test
-	void depositThrowsUserNotFoundExceptionWhenEmailNotFound() {
+	void depositThrowsUserNotFoundExceptionWhenEmailNotFound() throws UserNotFoundException {
 		NewOperationDTO operationDTO = new NewOperationDTO();
 		operationDTO.setAmount(1000.0);
-		when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+		when(userService.isUserExists(anyString())).thenThrow(UserNotFoundException.class);
 		assertThrows(UserNotFoundException.class, () -> operationService.deposit("bob@bob.com", operationDTO));
 	}
 
@@ -52,16 +58,16 @@ class OperationServiceTest {
 		account.setOperations(new ArrayList<>());
 		User user = new User();
 		user.setAccount(account);
-		when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
+		when(userService.isUserExists(anyString())).thenReturn(user);
 		operationService.deposit("bob@bob.com", operationDTO);
 		verify(accountRepository, Mockito.times(1)).save(any(Account.class));
 	}
 
 	@Test
-	void withdrawalThrowsUserNotFoundExceptionWhenEmailNotFound() {
+	void withdrawalThrowsUserNotFoundExceptionWhenEmailNotFound() throws UserNotFoundException {
 		NewOperationDTO operationDTO = new NewOperationDTO();
 		operationDTO.setAmount(1000.0);
-		when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+		when(userService.isUserExists(anyString())).thenThrow(UserNotFoundException.class);
 		assertThrows(UserNotFoundException.class, () -> operationService.withdrawal("bob@bob.com", operationDTO));
 	}
 
@@ -74,7 +80,7 @@ class OperationServiceTest {
 		account.setOperations(new ArrayList<>());
 		User user = new User();
 		user.setAccount(account);
-		when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
+		when(userService.isUserExists(anyString())).thenReturn(user);
 		operationService.withdrawal("bob@bob.com", operationDTO);
 		verify(accountRepository, Mockito.times(1)).save(any(Account.class));
 	}
@@ -89,8 +95,23 @@ class OperationServiceTest {
 		account.setOperations(new ArrayList<>());
 		User user = new User();
 		user.setAccount(account);
-		when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
+		when(userService.isUserExists(anyString())).thenReturn(user);
 		assertThrows(OperationForbiddenException.class, () -> operationService.withdrawal("bob@bob.com", operationDTO));
+	}
+
+	@Test
+	void getTransferThrowsExceptionWhenEmailNotFound() throws UserNotFoundException {
+		when(userService.isUserExists(anyString())).thenThrow(UserNotFoundException.class);
+		assertThrows(UserNotFoundException.class, () -> operationService.getTransfersDetails("alice@alice.com"));
+	}
+	
+	@Test
+	void getTransferReturnsDTOswhenOk() throws UserNotFoundException {
+		User user = new User();
+		user.setConnections(new ArrayList<>());
+		when(userService.isUserExists(anyString())).thenReturn(user);
+		when(operationRepository.findTransfersByIdSrc(anyInt())).thenReturn(new ArrayList<>());
+		assertEquals(0, operationService.getTransfersDetails("alice@alice.com").getTransactions().size());
 	}
 
 }

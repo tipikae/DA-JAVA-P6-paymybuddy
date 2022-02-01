@@ -3,9 +3,13 @@ package com.tipikae.paymybuddy.unit.controller;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
+import java.util.ArrayList;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -18,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.tipikae.paymybuddy.controllers.OperationController;
 import com.tipikae.paymybuddy.dto.NewOperationDTO;
+import com.tipikae.paymybuddy.dto.TransferDTO;
 import com.tipikae.paymybuddy.exceptions.OperationForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.services.IOperationService;
@@ -94,6 +99,27 @@ class OperationControllerTest {
 			.andExpect(status().is(302))
 			.andExpect(view().name("redirect:/home?error=Amount can't be more than balance."));
 		
+	}
+	
+	@WithMockUser
+	@Test
+	void getTransferReturnsErrorWhenUserNotFoundException() throws Exception {
+		doThrow(UserNotFoundException.class).when(operationService).getTransfersDetails(anyString());
+		mockMvc.perform(get("/transfer"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("error/404"));
+	}
+	
+	@WithMockUser
+	@Test
+	void getTransferReturnsTransferWhenOk() throws Exception {
+		TransferDTO transferDTO = new TransferDTO();
+		transferDTO.setConnections(new ArrayList<>());
+		transferDTO.setTransactions(new ArrayList<>());
+		when(operationService.getTransfersDetails(anyString())).thenReturn(transferDTO);
+		mockMvc.perform(get("/transfer"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("transfer"));
 	}
 
 }

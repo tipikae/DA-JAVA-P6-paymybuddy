@@ -2,11 +2,9 @@ package com.tipikae.paymybuddy.unit.services;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
@@ -25,8 +23,6 @@ import com.tipikae.paymybuddy.entities.Role;
 import com.tipikae.paymybuddy.entities.User;
 import com.tipikae.paymybuddy.exceptions.UserAlreadyExistException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
-import com.tipikae.paymybuddy.repositories.IAccountRepository;
-import com.tipikae.paymybuddy.repositories.IOperationRepository;
 import com.tipikae.paymybuddy.repositories.IUserRepository;
 import com.tipikae.paymybuddy.services.UserServiceImpl;
 
@@ -35,10 +31,6 @@ class UserServiceTest {
 	
 	@Mock
 	private IUserRepository userRepository;
-	@Mock
-	private IOperationRepository operationRepository;
-	@Mock
-	private IAccountRepository accountRepository;
 	@Mock
 	private PasswordEncoder passwordEncoder;
 	
@@ -79,21 +71,6 @@ class UserServiceTest {
 		when(userRepository.save(any(User.class))).thenReturn(user);
 		when(passwordEncoder.encode(anyString())).thenReturn("");
 		assertEquals("alice@alice.com", userService.registerNewUser(userDTO).getEmail());
-	}
-
-	@Test
-	void getTransferThrowsExceptionWhenEmailNotFound() {
-		when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
-		assertThrows(UserNotFoundException.class, () -> userService.getTransfersDetails("alice@alice.com"));
-	}
-	
-	@Test
-	void getTransferReturnsDTOswhenOk() throws UserNotFoundException {
-		User user = new User();
-		user.setConnections(new ArrayList<>());
-		when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
-		when(operationRepository.findTransfersByIdSrc(anyInt())).thenReturn(new ArrayList<>());
-		assertEquals(0, userService.getTransfersDetails("alice@alice.com").getTransactions().size());
 	}
 
 	@Test

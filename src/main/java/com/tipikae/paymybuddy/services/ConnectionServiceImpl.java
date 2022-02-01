@@ -2,7 +2,6 @@ package com.tipikae.paymybuddy.services;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -34,6 +33,9 @@ public class ConnectionServiceImpl implements IConnectionService {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionServiceImpl.class);
 	
+	@Autowired
+	private IUserService userService;
+	
 	/**
 	 * User repository.
 	 */
@@ -52,15 +54,10 @@ public class ConnectionServiceImpl implements IConnectionService {
 	@Override
 	public ContactDTO getConnectionsByEmail(String srcEmail) throws UserNotFoundException {
 		LOGGER.debug("Getting connections: source email=" + srcEmail);
-		Optional<User> optional = userRepository.findByEmail(srcEmail);
-		if(!optional.isPresent()) {
-			LOGGER.debug("GetConnections: user with email=" + srcEmail + " not found.");
-			throw new UserNotFoundException("User not found.");
-		}
+		User user = userService.isUserExists(srcEmail);
 		
-		User srcUser = optional.get();
-		List<ConnectionDTO> connections = getConnections(srcUser);
-		List<ConnectionDTO> others = getOthers(srcUser);
+		List<ConnectionDTO> connections = getConnections(user);
+		List<ConnectionDTO> others = getOthers(user);
 		ContactDTO contactDTO = new ContactDTO();
 		contactDTO.setConnections(connections);
 		contactDTO.setOthers(others);
@@ -81,22 +78,14 @@ public class ConnectionServiceImpl implements IConnectionService {
 			throw new ConnectionForbiddenException("Source and dest are identical.");
 		}
 		
-		Optional<User> optionalSrc = userRepository.findByEmail(srcEmail);
-		Optional<User> optionalDest = userRepository.findByEmail(destEmail);
-		if(!optionalSrc.isPresent()) {
-			LOGGER.debug("AddConnection: user src with email=" + srcEmail + " not found.");
-			throw new UserNotFoundException("User not found.");
-		}
-		if(!optionalDest.isPresent()) {
-			LOGGER.debug("AddConnection: user dest with email=" + destEmail + " not found.");
-			throw new UserNotFoundException("User not found.");
-		}
+		User userSrc = userService.isUserExists(srcEmail);
+		User userDest = userService.isUserExists(srcEmail);
 		
-		ConnectionId connectionId = new ConnectionId(optionalSrc.get().getId(), optionalDest.get().getId());
+		ConnectionId connectionId = new ConnectionId(userSrc.getId(), userDest.getId());
 		Connection connection = new Connection();
 		connection.setId(connectionId);
-		connection.setSrcUser(optionalSrc.get());
-		connection.setDestUser(optionalDest.get());
+		connection.setSrcUser(userSrc);
+		connection.setDestUser(userDest);
 		connectionRepository.save(connection);
 	}
 	

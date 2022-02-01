@@ -9,11 +9,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.tipikae.paymybuddy.dto.NewTransferDTO;
+import com.tipikae.paymybuddy.dto.TransferDTO;
 import com.tipikae.paymybuddy.dto.NewOperationDTO;
 import com.tipikae.paymybuddy.exceptions.OperationForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
@@ -32,6 +35,29 @@ public class OperationController {
 	
 	@Autowired
 	private IOperationService operationService;
+	
+	/**
+	 * Get transfers page.
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@GetMapping("/transfer")
+	public String getTransfer(HttpServletRequest request, Model model) {
+		LOGGER.debug("Get transfer");
+		try {
+			Principal principal = request.getUserPrincipal();
+			TransferDTO transferDTO = operationService.getTransfersDetails(principal.getName());
+			model.addAttribute("transfer", transferDTO);
+		} catch (UserNotFoundException e) {
+			LOGGER.debug("User not found: " + e.getMessage());
+			return "error/404";
+		} catch (Exception e) {
+			LOGGER.debug("Unable to process getTransfer: " + e.getMessage());
+			return "error/400";
+		}
+		return ("transfer");
+	}
 	
 	/**
 	 * Save operation for deposit and withdrawal.

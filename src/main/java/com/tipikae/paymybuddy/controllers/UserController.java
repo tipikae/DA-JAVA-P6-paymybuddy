@@ -19,7 +19,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.tipikae.paymybuddy.dto.HomeDTO;
 import com.tipikae.paymybuddy.dto.ProfileDTO;
-import com.tipikae.paymybuddy.dto.TransferDTO;
 import com.tipikae.paymybuddy.dto.NewUserDTO;
 import com.tipikae.paymybuddy.exceptions.UserAlreadyExistException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
@@ -120,29 +119,6 @@ public class UserController {
 			return "error/400";
 		}
 		return "profile";
-	}
-	
-	/**
-	 * Get transfers page.
-	 * @param request
-	 * @param model
-	 * @return
-	 */
-	@GetMapping("/transfer")
-	public String getTransfer(HttpServletRequest request, Model model) {
-		LOGGER.debug("Get transfer");
-		try {
-			Principal principal = request.getUserPrincipal();
-			TransferDTO transferDTO = userService.getTransfersDetails(principal.getName());
-			model.addAttribute("transfer", transferDTO);
-		} catch (UserNotFoundException e) {
-			LOGGER.debug("User not found: " + e.getMessage());
-			return "error/404";
-		} catch (Exception e) {
-			LOGGER.debug("Unable to process getTransfer: " + e.getMessage());
-			return "error/400";
-		}
-		return ("transfer");
 	}
 	
 	/**

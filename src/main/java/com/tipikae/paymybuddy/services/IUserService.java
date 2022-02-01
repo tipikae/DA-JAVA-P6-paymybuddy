@@ -2,7 +2,6 @@ package com.tipikae.paymybuddy.services;
 
 import com.tipikae.paymybuddy.dto.HomeDTO;
 import com.tipikae.paymybuddy.dto.ProfileDTO;
-import com.tipikae.paymybuddy.dto.TransferDTO;
 import com.tipikae.paymybuddy.dto.NewUserDTO;
 import com.tipikae.paymybuddy.entities.User;
 import com.tipikae.paymybuddy.exceptions.UserAlreadyExistException;
@@ -39,12 +38,12 @@ public interface IUserService {
 	 * @throws UserNotFoundException
 	 */
 	ProfileDTO getProfileDetails(String email) throws UserNotFoundException;
-	
+
 	/**
-	 * Get transfers details.
-	 * @param srcEmail
-	 * @return TransferDTO
+	 * Check if a user exists or not. Only for others services.
+	 * @param email
+	 * @return User
 	 * @throws UserNotFoundException
 	 */
-	TransferDTO getTransfersDetails(String srcEmail) throws UserNotFoundException;
+	User isUserExists(String email) throws UserNotFoundException;
 }
