@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.tipikae.paymybuddy.dto.ContactDTO;
 import com.tipikae.paymybuddy.dto.NewContactDTO;
 import com.tipikae.paymybuddy.exceptions.ConnectionForbiddenException;
+import com.tipikae.paymybuddy.exceptions.ConverterException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.services.IConnectionService;
 
@@ -51,6 +52,9 @@ public class ConnectionController {
 		} catch (UserNotFoundException e) {
 			LOGGER.debug("User not found exception: " + e.getMessage());
 			return "error/404";
+		} catch (ConverterException e) {
+			LOGGER.debug("DTO converter exception: " + e.getMessage());
+			return "error/400";
 		} catch (Exception e) {
 			LOGGER.debug("Unable to process contact: " + e.getMessage());
 			return "error/400";

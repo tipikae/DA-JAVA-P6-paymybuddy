@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.tipikae.paymybuddy.dto.HomeDTO;
 import com.tipikae.paymybuddy.dto.ProfileDTO;
 import com.tipikae.paymybuddy.dto.NewUserDTO;
+import com.tipikae.paymybuddy.exceptions.ConverterException;
 import com.tipikae.paymybuddy.exceptions.UserAlreadyExistException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.services.IUserService;
@@ -114,6 +115,9 @@ public class UserController {
 		} catch (UserNotFoundException e) {
 			LOGGER.debug("Get profile: UserNotFoundException: " + e.getMessage());
 			return "error/404";
+		} catch (ConverterException e) {
+			LOGGER.debug("DTO converter exception: " + e.getMessage());
+			return "error/400";
 		} catch(Exception e) {
 			LOGGER.debug("Get profile: Exception: " + e.getMessage());
 			return "error/400";
@@ -137,6 +141,9 @@ public class UserController {
 		} catch (UserNotFoundException e) {
 			LOGGER.debug("Get home: UserNotFoundException: " + e.getMessage());
 			return "error/404";
+		} catch (ConverterException e) {
+			LOGGER.debug("DTO converter exception: " + e.getMessage());
+			return "error/400";
 		} catch(Exception e) {
 			LOGGER.debug("Get home: Exception: " + e.getMessage());
 			return "error/400";
