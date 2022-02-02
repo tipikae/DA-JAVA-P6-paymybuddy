@@ -50,11 +50,13 @@ public class OperationServiceImpl implements IOperationService {
 	/**
 	 * Converter Connection list to ConnectionDTO list.
 	 */
+	@Autowired
 	private IConverterListConnectionToConnectionDTO converterConnectionToConnectionDTO;
 	
 	/**
 	 * Converter Transfer list to TransactionDTO list.
 	 */
+	@Autowired
 	private IConverterListTransferToTransactionDTO converterTransferToTransactionDTO;
 	
 	/**
