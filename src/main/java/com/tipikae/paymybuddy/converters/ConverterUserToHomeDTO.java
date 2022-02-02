@@ -1,5 +1,7 @@
 package com.tipikae.paymybuddy.converters;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.tipikae.paymybuddy.dto.HomeDTO;
@@ -14,6 +16,8 @@ import com.tipikae.paymybuddy.exceptions.ConverterException;
  */
 @Component
 public class ConverterUserToHomeDTO implements IConverterUserToHomeDTO {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(ConverterUserToHomeDTO.class);
 
 	/**
 	 * {@inheritDoc}
@@ -21,8 +25,13 @@ public class ConverterUserToHomeDTO implements IConverterUserToHomeDTO {
 	@Override
 	public HomeDTO convertToDTO(User user) throws ConverterException {
 		HomeDTO homeDTO = new HomeDTO();
-		homeDTO.setEmail(user.getEmail());
-		homeDTO.setBalance(user.getAccount().getBalance());
+		try {
+			homeDTO.setEmail(user.getEmail());
+			homeDTO.setBalance(user.getAccount().getBalance());
+		} catch (Exception e) {
+			LOGGER.debug("ConverterException: " + e.getMessage());
+			throw new ConverterException(e.getMessage());
+		}
 		
 		return homeDTO;
 	}
