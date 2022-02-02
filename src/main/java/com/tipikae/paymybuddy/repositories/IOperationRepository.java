@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.tipikae.paymybuddy.entities.Account;
 import com.tipikae.paymybuddy.entities.Operation;
 import com.tipikae.paymybuddy.entities.Transfer;
 
@@ -21,12 +20,10 @@ import com.tipikae.paymybuddy.entities.Transfer;
 public interface IOperationRepository extends JpaRepository<Operation, Integer> {
 
 	/**
-	 * Find operations by account.
-	 * @param account
-	 * @return List
+	 * Find transfers by id source.
+	 * @param idSrc
+	 * @return List<Transfer>
 	 */
-	List<Operation> findByAccount(Account account);
-	
 	@Query(
 		value = "SELECT * FROM operation WHERE type = 'TRA' AND id_src_connection = :idSrc",
 		nativeQuery = true)
