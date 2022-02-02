@@ -1,6 +1,7 @@
 package com.tipikae.paymybuddy.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import lombok.Data;
 
@@ -28,5 +29,5 @@ public class TransactionDTO implements Serializable {
 	/**
 	 * Amount
 	 */
-	private double amount;
+	private BigDecimal amount;
 }

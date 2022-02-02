@@ -1,5 +1,6 @@
 package com.tipikae.paymybuddy.entities;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.DiscriminatorValue;
@@ -42,8 +43,8 @@ public class Transfer extends Operation {
 		super();
 	}
 	
-	public Transfer(int number, Date dateOperation, double amount, String description, 
-			double fee, Account account, User scrUser, User destUSer) {
+	public Transfer(int number, Date dateOperation, BigDecimal amount, String description, 
+			BigDecimal fee, Account account, User scrUser, User destUSer) {
 		super(number, dateOperation, amount, description, fee, account);
 		this.srcUser = scrUser;
 		this.destUser = destUSer;

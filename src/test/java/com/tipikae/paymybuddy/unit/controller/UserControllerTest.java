@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -121,7 +122,7 @@ class UserControllerTest {
 	@Test
 	void getHomeReturnsHomeWhenFound() throws Exception {
 		HomeDTO homeDTO = new HomeDTO();
-		homeDTO.setBalance(1000.0);
+		homeDTO.setBalance(new BigDecimal(1000.0));
 		when(userService.getHomeDetails(anyString())).thenReturn(homeDTO);
 		mockMvc.perform(get("/home"))
 			.andExpect(status().isOk())

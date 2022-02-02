@@ -1,7 +1,9 @@
 package com.tipikae.paymybuddy.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 
@@ -28,5 +30,6 @@ public class NewOperationDTO implements Serializable {
 	 * Operation amount.
 	 */
 	@Positive(message = "Amount must be positive.")
-	private double amount;
+	@Digits(integer = 10, fraction = 2, message = "Amount must be a decimal number.")
+	private BigDecimal amount;
 }

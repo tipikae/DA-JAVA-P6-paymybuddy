@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
@@ -109,14 +110,14 @@ class UserServiceTest {
 	@Test
 	void getHomeReturnsHomeDTOWhenEmailFound() throws UserNotFoundException, ConverterException {
 		Account account = new Account();
-		account.setBalance(1000.0);
+		account.setBalance(new BigDecimal(1000.0));
 		User user = new User();
 		user.setAccount(account);
 		HomeDTO homeDTO = new HomeDTO();
 		homeDTO.setBalance(account.getBalance());
 		when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
 		when(converterUserToHomeDTO.convertToDTO(any(User.class))).thenReturn(homeDTO);
-		assertEquals(1000.0, userService.getHomeDetails("bob@bob.com").getBalance());
+		assertEquals(new BigDecimal(1000), userService.getHomeDetails("bob@bob.com").getBalance());
 	}
 
 	@Test

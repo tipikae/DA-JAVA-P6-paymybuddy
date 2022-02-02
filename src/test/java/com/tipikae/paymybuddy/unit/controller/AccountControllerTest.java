@@ -7,6 +7,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import java.math.BigDecimal;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,15 +43,15 @@ class AccountControllerTest {
 	private static void setUp() {
 		rightDepOperationDTO = new NewOperationDTO();
 		rightDepOperationDTO.setTypeOperation("DEP");
-		rightDepOperationDTO.setAmount(1000.0);
+		rightDepOperationDTO.setAmount(new BigDecimal(1000.0));
 		
 		rightWitOperationDTO = new NewOperationDTO();
 		rightWitOperationDTO.setTypeOperation("WIT");
-		rightWitOperationDTO.setAmount(500.0);
+		rightWitOperationDTO.setAmount(new BigDecimal(500.0));
 		
 		wrongOperationDTO = new NewOperationDTO();
 		wrongOperationDTO.setTypeOperation("DEP");
-		wrongOperationDTO.setAmount(-1000.0);
+		wrongOperationDTO.setAmount(new BigDecimal(-1000.0));
 	}
 	
 	@WithMockUser

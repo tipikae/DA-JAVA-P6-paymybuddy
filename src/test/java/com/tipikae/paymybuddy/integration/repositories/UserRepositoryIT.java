@@ -2,6 +2,7 @@ package com.tipikae.paymybuddy.integration.repositories;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -39,9 +40,8 @@ class UserRepositoryIT {
 	void testGetAccountById() {
 		User user = userRepository.getById(1);
 		assertEquals(1, user.getAccount().getIdUser());
-		assertEquals(1000.0, user.getAccount().getBalance());
+		assertEquals(0, user.getAccount().getBalance().compareTo(new BigDecimal(1000.0)));
 	}
-	
 	@Test
 	void testGetConnectionsById() {
 		assertEquals(2, userRepository.getById(1).getConnections().size());

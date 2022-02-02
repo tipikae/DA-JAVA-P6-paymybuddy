@@ -1,5 +1,6 @@
 package com.tipikae.paymybuddy.services;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
@@ -81,7 +82,7 @@ public class UserServiceImpl implements IUserService {
 		user.setRoles(Arrays.asList(role));
 		user.setAccount(account);
 		
-		account.setBalance(0);
+		account.setBalance(new BigDecimal(0.00));
 		account.setDateCreated(new Date());
 		account.setUser(user);
 		

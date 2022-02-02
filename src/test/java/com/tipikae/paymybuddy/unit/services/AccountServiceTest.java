@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
@@ -39,7 +40,7 @@ class AccountServiceTest {
 	void depositThrowsUserNotFoundExceptionWhenEmailNotFound() throws UserNotFoundException {
 		NewOperationDTO operationDTO = new NewOperationDTO();
 		operationDTO.setTypeOperation("DEP");
-		operationDTO.setAmount(1000.0);
+		operationDTO.setAmount(new BigDecimal(1000.0));
 		when(userService.isUserExists(anyString())).thenThrow(UserNotFoundException.class);
 		assertThrows(UserNotFoundException.class, () -> accountService.operation("bob@bob.com", operationDTO));
 	}
@@ -48,8 +49,9 @@ class AccountServiceTest {
 	void depositCallSaveWhenEmailFound() throws UserNotFoundException, OperationForbiddenException {
 		NewOperationDTO operationDTO = new NewOperationDTO();
 		operationDTO.setTypeOperation("DEP");
-		operationDTO.setAmount(1000.0);
+		operationDTO.setAmount(new BigDecimal(1000.0));
 		Account account = new Account();
+		account.setBalance(new BigDecimal(0));
 		account.setOperations(new ArrayList<>());
 		User user = new User();
 		user.setAccount(account);
@@ -62,7 +64,7 @@ class AccountServiceTest {
 	void withdrawalThrowsUserNotFoundExceptionWhenEmailNotFound() throws UserNotFoundException {
 		NewOperationDTO operationDTO = new NewOperationDTO();
 		operationDTO.setTypeOperation("WIT");
-		operationDTO.setAmount(1000.0);
+		operationDTO.setAmount(new BigDecimal(1000.0));
 		when(userService.isUserExists(anyString())).thenThrow(UserNotFoundException.class);
 		assertThrows(UserNotFoundException.class, () -> accountService.operation("bob@bob.com", operationDTO));
 	}
@@ -71,9 +73,9 @@ class AccountServiceTest {
 	void withdrawalCallSaveWhenEmailFound() throws UserNotFoundException, OperationForbiddenException {
 		NewOperationDTO operationDTO = new NewOperationDTO();
 		operationDTO.setTypeOperation("WIT");
-		operationDTO.setAmount(1000.0);
+		operationDTO.setAmount(new BigDecimal(1000.0));
 		Account account = new Account();
-		account.setBalance(2000);
+		account.setBalance(new BigDecimal(2000.0));
 		account.setOperations(new ArrayList<>());
 		User user = new User();
 		user.setAccount(account);
@@ -87,9 +89,9 @@ class AccountServiceTest {
 			throws UserNotFoundException, OperationForbiddenException {
 		NewOperationDTO operationDTO = new NewOperationDTO();
 		operationDTO.setTypeOperation("WIT");
-		operationDTO.setAmount(1000.0);
+		operationDTO.setAmount(new BigDecimal(1000.0));
 		Account account = new Account();
-		account.setBalance(500);
+		account.setBalance(new BigDecimal(500.0));
 		account.setOperations(new ArrayList<>());
 		User user = new User();
 		user.setAccount(account);

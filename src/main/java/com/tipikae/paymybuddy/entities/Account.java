@@ -1,6 +1,7 @@
 package com.tipikae.paymybuddy.entities;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class Account implements Serializable {
 	 * Balance.
 	 */
 	@Column(name = "balance")
-	private double balance;
+	private BigDecimal balance;
 
 	/**
 	 * User object.

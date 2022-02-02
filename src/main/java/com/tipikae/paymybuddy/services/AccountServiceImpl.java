@@ -1,5 +1,6 @@
 package com.tipikae.paymybuddy.services;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -51,7 +52,7 @@ public class AccountServiceImpl implements IAccountService {
 	 * Rate property from application.properties.
 	 */
 	@Value("${paymybuddy.rate}")
-	private double rate;
+	private BigDecimal rate;
 
 	/**
 	 * {@inheritDoc}
@@ -59,7 +60,7 @@ public class AccountServiceImpl implements IAccountService {
 	@Override
 	public void operation(String email, NewOperationDTO operationDTO)
 			throws UserNotFoundException, OperationForbiddenException {
-		double amount = operationDTO.getAmount();
+		BigDecimal amount = operationDTO.getAmount();
 		String type = operationDTO.getTypeOperation();
 		LOGGER.debug("Operation: email=" + email + " type=" + type + " amount=" + amount);
 		User user = userService.isUserExists(email);
@@ -74,7 +75,7 @@ public class AccountServiceImpl implements IAccountService {
 		}
 	}
 
-	private void deposit(User user, double amount) {
+	private void deposit(User user, BigDecimal amount) {
 		Account account = user.getAccount();
 		List<Operation> operations = account.getOperations();
 		Deposit deposit = new Deposit();
@@ -83,13 +84,13 @@ public class AccountServiceImpl implements IAccountService {
 		deposit.setDateOperation(new Date());
 		operations.add(deposit);
 		account.setOperations(operations);
-		account.setBalance(account.getBalance() + amount);
+		account.setBalance(account.getBalance().add(amount));
 		accountRepository.save(account);
 	}
 
-	private void withdrawal(User user, double amount) throws OperationForbiddenException {
+	private void withdrawal(User user, BigDecimal amount) throws OperationForbiddenException {
 		Account account = user.getAccount();
-		if(amount > account.getBalance()) {
+		if(amount.compareTo(account.getBalance()) == 1 ) {
 			LOGGER.debug("Withdrawal: amount(" + amount + ") > balance(" + account.getBalance() + ")");
 			throw new OperationForbiddenException("Amount can't be more than balance.");
 		}
@@ -100,7 +101,7 @@ public class AccountServiceImpl implements IAccountService {
 		withdrawal.setDateOperation(new Date());
 		operations.add(withdrawal);
 		account.setOperations(operations);
-		account.setBalance(account.getBalance() - amount);
+		account.setBalance(account.getBalance().subtract(amount));
 		accountRepository.save(account);
 	}
 
@@ -112,7 +113,7 @@ public class AccountServiceImpl implements IAccountService {
 			throws UserNotFoundException, OperationForbiddenException {
 		String emailDest = newTransferDTO.getDestEmail();
 		String description = newTransferDTO.getDescription();
-		double amount = newTransferDTO.getAmount();
+		BigDecimal amount = newTransferDTO.getAmount();
 		LOGGER.debug("Transfer: emailSrc=" + emailSrc + " emailDest=" + emailDest + " amount=" + amount);
 		
 		if(emailSrc.equals(emailDest)) {
@@ -125,7 +126,7 @@ public class AccountServiceImpl implements IAccountService {
 
 		Account accountSrc = userSrc.getAccount();
 		List<Operation> operations = accountSrc.getOperations();
-		double fee = amount * rate;
+		BigDecimal fee = amount.multiply(rate);
 		Transfer transfer = new Transfer();
 		transfer.setAccount(accountSrc);
 		transfer.setAmount(amount);
@@ -136,7 +137,7 @@ public class AccountServiceImpl implements IAccountService {
 		transfer.setFee(fee);
 		operations.add(transfer);
 		accountSrc.setOperations(operations);
-		accountSrc.setBalance(accountSrc.getBalance() - amount - fee);
+		accountSrc.setBalance(accountSrc.getBalance().subtract(amount).subtract(fee));
 		accountRepository.save(accountSrc);
 		// TODO
 		// add amount to dest account
