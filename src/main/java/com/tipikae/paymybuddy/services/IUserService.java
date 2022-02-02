@@ -41,6 +41,13 @@ public interface IUserService {
 	 * @throws ConverterException 
 	 */
 	ProfileDTO getProfileDetails(String email) throws UserNotFoundException, ConverterException;
+	
+	/**
+	 * Get bank page.
+	 * @param email
+	 * @throws UserNotFoundException
+	 */
+	void getBank(String email) throws UserNotFoundException;
 
 	/**
 	 * Check if a user exists or not. Only for others services.

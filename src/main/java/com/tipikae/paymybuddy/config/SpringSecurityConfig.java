@@ -50,7 +50,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 			.rememberMe().key("MySecretRMKey");
 		http.authorizeRequests()
-			.antMatchers("/home", "/profile", "/transfer", "contact", "/saveContact", "/saveOperation", "/saveTransfer")
+			.antMatchers("/home", "/transfer", "/bank", "/profile", "contact", "/saveContact", "/saveOperation", "/saveTransfer")
 			.hasRole("USER");
 		http.authorizeRequests().antMatchers("/user/registration", "/login")
 			.permitAll();

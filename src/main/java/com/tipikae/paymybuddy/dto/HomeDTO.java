@@ -22,6 +22,16 @@ public class HomeDTO implements Serializable {
 	private String email;
 	
 	/**
+	 * Firstname.
+	 */
+	private String firstname;
+	
+	/**
+	 * Lastname.
+	 */
+	private String lastname;
+	
+	/**
 	 * Balance.
 	 */
 	private BigDecimal balance;

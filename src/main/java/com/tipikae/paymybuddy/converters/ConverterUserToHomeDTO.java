@@ -26,6 +26,8 @@ public class ConverterUserToHomeDTO implements IConverterUserToHomeDTO {
 	public HomeDTO convertToDTO(User user) throws ConverterException {
 		HomeDTO homeDTO = new HomeDTO();
 		try {
+			homeDTO.setFirstname(user.getFirstname());
+			homeDTO.setLastname(user.getLastname());
 			homeDTO.setEmail(user.getEmail());
 			homeDTO.setBalance(user.getAccount().getBalance());
 		} catch (Exception e) {

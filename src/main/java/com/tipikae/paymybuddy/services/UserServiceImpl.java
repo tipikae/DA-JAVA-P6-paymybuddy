@@ -119,13 +119,11 @@ public class UserServiceImpl implements IUserService {
 		return converterUserToProfileDTO.convertToDTO(user);
 	}
 
-    private boolean emailExists(String email) {
-    	Optional<User> optional = userRepository.findByEmail(email);
-    	if(optional.isPresent()) {
-    		return true;
-    	}
-		return false;
-    }
+	@Override
+	public void getBank(String email) throws UserNotFoundException {
+		LOGGER.debug("GetBank: email=" + email);
+		isUserExists(email);
+	}
 
     /**
      * {@inheritDoc}
@@ -139,4 +137,12 @@ public class UserServiceImpl implements IUserService {
 		}
 		return optional.get();
 	}
+
+    private boolean emailExists(String email) {
+    	Optional<User> optional = userRepository.findByEmail(email);
+    	if(optional.isPresent()) {
+    		return true;
+    	}
+		return false;
+    }
 }

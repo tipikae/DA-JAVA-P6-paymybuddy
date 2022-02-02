@@ -84,12 +84,12 @@ public class UserController {
 		try {
 			userService.registerNewUser(userDTO);
 		} catch(UserAlreadyExistException e) {
-			LOGGER.debug("An user for that email already exists.");
+			LOGGER.debug("Register: An user for that email already exists.");
 			ModelAndView mav = new ModelAndView("registration", "user", userDTO);
 			mav.addObject("message", "An user for that email already exists.");
 	        return mav;
 		} catch(Exception e) {
-			LOGGER.debug("Unable to register: " + e.getMessage());
+			LOGGER.debug("Register: Unable to register: " + e.getMessage());
 			ModelAndView mav = new ModelAndView("registration", "user", userDTO);
 			mav.addObject("message", "Unable to register.");
 	        return mav;
@@ -97,32 +97,6 @@ public class UserController {
 
 		LOGGER.debug("Registration succeed.");
 		return new ModelAndView("registration_success", "", null);
-	}
-	
-	/**
-	 * Get the user profile page.
-	 * @param request
-	 * @param model
-	 * @return String
-	 */
-	@GetMapping("/profile")
-	public String getProfile(HttpServletRequest request, Model model) {
-		LOGGER.debug("Get profile");
-		Principal principal = request.getUserPrincipal();
-		try {
-			ProfileDTO profile = userService.getProfileDetails(principal.getName());
-			model.addAttribute("profile", profile);
-		} catch (UserNotFoundException e) {
-			LOGGER.debug("Get profile: UserNotFoundException: " + e.getMessage());
-			return "error/404";
-		} catch (ConverterException e) {
-			LOGGER.debug("DTO converter exception: " + e.getMessage());
-			return "error/400";
-		} catch(Exception e) {
-			LOGGER.debug("Get profile: Exception: " + e.getMessage());
-			return "error/400";
-		}
-		return "profile";
 	}
 	
 	/**
@@ -142,7 +116,7 @@ public class UserController {
 			LOGGER.debug("Get home: UserNotFoundException: " + e.getMessage());
 			return "error/404";
 		} catch (ConverterException e) {
-			LOGGER.debug("DTO converter exception: " + e.getMessage());
+			LOGGER.debug("Get home: DTO converter exception: " + e.getMessage());
 			return "error/400";
 		} catch(Exception e) {
 			LOGGER.debug("Get home: Exception: " + e.getMessage());
@@ -150,5 +124,53 @@ public class UserController {
 		}
 		
 		return "home";
+	}
+	
+	/**
+	 * Get the user profile page.
+	 * @param request
+	 * @param model
+	 * @return String
+	 */
+	@GetMapping("/profile")
+	public String getProfile(HttpServletRequest request, Model model) {
+		LOGGER.debug("Get profile");
+		Principal principal = request.getUserPrincipal();
+		try {
+			ProfileDTO profile = userService.getProfileDetails(principal.getName());
+			model.addAttribute("profile", profile);
+		} catch (UserNotFoundException e) {
+			LOGGER.debug("Get profile: UserNotFoundException: " + e.getMessage());
+			return "error/404";
+		} catch (ConverterException e) {
+			LOGGER.debug("Get profile: DTO converter exception: " + e.getMessage());
+			return "error/400";
+		} catch(Exception e) {
+			LOGGER.debug("Get profile: Exception: " + e.getMessage());
+			return "error/400";
+		}
+		return "profile";
+	}
+	
+	/**
+	 * Get the bank page.
+	 * @param request
+	 * @param model
+	 * @return String
+	 */
+	@GetMapping("/bank")
+	public String getBank(HttpServletRequest request) {
+		LOGGER.debug("Get bank");
+		Principal principal = request.getUserPrincipal();
+		try {
+			userService.getBank(principal.getName());
+		} catch (UserNotFoundException e) {
+			LOGGER.debug("Get bank: UserNotFoundException: " + e.getMessage());
+			return "error/404";
+		} catch(Exception e) {
+			LOGGER.debug("Get bank: Exception: " + e.getMessage());
+			return "error/400";
+		}
+		return "bank";
 	}
 }

@@ -50,13 +50,13 @@ public class ConnectionController {
 			ContactDTO contactDTO= connectionService.getConnectionsDetails(principal.getName());
 			model.addAttribute("contact", contactDTO);
 		} catch (UserNotFoundException e) {
-			LOGGER.debug("User not found exception: " + e.getMessage());
+			LOGGER.debug("Get contact: User not found exception: " + e.getMessage());
 			return "error/404";
 		} catch (ConverterException e) {
-			LOGGER.debug("DTO converter exception: " + e.getMessage());
+			LOGGER.debug("Get contact: DTO converter exception: " + e.getMessage());
 			return "error/400";
 		} catch (Exception e) {
-			LOGGER.debug("Unable to process contact: " + e.getMessage());
+			LOGGER.debug("Get contact: Unable to process contact: " + e.getMessage());
 			return "error/400";
 		}
 		
@@ -81,13 +81,13 @@ public class ConnectionController {
 			Principal principal = request.getUserPrincipal();
 			connectionService.addConnection(principal.getName(), newContactDTO);
 		} catch (UserNotFoundException e) {
-			LOGGER.debug("User not found: " + e.getMessage());
+			LOGGER.debug("Save contact: User not found: " + e.getMessage());
 			return "redirect:/contact?error=User not found.";
 		} catch (ConnectionForbiddenException e) {
-			LOGGER.debug("Connection forbidden : " + e.getMessage());
+			LOGGER.debug("Save contact: Connection forbidden : " + e.getMessage());
 			return "redirect:/contact?error=Connection forbidden.";
 		} catch (Exception e) {
-			LOGGER.debug("Unable to process new connection : " + e.getMessage());
+			LOGGER.debug("Save contact: Unable to process new connection : " + e.getMessage());
 			return "redirect:/contact?error=Unable to process new connection.";
 		}
 

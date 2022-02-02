@@ -51,13 +51,13 @@ public class OperationController {
 			TransferDTO transferDTO = operationService.getTransfersDetails(principal.getName());
 			model.addAttribute("transfer", transferDTO);
 		} catch (UserNotFoundException e) {
-			LOGGER.debug("User not found: " + e.getMessage());
+			LOGGER.debug("Get transfer: User not found: " + e.getMessage());
 			return "error/404";
 		} catch (ConverterException e) {
-			LOGGER.debug("DTO converter exception: " + e.getMessage());
+			LOGGER.debug("Get transfer: DTO converter exception: " + e.getMessage());
 			return "error/400";
 		} catch (Exception e) {
-			LOGGER.debug("Unable to process getTransfer: " + e.getMessage());
+			LOGGER.debug("Get transfer: Unable to process getTransfer: " + e.getMessage());
 			return "error/400";
 		}
 		return ("transfer");
@@ -82,24 +82,24 @@ public class OperationController {
 			StringBuilder sb = new StringBuilder();
 			errors.getAllErrors().stream().forEach(e -> sb.append(e.getDefaultMessage() + " "));
 			LOGGER.debug("has errors:" + sb);
-			return "redirect:/home?error=" + sb;
+			return "redirect:/bank?error=" + sb;
 		}
 		
 		Principal principal = request.getUserPrincipal();
 		try {
 			operationService.operation(principal.getName(), operationDTO);
 		} catch (UserNotFoundException e) {
-			LOGGER.debug("User not found: " + e.getMessage());
-			return "redirect:/home?error=" + e.getMessage();
+			LOGGER.debug("Save operation: User not found: " + e.getMessage());
+			return "redirect:/bank?error=User not found";
 		} catch (OperationForbiddenException e) {
-			LOGGER.debug("Operation forbidden: " + e.getMessage());
-			return "redirect:/home?error=" + e.getMessage();
+			LOGGER.debug("Save operation: Operation forbidden: " + e.getMessage());
+			return "redirect:/bank?error=Operation forbidden";
 		} catch (Exception e) {
-			LOGGER.debug("Unable to process operation: " + e.getMessage());
-			return "redirect:/home?error=" + e.getMessage();
+			LOGGER.debug("Save operation: Unable to process operation: " + e.getMessage());
+			return "redirect:/bank?error=Unable to process operation";
 		}
 		
-		return "redirect:/home?success=Operation succeed.";
+		return "redirect:/bank?success=Operation succeed.";
 	}
 	
 	@PostMapping("/saveTransfer")
@@ -113,20 +113,20 @@ public class OperationController {
 			StringBuilder sb = new StringBuilder();
 			errors.getAllErrors().stream().forEach(e -> sb.append(e.getDefaultMessage() + " "));
 			LOGGER.debug("has errors:" + sb);
-			return "redirect:/home?error=" + sb;
+			return "redirect:/transfer?error=" + sb;
 		}
 		
 		Principal principal = request.getUserPrincipal();
 		try {
 			operationService.transfer(principal.getName(), newTransferDTO);
 		} catch (UserNotFoundException e) {
-			LOGGER.debug("User not found: " + e.getMessage());
+			LOGGER.debug("Save transfer: User not found: " + e.getMessage());
 			return "redirect:/transfer?error=User not found";
 		} catch (OperationForbiddenException e) {
-			LOGGER.debug("Operation forbidden: " + e.getMessage());
+			LOGGER.debug("Save transfer: Operation forbidden: " + e.getMessage());
 			return "redirect:/transfer?error=Operation forbidden.";
 		} catch (Exception e) {
-			LOGGER.debug("Unable to process operation: " + e.getMessage());
+			LOGGER.debug("Save transfer: Unable to process operation: " + e.getMessage());
 			return "redirect:/transfer?error=Unable to process transfer.";
 		}
 		
