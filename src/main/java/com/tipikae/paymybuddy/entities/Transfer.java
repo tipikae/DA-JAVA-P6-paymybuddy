@@ -3,6 +3,7 @@ package com.tipikae.paymybuddy.entities;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -26,6 +27,18 @@ public class Transfer extends Operation {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * Description.
+	 */
+	@Column(name = "description")
+	private String description;
+
+	/**
+	 * Fee.
+	 */
+	@Column(name = "fee")
+	private BigDecimal fee;
+
+	/**
 	 * The source User object.
 	 */
 	@ManyToOne
@@ -45,7 +58,9 @@ public class Transfer extends Operation {
 	
 	public Transfer(int number, Date dateOperation, BigDecimal amount, String description, 
 			BigDecimal fee, Account account, User scrUser, User destUSer) {
-		super(number, dateOperation, amount, description, fee, account);
+		super(number, dateOperation, amount, account);
+		this.description = description;
+		this.fee = fee;
 		this.srcUser = scrUser;
 		this.destUser = destUSer;
 	}

@@ -58,18 +58,6 @@ public abstract class Operation implements Serializable {
 	private BigDecimal amount;
 
 	/**
-	 * Description.
-	 */
-	@Column(name = "description")
-	private String description;
-
-	/**
-	 * Fee.
-	 */
-	@Column(name = "fee")
-	private BigDecimal fee;
-
-	/**
 	 * Account.
 	 */
 	@ManyToOne
@@ -80,14 +68,11 @@ public abstract class Operation implements Serializable {
 		super();
 	}
 
-	public Operation(int number, Date dateOperation, BigDecimal amount, String description, 
-			BigDecimal fee, Account account) {
+	public Operation(int number, Date dateOperation, BigDecimal amount, Account account) {
 		super();
 		this.number = number;
 		this.dateOperation = dateOperation;
 		this.amount = amount;
-		this.description = description;
-		this.fee = fee;
 		this.account = account;
 	}
 	

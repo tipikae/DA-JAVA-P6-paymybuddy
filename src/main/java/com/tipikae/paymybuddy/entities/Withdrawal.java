@@ -22,9 +22,8 @@ public class Withdrawal extends Operation {
 		super();
 	}
 
-	public Withdrawal(int number, Date dateOperation, BigDecimal amount, 
-			String description, BigDecimal fee, Account account) {
-		super(number, dateOperation, amount, description, fee, account);
+	public Withdrawal(int number, Date dateOperation, BigDecimal amount, Account account) {
+		super(number, dateOperation, amount, account);
 	}
 	
 	

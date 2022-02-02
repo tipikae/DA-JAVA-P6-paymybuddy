@@ -2,7 +2,6 @@ package com.tipikae.paymybuddy.services;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -16,13 +15,12 @@ import com.tipikae.paymybuddy.dto.NewOperationDTO;
 import com.tipikae.paymybuddy.dto.NewTransferDTO;
 import com.tipikae.paymybuddy.entities.Account;
 import com.tipikae.paymybuddy.entities.Deposit;
-import com.tipikae.paymybuddy.entities.Operation;
 import com.tipikae.paymybuddy.entities.Transfer;
 import com.tipikae.paymybuddy.entities.User;
 import com.tipikae.paymybuddy.entities.Withdrawal;
 import com.tipikae.paymybuddy.exceptions.OperationForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
-import com.tipikae.paymybuddy.repositories.IAccountRepository;
+import com.tipikae.paymybuddy.repositories.IOperationRepository;
 
 /**
  * Account Service implementation.
@@ -43,10 +41,10 @@ public class AccountServiceImpl implements IAccountService {
 	private IUserService userService;
 	
 	/**
-	 * Account repository.
+	 * Operation repository.
 	 */
 	@Autowired
-	private IAccountRepository accountRepository;
+	private IOperationRepository operationRepository;
 	
 	/**
 	 * Rate property from application.properties.
@@ -77,15 +75,12 @@ public class AccountServiceImpl implements IAccountService {
 
 	private void deposit(User user, BigDecimal amount) {
 		Account account = user.getAccount();
-		List<Operation> operations = account.getOperations();
 		Deposit deposit = new Deposit();
 		deposit.setAccount(account);
 		deposit.setAmount(amount);
 		deposit.setDateOperation(new Date());
-		operations.add(deposit);
-		account.setOperations(operations);
 		account.setBalance(account.getBalance().add(amount));
-		accountRepository.save(account);
+		operationRepository.save(deposit);
 	}
 
 	private void withdrawal(User user, BigDecimal amount) throws OperationForbiddenException {
@@ -94,15 +89,13 @@ public class AccountServiceImpl implements IAccountService {
 			LOGGER.debug("Withdrawal: amount(" + amount + ") > balance(" + account.getBalance() + ")");
 			throw new OperationForbiddenException("Amount can't be more than balance.");
 		}
-		List<Operation> operations = account.getOperations();
+		
 		Withdrawal withdrawal = new Withdrawal();
 		withdrawal.setAccount(account);
 		withdrawal.setAmount(amount);
 		withdrawal.setDateOperation(new Date());
-		operations.add(withdrawal);
-		account.setOperations(operations);
 		account.setBalance(account.getBalance().subtract(amount));
-		accountRepository.save(account);
+		operationRepository.save(withdrawal);
 	}
 
 	/**
@@ -125,7 +118,7 @@ public class AccountServiceImpl implements IAccountService {
 		User userDest = userService.isUserExists(emailDest);
 
 		Account accountSrc = userSrc.getAccount();
-		List<Operation> operations = accountSrc.getOperations();
+		Account accountDest = userDest.getAccount();
 		BigDecimal fee = amount.multiply(rate);
 		Transfer transfer = new Transfer();
 		transfer.setAccount(accountSrc);
@@ -135,12 +128,9 @@ public class AccountServiceImpl implements IAccountService {
 		transfer.setDestUser(userDest);
 		transfer.setSrcUser(userSrc);
 		transfer.setFee(fee);
-		operations.add(transfer);
-		accountSrc.setOperations(operations);
 		accountSrc.setBalance(accountSrc.getBalance().subtract(amount).subtract(fee));
-		accountRepository.save(accountSrc);
-		// TODO
-		// add amount to dest account
+		accountDest.setBalance(accountDest.getBalance().add(amount));
+		operationRepository.save(transfer); 
 	}
 
 }
