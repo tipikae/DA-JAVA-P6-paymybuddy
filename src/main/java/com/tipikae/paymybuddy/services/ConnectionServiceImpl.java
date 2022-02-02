@@ -82,7 +82,8 @@ public class ConnectionServiceImpl implements IConnectionService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ContactDTO getConnectionsDetails(String srcEmail) throws UserNotFoundException, ConverterException {
+	public ContactDTO getConnectionsDetails(String srcEmail) 
+			throws UserNotFoundException, ConverterException {
 		LOGGER.debug("Getting connections: source email=" + srcEmail);
 		User user = userService.isUserExists(srcEmail);
 		
@@ -90,7 +91,8 @@ public class ConnectionServiceImpl implements IConnectionService {
 		contactDTO.setConnections(
 				converterConnectionToConnectionDTO.convertToListDTOs(user.getConnections()));
 		contactDTO.setOthers(
-				converterUserToConnectionDTO.convertToListDTOs(connectionRepository.getPotentialConnections(user.getId())));
+				converterUserToConnectionDTO.convertToListDTOs(
+						connectionRepository.getPotentialConnections(user.getId())));
 		
 		return contactDTO;
 	}
