@@ -23,9 +23,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.tipikae.paymybuddy.controllers.OperationController;
 import com.tipikae.paymybuddy.dto.NewOperationDTO;
-import com.tipikae.paymybuddy.dto.TransferDTO;
 import com.tipikae.paymybuddy.exceptions.OperationForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
+import com.tipikae.paymybuddy.services.IConnectionService;
 import com.tipikae.paymybuddy.services.IOperationService;
 
 @WebMvcTest(controllers = OperationController.class)
@@ -38,6 +38,8 @@ class OperationControllerTest {
 	private UserDetailsService userDetailsService;
 	@MockBean
 	private IOperationService operationService;
+	@MockBean
+	private IConnectionService connectionService;
 	
 	private static NewOperationDTO rightDepOperationDTO;
 	private static NewOperationDTO rightWitOperationDTO;
@@ -60,8 +62,8 @@ class OperationControllerTest {
 	
 	@WithMockUser
 	@Test
-	void getTransactionReturnsErrorWhenUserNotFoundException() throws Exception {
-		doThrow(UserNotFoundException.class).when(operationService).getTransfersDetails(anyString());
+	void getTransactionsReturnsErrorWhenUserNotFoundException() throws Exception {
+		doThrow(UserNotFoundException.class).when(operationService).getOperations(anyString());
 		mockMvc.perform(get("/transaction"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("error/404"));
@@ -69,11 +71,8 @@ class OperationControllerTest {
 	
 	@WithMockUser
 	@Test
-	void getTransactionReturnsTransferWhenOk() throws Exception {
-		TransferDTO transferDTO = new TransferDTO();
-		transferDTO.setConnections(new ArrayList<>());
-		transferDTO.setTransactions(new ArrayList<>());
-		when(operationService.getTransfersDetails(anyString())).thenReturn(transferDTO);
+	void getTransactionsReturnsTransferWhenOk() throws Exception {
+		when(operationService.getOperations(anyString())).thenReturn(new ArrayList<>());
 		mockMvc.perform(get("/transaction"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("transaction"));

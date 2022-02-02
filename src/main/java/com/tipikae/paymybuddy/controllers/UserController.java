@@ -3,6 +3,7 @@ package com.tipikae.paymybuddy.controllers;
 import java.security.Principal;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -104,10 +105,11 @@ public class UserController {
 	 * @return String
 	 */
 	@GetMapping("/home")
-	public String getHome(HttpServletRequest request, Model model) {
+	public String getHome(HttpServletRequest request, Model model, HttpSession session) {
 		LOGGER.debug("getHome");
 		Principal principal = request.getUserPrincipal();
 		try {
+			session.setAttribute("page", "Home");
 			model.addAttribute("home", userService.getHomeDetails(principal.getName()));
 		} catch (UserNotFoundException e) {
 			LOGGER.debug("Get home: UserNotFoundException: " + e.getMessage());
@@ -130,10 +132,11 @@ public class UserController {
 	 * @return String
 	 */
 	@GetMapping("/profile")
-	public String getProfile(HttpServletRequest request, Model model) {
+	public String getProfile(HttpServletRequest request, Model model, HttpSession session) {
 		LOGGER.debug("Get profile");
 		Principal principal = request.getUserPrincipal();
 		try {
+			session.setAttribute("page", "Profile");
 			model.addAttribute("profile", userService.getProfileDetails(principal.getName()));
 		} catch (UserNotFoundException e) {
 			LOGGER.debug("Get profile: UserNotFoundException: " + e.getMessage());
@@ -155,10 +158,11 @@ public class UserController {
 	 * @return String
 	 */
 	@GetMapping("/bank")
-	public String getBank(HttpServletRequest request) {
+	public String getBank(HttpServletRequest request, HttpSession session) {
 		LOGGER.debug("Get bank");
 		Principal principal = request.getUserPrincipal();
 		try {
+			session.setAttribute("page", "Bank");
 			userService.getBank(principal.getName());
 		} catch (UserNotFoundException e) {
 			LOGGER.debug("Get bank: UserNotFoundException: " + e.getMessage());

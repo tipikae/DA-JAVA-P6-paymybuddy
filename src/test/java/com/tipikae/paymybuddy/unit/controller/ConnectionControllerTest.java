@@ -19,7 +19,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.tipikae.paymybuddy.controllers.ConnectionController;
-import com.tipikae.paymybuddy.dto.ContactDTO;
 import com.tipikae.paymybuddy.dto.NewContactDTO;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.services.IConnectionService;
@@ -49,10 +48,8 @@ class ConnectionControllerTest {
 	@WithMockUser
 	@Test
 	void getContactReturnsContactPageWhenOk() throws Exception {
-		ContactDTO contactDTO = new ContactDTO();
-		contactDTO.setConnections(new ArrayList<>());
-		contactDTO.setOthers(new ArrayList<>());
-		when(connectionService.getConnectionsDetails(anyString())).thenReturn(contactDTO);
+		when(connectionService.getConnections(anyString())).thenReturn(new ArrayList<>());
+		when(connectionService.getPotentialConnections(anyString())).thenReturn(new ArrayList<>());
 		mockMvc.perform(get("/contact"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("contact"));
@@ -61,7 +58,7 @@ class ConnectionControllerTest {
 	@WithMockUser
 	@Test
 	void getContactReturnsErrorWhenEmailNotFound() throws Exception {
-		doThrow(UserNotFoundException.class).when(connectionService).getConnectionsDetails(anyString());
+		doThrow(UserNotFoundException.class).when(connectionService).getConnections(anyString());
 		mockMvc.perform(get("/contact"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("error/404"));

@@ -3,6 +3,7 @@ package com.tipikae.paymybuddy.controllers;
 import java.security.Principal;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -42,10 +43,11 @@ public class ConnectionController {
 	 * @return @return
 	 */
 	@GetMapping("/contact")
-	public String getContact(HttpServletRequest request, Model model) {
+	public String getContact(HttpServletRequest request, Model model, HttpSession session) {
 		LOGGER.debug("Get contact");
 		try {
 			Principal principal = request.getUserPrincipal();
+			session.setAttribute("page", "Contact");
 			model.addAttribute("connections", connectionService.getConnections(principal.getName()));
 			model.addAttribute("others", connectionService.getPotentialConnections(principal.getName()));
 		} catch (UserNotFoundException e) {

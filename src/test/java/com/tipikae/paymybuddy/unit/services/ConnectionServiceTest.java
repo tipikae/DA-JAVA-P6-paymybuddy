@@ -66,13 +66,13 @@ class ConnectionServiceTest {
 		when(userService.isUserExists(anyString())).thenReturn(alice);
 		when(converterConnectionToConnectionDTO.convertToListDTOs(connections)).thenReturn(connectionsDTO);
 		assertEquals("bob@bob.com", 
-				connectionService.getConnectionsDetails("alice@alice.com").getConnections().get(0).getEmail());
+				connectionService.getConnections("alice@alice.com").get(0).getEmail());
 	}
 
 	@Test
 	void getConnectionsThrowsUserNotFoundExceptionWhenEmailNotFound() throws UserNotFoundException {
 		when(userService.isUserExists(anyString())).thenThrow(UserNotFoundException.class);
-		assertThrows(UserNotFoundException.class, () -> connectionService.getConnectionsDetails("bob@bob.com"));
+		assertThrows(UserNotFoundException.class, () -> connectionService.getConnections("bob@bob.com"));
 	}
 	
 	@Test

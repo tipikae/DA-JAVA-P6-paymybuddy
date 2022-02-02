@@ -3,6 +3,7 @@ package com.tipikae.paymybuddy.controllers;
 import java.security.Principal;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -46,10 +47,11 @@ public class OperationController {
 	 * @return
 	 */
 	@GetMapping("/transaction")
-	public String getTransactions(HttpServletRequest request, Model model) {
+	public String getTransactions(HttpServletRequest request, Model model, HttpSession session) {
 		LOGGER.debug("Get transactions");
 		try {
 			Principal principal = request.getUserPrincipal();
+			session.setAttribute("page", "Transactions");
 			model.addAttribute("connections", connectionService.getConnections(principal.getName()));
 			model.addAttribute("operations", operationService.getOperations(principal.getName()));
 		} catch (UserNotFoundException e) {
@@ -92,13 +94,13 @@ public class OperationController {
 			operationService.operation(principal.getName(), operationDTO);
 		} catch (UserNotFoundException e) {
 			LOGGER.debug("Save operation: User not found: " + e.getMessage());
-			return "redirect:/bank?error=User not found";
+			return "redirect:/bank?error=User not found.";
 		} catch (OperationForbiddenException e) {
 			LOGGER.debug("Save operation: Operation forbidden: " + e.getMessage());
-			return "redirect:/bank?error=Operation forbidden";
+			return "redirect:/bank?error=Amount can't be more than balance.";
 		} catch (Exception e) {
 			LOGGER.debug("Save operation: Unable to process operation: " + e.getMessage());
-			return "redirect:/bank?error=Unable to process operation";
+			return "redirect:/bank?error=Unable to process operation.";
 		}
 		
 		return "redirect:/bank?success=Operation succeed.";
@@ -123,7 +125,7 @@ public class OperationController {
 			operationService.transfer(principal.getName(), newTransferDTO);
 		} catch (UserNotFoundException e) {
 			LOGGER.debug("Save transfer: User not found: " + e.getMessage());
-			return "redirect:/transaction?error=User not found";
+			return "redirect:/transaction?error=User not found.";
 		} catch (OperationForbiddenException e) {
 			LOGGER.debug("Save transfer: Operation forbidden: " + e.getMessage());
 			return "redirect:/transaction?error=Operation forbidden.";

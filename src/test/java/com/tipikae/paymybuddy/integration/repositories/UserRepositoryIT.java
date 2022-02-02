@@ -40,7 +40,7 @@ class UserRepositoryIT {
 	void testGetAccountById() {
 		User user = userRepository.getById(1);
 		assertEquals(1, user.getAccount().getIdUser());
-		assertEquals(0, user.getAccount().getBalance().compareTo(new BigDecimal(1000.0)));
+		assertEquals(1, user.getAccount().getBalance().compareTo(new BigDecimal(1000.0)));
 	}
 	@Test
 	void testGetConnectionsById() {

@@ -18,14 +18,6 @@ class ConnectionRepositoryIT {
 	private IConnectionRepository connectionRepository;
 
 	@Test
-	void testFindByConnectionId() {
-		int idSrc = 1;
-		int idDest = 2;
-		assertEquals(idSrc, 
-				connectionRepository.findByConnectionId(idSrc, idDest).get().getSrcUser().getId());
-	}
-	
-	@Test
 	void testGetPotentialFriends() {
 		assertEquals(0, connectionRepository.getPotentialConnections(1).size());
 	}

@@ -19,7 +19,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.tipikae.paymybuddy.converters.IConverterListConnectionToConnectionDTO;
-import com.tipikae.paymybuddy.converters.IConverterListTransferToTransactionDTO;
+import com.tipikae.paymybuddy.converters.IConverterListOperationToOperationDTO;
 import com.tipikae.paymybuddy.dto.NewOperationDTO;
 import com.tipikae.paymybuddy.entities.Account;
 import com.tipikae.paymybuddy.entities.Operation;
@@ -41,26 +41,29 @@ class OperationServiceTest {
 	@Mock
 	private IConverterListConnectionToConnectionDTO converterConnectionToConnectionDTO;
 	@Mock
-	private IConverterListTransferToTransactionDTO converterTransferToTransactionDTO;
+	private IConverterListOperationToOperationDTO converterOperationToOperationDTO;
 	
 	@InjectMocks
 	private OperationServiceImpl operationService;
 
 	@Test
-	void getTransferThrowsExceptionWhenEmailNotFound() throws UserNotFoundException {
+	void getOperationsThrowsExceptionWhenEmailNotFound() throws UserNotFoundException {
 		when(userService.isUserExists(anyString())).thenThrow(UserNotFoundException.class);
-		assertThrows(UserNotFoundException.class, () -> operationService.getTransfersDetails("alice@alice.com"));
+		assertThrows(UserNotFoundException.class, () -> operationService.getOperations("alice@alice.com"));
 	}
 	
 	@Test
-	void getTransferReturnsDTOswhenOk() throws UserNotFoundException, ConverterException {
+	void getOperationsReturnsDTOswhenOk() throws UserNotFoundException, ConverterException {
+		Account account = new Account();
 		User user = new User();
+		user.setId(1);
 		user.setConnections(new ArrayList<>());
+		account.setIdUser(user.getId());
+		user.setAccount(account);
 		when(userService.isUserExists(anyString())).thenReturn(user);
-		when(operationRepository.findTransfersByIdSrc(anyInt())).thenReturn(new ArrayList<>());
-		when(converterConnectionToConnectionDTO.convertToListDTOs(anyList())).thenReturn(new ArrayList<>());
-		when(converterTransferToTransactionDTO.convertToListDTOs(anyList())).thenReturn(new ArrayList<>());
-		assertEquals(0, operationService.getTransfersDetails("alice@alice.com").getConnections().size());
+		when(operationRepository.findOperationsByIdSrc(anyInt())).thenReturn(new ArrayList<>());
+		when(converterOperationToOperationDTO.convertToListDTOs(anyList())).thenReturn(new ArrayList<>());
+		assertEquals(0, operationService.getOperations("alice@alice.com").size());
 	}
 	
 	@Test

@@ -15,7 +15,7 @@ class OperationRepositoryIT {
 	private IOperationRepository operationRepository;
 
 	@Test
-	void testFindTransfersByEmailSrc() {
-		assertEquals(2, operationRepository.findTransfersByIdSrc(1).size());
+	void testFindOperationsByEmailSrc() {
+		assertEquals(9, operationRepository.findOperationsByIdSrc(1).size());
 	}
 }
