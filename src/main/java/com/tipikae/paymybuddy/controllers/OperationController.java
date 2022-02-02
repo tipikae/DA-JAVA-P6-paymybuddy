@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.tipikae.paymybuddy.dto.NewOperationDTO;
 import com.tipikae.paymybuddy.dto.NewTransferDTO;
 import com.tipikae.paymybuddy.dto.TransferDTO;
+import com.tipikae.paymybuddy.exceptions.ConverterException;
 import com.tipikae.paymybuddy.exceptions.OperationForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.services.IOperationService;
@@ -52,6 +53,9 @@ public class OperationController {
 		} catch (UserNotFoundException e) {
 			LOGGER.debug("User not found: " + e.getMessage());
 			return "error/404";
+		} catch (ConverterException e) {
+			LOGGER.debug("DTO converter exception: " + e.getMessage());
+			return "error/400";
 		} catch (Exception e) {
 			LOGGER.debug("Unable to process getTransfer: " + e.getMessage());
 			return "error/400";
