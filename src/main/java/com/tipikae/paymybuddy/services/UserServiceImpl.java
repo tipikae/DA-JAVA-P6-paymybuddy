@@ -49,9 +49,15 @@ public class UserServiceImpl implements IUserService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
+	/**
+	 * User to HomeDTO converter.
+	 */
 	@Autowired
 	private IConverterUserToHomeDTO converterUserToHomeDTO;
 	
+	/**
+	 * User to ProfileDTO converter.
+	 */
 	@Autowired
 	private IConverterUserToProfileDTO converterUserToProfileDTO;
 
