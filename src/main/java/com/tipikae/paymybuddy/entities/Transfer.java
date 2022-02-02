@@ -19,7 +19,7 @@ import lombok.EqualsAndHashCode;
  *
  */
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @DiscriminatorValue("TRA")
 public class Transfer extends Operation {
@@ -56,12 +56,12 @@ public class Transfer extends Operation {
 		super();
 	}
 	
-	public Transfer(int number, Date dateOperation, BigDecimal amount, String description, 
-			BigDecimal fee, Account account, User scrUser, User destUSer) {
+	public Transfer(int number, Date dateOperation, BigDecimal amount, Account account, 
+			String description, BigDecimal fee, User srcUser, User destUser) {
 		super(number, dateOperation, amount, account);
 		this.description = description;
 		this.fee = fee;
-		this.srcUser = scrUser;
-		this.destUser = destUSer;
+		this.srcUser = srcUser;
+		this.destUser = destUser;
 	}
 }

@@ -1,7 +1,6 @@
 package com.tipikae.paymybuddy.repositories;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,19 +19,6 @@ import com.tipikae.paymybuddy.entities.User;
  */
 @Repository
 public interface IConnectionRepository extends JpaRepository<Connection, ConnectionId> {
-
-	/**
-	 * Find a connection
-	 * @param idSrc
-	 * @param idDest
-	 * @return Optional<ConnectionId>
-	 */
-	@Query(
-		value = "SELECT * FROM connection WHERE id_user_src = :idSrc AND id_user_dest = :idDest",
-		nativeQuery = true)
-	Optional<Connection> findByConnectionId(
-			@Param("idSrc") int idSrc, 
-			@Param("idDest") int idDest);
 
 	/**
 	 * Get potential connections.

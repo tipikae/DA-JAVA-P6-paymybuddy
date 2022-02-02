@@ -28,4 +28,14 @@ public interface IOperationRepository extends JpaRepository<Operation, Integer> 
 		value = "SELECT * FROM operation WHERE type = 'TRA' AND id_src_connection = :idSrc",
 		nativeQuery = true)
 	List<Transfer> findTransfersByIdSrc(@Param("idSrc") int idSrc);
+	
+	/**
+	 * Find operations by id account.
+	 * @param idAccount
+	 * @return List<Operation>
+	 */
+	@Query(
+		value = "SELECT * FROM operation WHERE id_account = :idAccount",
+		nativeQuery = true)
+	List<Operation> findOperationsByIdSrc(@Param("idAccount") int idAccount);
 }

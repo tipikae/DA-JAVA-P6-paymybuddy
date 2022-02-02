@@ -110,8 +110,7 @@ public class UserController {
 		LOGGER.debug("getHome");
 		Principal principal = request.getUserPrincipal();
 		try {
-			HomeDTO homeDTO = userService.getHomeDetails(principal.getName());
-			model.addAttribute("home", homeDTO);
+			model.addAttribute("home", userService.getHomeDetails(principal.getName()));
 		} catch (UserNotFoundException e) {
 			LOGGER.debug("Get home: UserNotFoundException: " + e.getMessage());
 			return "error/404";
@@ -137,8 +136,7 @@ public class UserController {
 		LOGGER.debug("Get profile");
 		Principal principal = request.getUserPrincipal();
 		try {
-			ProfileDTO profile = userService.getProfileDetails(principal.getName());
-			model.addAttribute("profile", profile);
+			model.addAttribute("profile", userService.getProfileDetails(principal.getName()));
 		} catch (UserNotFoundException e) {
 			LOGGER.debug("Get profile: UserNotFoundException: " + e.getMessage());
 			return "error/404";

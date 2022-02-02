@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.tipikae.paymybuddy.dto.ContactDTO;
 import com.tipikae.paymybuddy.dto.NewContactDTO;
 import com.tipikae.paymybuddy.exceptions.ConnectionForbiddenException;
 import com.tipikae.paymybuddy.exceptions.ConverterException;
@@ -47,8 +46,8 @@ public class ConnectionController {
 		LOGGER.debug("Get contact");
 		try {
 			Principal principal = request.getUserPrincipal();
-			ContactDTO contactDTO= connectionService.getConnectionsDetails(principal.getName());
-			model.addAttribute("contact", contactDTO);
+			model.addAttribute("connections", connectionService.getConnections(principal.getName()));
+			model.addAttribute("others", connectionService.getPotentialConnections(principal.getName()));
 		} catch (UserNotFoundException e) {
 			LOGGER.debug("Get contact: User not found exception: " + e.getMessage());
 			return "error/404";

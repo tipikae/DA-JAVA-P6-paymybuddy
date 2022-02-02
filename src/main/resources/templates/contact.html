@@ -9,9 +9,9 @@
 </head>
 <body>
 	<div layout:fragment="content">
-		<section th:object="${contact}">
+		<section>
 			<div class="col-md-6">
-				<div class="" th:if="*{connections}">
+				<div class="" th:if="${connections}">
 					<h2>Connection list</h2>
 					<div>
 						<table class="table table-striped">
@@ -20,7 +20,7 @@
 								<th>Lastname</th>
 								<th>Email</th>
 							</tr>
-							<tr th:each="c:*{connections}">
+							<tr th:each="c:${connections}">
 								<td th:text="${c.firstname}"></td>
 								<td th:text="${c.lastname}"></td>
 								<td th:text="${c.email}"></td>
@@ -30,13 +30,13 @@
 				</div>
 			</div>
 			<div class="col-md-6">
-				<div class="" th:if="*{others}">
+				<div class="" th:if="${others}">
 					<h2>Add a connection</h2>
 					<form th:action="@{/saveContact}" method="post">
 						<select name="destEmail">
 							<option value="">Select a contact</option>
 							<option 
-								th:each="o:*{others}" 
+								th:each="o:${others}" 
 								th:value="${o.email}" 
 								th:text="${o.firstname} + ' ' + ${o.lastname} + ' ' + ${o.email}">
 							</option>

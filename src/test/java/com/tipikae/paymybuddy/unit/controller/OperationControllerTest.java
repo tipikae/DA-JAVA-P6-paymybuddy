@@ -60,23 +60,23 @@ class OperationControllerTest {
 	
 	@WithMockUser
 	@Test
-	void getTransferReturnsErrorWhenUserNotFoundException() throws Exception {
+	void getTransactionReturnsErrorWhenUserNotFoundException() throws Exception {
 		doThrow(UserNotFoundException.class).when(operationService).getTransfersDetails(anyString());
-		mockMvc.perform(get("/transfer"))
+		mockMvc.perform(get("/transaction"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("error/404"));
 	}
 	
 	@WithMockUser
 	@Test
-	void getTransferReturnsTransferWhenOk() throws Exception {
+	void getTransactionReturnsTransferWhenOk() throws Exception {
 		TransferDTO transferDTO = new TransferDTO();
 		transferDTO.setConnections(new ArrayList<>());
 		transferDTO.setTransactions(new ArrayList<>());
 		when(operationService.getTransfersDetails(anyString())).thenReturn(transferDTO);
-		mockMvc.perform(get("/transfer"))
+		mockMvc.perform(get("/transaction"))
 			.andExpect(status().isOk())
-			.andExpect(view().name("transfer"));
+			.andExpect(view().name("transaction"));
 	}
 	
 	@WithMockUser
@@ -85,7 +85,7 @@ class OperationControllerTest {
 		mockMvc.perform(post("/saveOperation")
 				.flashAttr("operation", rightDepOperationDTO))
 			.andExpect(status().is(302))
-			.andExpect(view().name("redirect:/home?success=Operation succeed."));
+			.andExpect(view().name("redirect:/bank?success=Operation succeed."));
 		
 	}
 	
@@ -95,7 +95,7 @@ class OperationControllerTest {
 		mockMvc.perform(post("/saveOperation")
 				.flashAttr("operation", wrongOperationDTO))
 			.andExpect(status().is(302))
-			.andExpect(view().name("redirect:/home?error=Amount must be positive. "));
+			.andExpect(view().name("redirect:/bank?error=Amount must be positive. "));
 		
 	}
 	
@@ -107,7 +107,7 @@ class OperationControllerTest {
 		mockMvc.perform(post("/saveOperation")
 				.flashAttr("operation", rightDepOperationDTO))
 			.andExpect(status().is(302))
-			.andExpect(view().name("redirect:/home?error=User not found."));
+			.andExpect(view().name("redirect:/bank?error=User not found."));
 		
 	}
 	
@@ -119,7 +119,7 @@ class OperationControllerTest {
 		mockMvc.perform(post("/saveOperation")
 				.flashAttr("operation", rightWitOperationDTO))
 			.andExpect(status().is(302))
-			.andExpect(view().name("redirect:/home?error=Amount can't be more than balance."));
+			.andExpect(view().name("redirect:/bank?error=Amount can't be more than balance."));
 		
 	}
 
