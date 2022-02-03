@@ -7,3 +7,20 @@
 .green {
 	color: green;
 }
+#logo {
+	display: inline-block;
+	width: 144px;
+	height: 42px;
+	background-image: url(../img/logo.png);
+  	background-repeat: no-repeat;
+	background-size: 144px 42px;
+  	background-position: center;
+  	background-origin: content-box;
+}
+#header {
+	margin-bottom: 0;
+	background-color: #ffffff;
+}
+.active {
+	color: #337ab7;
+}
