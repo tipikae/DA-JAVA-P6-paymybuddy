@@ -29,9 +29,7 @@ After downloading the mysql installer and installing it, you will be asked to co
 ### Creating database
 Post installation of MySQL, Java and Maven, you will have to set up the tables and data in the database.
 
-For this, please run the sql commands present in the `schema.sql` file under the `resources` folder in the code base.
-
-Then insert the data by running `data.sql` in the same `resources` folder.
+For this, please run the sql commands present in the `database.sql` file under the `resources` folder in the code base.
 
 ### Importing the project
 Import the project in your favorite IDE.
