@@ -19,10 +19,12 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.tipikae.paymybuddy.dto.NewUserDTO;
+import com.tipikae.paymybuddy.exceptions.BreadcrumbException;
 import com.tipikae.paymybuddy.exceptions.ConverterException;
 import com.tipikae.paymybuddy.exceptions.UserAlreadyExistException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.services.IUserService;
+import com.tipikae.paymybuddy.util.IBreadcrumb;
 
 /**
  * User controller.
@@ -40,6 +42,12 @@ public class UserController {
 	 */
 	@Autowired
 	private IUserService userService;
+	
+	/**
+	 * Breadcrumb interface.
+	 */
+	@Autowired
+	private IBreadcrumb breadcrumb;
 
 	/**
 	 * Mapping for display registration form.
@@ -109,8 +117,10 @@ public class UserController {
 		LOGGER.debug("getHome");
 		Principal principal = request.getUserPrincipal();
 		try {
-			session.setAttribute("page", "Home");
 			model.addAttribute("home", userService.getHomeDetails(principal.getName()));
+			session.setAttribute("breadcrumb", breadcrumb.getBreadCrumb("/home", "Home"));
+		} catch (BreadcrumbException e) {
+			LOGGER.debug("Get home: BreadcrumbException: " + e.getMessage());
 		} catch (UserNotFoundException e) {
 			LOGGER.debug("Get home: UserNotFoundException: " + e.getMessage());
 			return "error/404";
@@ -136,8 +146,10 @@ public class UserController {
 		LOGGER.debug("Get profile");
 		Principal principal = request.getUserPrincipal();
 		try {
-			session.setAttribute("page", "Profile");
 			model.addAttribute("profile", userService.getProfileDetails(principal.getName()));
+			session.setAttribute("breadcrumb", breadcrumb.getBreadCrumb("/profile", "Profile"));
+		} catch (BreadcrumbException e) {
+			LOGGER.debug("Get profile: BreadcrumbException: " + e.getMessage());
 		} catch (UserNotFoundException e) {
 			LOGGER.debug("Get profile: UserNotFoundException: " + e.getMessage());
 			return "error/404";
@@ -162,8 +174,10 @@ public class UserController {
 		LOGGER.debug("Get bank");
 		Principal principal = request.getUserPrincipal();
 		try {
-			session.setAttribute("page", "Bank");
 			userService.getBank(principal.getName());
+			session.setAttribute("breadcrumb", breadcrumb.getBreadCrumb("/bank", "Bank"));
+		} catch (BreadcrumbException e) {
+			LOGGER.debug("Get bank: BreadcrumbException: " + e.getMessage());
 		} catch (UserNotFoundException e) {
 			LOGGER.debug("Get bank: UserNotFoundException: " + e.getMessage());
 			return "error/404";

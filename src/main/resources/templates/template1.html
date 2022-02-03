@@ -24,11 +24,11 @@
 					</ul>
 				</div>
 			</div>
-			<div>
+			<div th:if="${session.breadcrumb}">
 				<ul class="breadcrumb">
-					<li th:each="entry : ${session.breadCrumb}">
-				         <a th:href="${entry.queryString}" th:unless="${entry.isCurrent}" th:text="${entry.label}">Home</a>
-				         <span th:if="${entry.isCurrent}" th:text="${entry.label}">Home</span>
+					<li th:each="entry : ${session.breadcrumb}">
+				         <a th:href="${entry.query}" th:unless="${entry.isCurrent}" th:text="${entry.label}">Home</a>
+				         <span th:if="${entry.isCurrent and entry.label != 'Home'}" th:text="${entry.label}">Home</span>
 				    </li>
 				 </ul>
 			</div>

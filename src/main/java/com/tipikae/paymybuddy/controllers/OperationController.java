@@ -18,11 +18,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.tipikae.paymybuddy.dto.NewOperationDTO;
 import com.tipikae.paymybuddy.dto.NewTransferDTO;
+import com.tipikae.paymybuddy.exceptions.BreadcrumbException;
 import com.tipikae.paymybuddy.exceptions.ConverterException;
 import com.tipikae.paymybuddy.exceptions.OperationForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.services.IConnectionService;
 import com.tipikae.paymybuddy.services.IOperationService;
+import com.tipikae.paymybuddy.util.IBreadcrumb;
 
 /**
  * Operation Controller.
@@ -35,10 +37,23 @@ public class OperationController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(OperationController.class);
 	
+	/**
+	 * Operation service interface.
+	 */
 	@Autowired
 	private IOperationService operationService;
+	
+	/**
+	 * Connection service interface.
+	 */
 	@Autowired
 	private IConnectionService connectionService;
+	
+	/**
+	 * Breadcrumb interface.
+	 */
+	@Autowired
+	private IBreadcrumb breadcrumb;
 	
 	/**
 	 * Get transactions page.
@@ -51,9 +66,11 @@ public class OperationController {
 		LOGGER.debug("Get transactions");
 		try {
 			Principal principal = request.getUserPrincipal();
-			session.setAttribute("page", "Transactions");
 			model.addAttribute("connections", connectionService.getConnections(principal.getName()));
 			model.addAttribute("operations", operationService.getOperations(principal.getName()));
+			session.setAttribute("breadcrumb", breadcrumb.getBreadCrumb("/transaction", "Transactions"));
+		} catch (BreadcrumbException e) {
+			LOGGER.debug("Get transactions: BreadcrumbException: " + e.getMessage());
 		} catch (UserNotFoundException e) {
 			LOGGER.debug("Get transactions: User not found: " + e.getMessage());
 			return "error/404";
