@@ -80,7 +80,7 @@ public class OperationController {
 			model.addAttribute("connections", connectionService.getConnections(principal.getName()));
 			model.addAttribute("operations", pageOperations);
 
-			if(pageOperations.getTotalPages() > 0) {
+			if(pageOperations.getTotalPages() > 1) {
 				List<Integer> pages = IntStream.rangeClosed(1, pageOperations.getTotalPages())
 						.boxed()
 						.collect(Collectors.toList());
