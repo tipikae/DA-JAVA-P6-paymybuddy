@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.tipikae.paymybuddy.dto.NewOperationDTO;
 import com.tipikae.paymybuddy.dto.NewTransferDTO;
+import com.tipikae.paymybuddy.exceptions.BreadcrumbException;
 import com.tipikae.paymybuddy.exceptions.ConverterException;
 import com.tipikae.paymybuddy.exceptions.OperationForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
@@ -65,9 +66,11 @@ public class OperationController {
 		LOGGER.debug("Get transactions");
 		try {
 			Principal principal = request.getUserPrincipal();
-			session.setAttribute("breadcrumb", breadcrumb.getBreadCrumb("/transaction", "Transactions"));
 			model.addAttribute("connections", connectionService.getConnections(principal.getName()));
 			model.addAttribute("operations", operationService.getOperations(principal.getName()));
+			session.setAttribute("breadcrumb", breadcrumb.getBreadCrumb("/transaction", "Transactions"));
+		} catch (BreadcrumbException e) {
+			LOGGER.debug("Get transactions: BreadcrumbException: " + e.getMessage());
 		} catch (UserNotFoundException e) {
 			LOGGER.debug("Get transactions: User not found: " + e.getMessage());
 			return "error/404";
