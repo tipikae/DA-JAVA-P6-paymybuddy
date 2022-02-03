@@ -73,7 +73,7 @@ public class ConnectionServiceImpl implements IConnectionService {
 		}
 		
 		User userSrc = userService.isUserExists(srcEmail);
-		User userDest = userService.isUserExists(srcEmail);
+		User userDest = userService.isUserExists(destEmail);
 		
 		ConnectionId connectionId = new ConnectionId(userSrc.getId(), userDest.getId());
 		Connection connection = new Connection();
