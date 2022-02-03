@@ -26,8 +26,10 @@
 			</div>
 			<div>
 				<ul class="breadcrumb">
-					<li><a th:href="@{/home}">Home</a></li>
-					<li th:if="${session.page != 'Home'}" th:text="${session.page}"></li>
+					<li th:each="entry : ${session.breadCrumb}">
+				         <a th:href="${entry.queryString}" th:unless="${entry.isCurrent}" th:text="${entry.label}">Home</a>
+				         <span th:if="${entry.isCurrent}" th:text="${entry.label}">Home</span>
+				    </li>
 				 </ul>
 			</div>
 		</header>
