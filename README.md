@@ -47,7 +47,7 @@ Execute `mvn verify` to run unit and integration tests.
 ### Running App
 Go to the `target` repository and run the executable:
 
-`java -jar PayMyBuddy-0.0.1-SNAPSHOT.jar`.
+`java -jar PayMyBuddy-0.0.1-SNAPSHOT.jar --spring.config.location=../config/application.properties`.
 
 Registration step:
 
