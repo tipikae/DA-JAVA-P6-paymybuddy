@@ -1,6 +1,9 @@
 package com.tipikae.paymybuddy.controllers;
 
 import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -66,16 +69,24 @@ public class OperationController {
 	 */
 	@GetMapping("/transaction")
 	public String getTransactions(HttpServletRequest request, Model model, HttpSession session, 
-			@RequestParam(name="page", defaultValue="0")int page, 
+			@RequestParam(name="page", defaultValue="1")int page, 
 			@RequestParam(name="size", defaultValue="5")int size) {
 		LOGGER.debug("Get transactions");
 		try {
 			Principal principal = request.getUserPrincipal();
-			Page<OperationDTO> pageOperations = operationService.getOperations(principal.getName(), page, size);
-			int[] pages = new int[pageOperations.getTotalPages()];
+			Page<OperationDTO> pageOperations = 
+					operationService.getOperations(principal.getName(), page - 1, size);
+			
 			model.addAttribute("connections", connectionService.getConnections(principal.getName()));
 			model.addAttribute("operations", pageOperations);
-			model.addAttribute("pages", pages);
+
+			if(pageOperations.getTotalPages() > 0) {
+				List<Integer> pages = IntStream.rangeClosed(1, pageOperations.getTotalPages())
+						.boxed()
+						.collect(Collectors.toList());
+				model.addAttribute("pages", pages);
+			}
+			
 			session.setAttribute("breadcrumb", breadcrumb.getBreadCrumb("/transaction", "Transactions"));
 		} catch (BreadcrumbException e) {
 			LOGGER.debug("Get transactions: BreadcrumbException: " + e.getMessage());
