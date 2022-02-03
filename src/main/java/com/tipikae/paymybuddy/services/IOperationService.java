@@ -1,7 +1,11 @@
 package com.tipikae.paymybuddy.services;
 
+import java.util.List;
+
+import com.tipikae.paymybuddy.dto.NewOperationDTO;
 import com.tipikae.paymybuddy.dto.NewTransferDTO;
 import com.tipikae.paymybuddy.dto.OperationDTO;
+import com.tipikae.paymybuddy.exceptions.ConverterException;
 import com.tipikae.paymybuddy.exceptions.OperationForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 
@@ -12,26 +16,28 @@ import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
  *
  */
 public interface IOperationService {
-
+	
 	/**
-	 * Deposit money from bank account.
+	 * Get operations.
+	 * @param srcEmail
+	 * @return List<OperationDTO>
+	 * @throws UserNotFoundException
+	 * @throws ConverterException
+	 */
+	List<OperationDTO> getOperations(String srcEmail) throws UserNotFoundException, ConverterException;
+	
+	/**
+	 * Save a deposit or withdrawal operation.
 	 * @param email
 	 * @param operationDTO
 	 * @throws UserNotFoundException
+	 * @throws OperationForbiddenException
 	 */
-	void deposit(String email, OperationDTO operationDTO) throws UserNotFoundException;
-	
-	/**
-	 * Withdrawal money to bank account.
-	 * @param email
-	 * @param operationDTO
-	 * @throws UserNotFoundException, OperationForbiddenException
-	 */
-	void withdrawal(String email, OperationDTO operationDTO) 
+	void operation(String email, NewOperationDTO operationDTO) 
 			throws UserNotFoundException, OperationForbiddenException;
-	
+
 	/**
-	 * Transfer money between friends.
+	 * Transfer money between users.
 	 * @param emailSrc
 	 * @param newTransferDTO
 	 */

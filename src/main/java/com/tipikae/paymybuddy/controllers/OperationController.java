@@ -3,20 +3,25 @@ package com.tipikae.paymybuddy.controllers;
 import java.security.Principal;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.tipikae.paymybuddy.dto.NewOperationDTO;
 import com.tipikae.paymybuddy.dto.NewTransferDTO;
-import com.tipikae.paymybuddy.dto.OperationDTO;
+import com.tipikae.paymybuddy.exceptions.ConverterException;
 import com.tipikae.paymybuddy.exceptions.OperationForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
+import com.tipikae.paymybuddy.services.IConnectionService;
 import com.tipikae.paymybuddy.services.IOperationService;
 
 /**
@@ -32,6 +37,35 @@ public class OperationController {
 	
 	@Autowired
 	private IOperationService operationService;
+	@Autowired
+	private IConnectionService connectionService;
+	
+	/**
+	 * Get transactions page.
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@GetMapping("/transaction")
+	public String getTransactions(HttpServletRequest request, Model model, HttpSession session) {
+		LOGGER.debug("Get transactions");
+		try {
+			Principal principal = request.getUserPrincipal();
+			session.setAttribute("page", "Transactions");
+			model.addAttribute("connections", connectionService.getConnections(principal.getName()));
+			model.addAttribute("operations", operationService.getOperations(principal.getName()));
+		} catch (UserNotFoundException e) {
+			LOGGER.debug("Get transactions: User not found: " + e.getMessage());
+			return "error/404";
+		} catch (ConverterException e) {
+			LOGGER.debug("Get transactions: DTO converter exception: " + e.getMessage());
+			return "error/400";
+		} catch (Exception e) {
+			LOGGER.debug("Get transactions: Unable to process getTransfer: " + e.getMessage());
+			return "error/400";
+		}
+		return ("transaction");
+	}
 	
 	/**
 	 * Save operation for deposit and withdrawal.
@@ -43,7 +77,7 @@ public class OperationController {
 	 */
 	@PostMapping("/saveOperation")
 	public String saveOperation(
-			@ModelAttribute("operation") @Valid OperationDTO operationDTO,
+			@ModelAttribute("operation") @Valid NewOperationDTO operationDTO,
 			Errors errors,
 			HttpServletRequest request) {
 		
@@ -52,31 +86,24 @@ public class OperationController {
 			StringBuilder sb = new StringBuilder();
 			errors.getAllErrors().stream().forEach(e -> sb.append(e.getDefaultMessage() + " "));
 			LOGGER.debug("has errors:" + sb);
-			return "redirect:/home?error=" + sb;
+			return "redirect:/bank?error=" + sb;
 		}
 		
 		Principal principal = request.getUserPrincipal();
 		try {
-			switch(operationDTO.getTypeOperation()) {
-				case "DEP":
-					operationService.deposit(principal.getName(), operationDTO);
-					break;
-				case "WIT":
-					operationService.withdrawal(principal.getName(), operationDTO);
-					break;
-			}
+			operationService.operation(principal.getName(), operationDTO);
 		} catch (UserNotFoundException e) {
-			LOGGER.debug("User not found: " + e.getMessage());
-			return "redirect:/home?error=" + e.getMessage();
+			LOGGER.debug("Save operation: User not found: " + e.getMessage());
+			return "redirect:/bank?error=User not found.";
 		} catch (OperationForbiddenException e) {
-			LOGGER.debug("Operation forbidden: " + e.getMessage());
-			return "redirect:/home?error=" + e.getMessage();
+			LOGGER.debug("Save operation: Operation forbidden: " + e.getMessage());
+			return "redirect:/bank?error=Amount can't be more than balance.";
 		} catch (Exception e) {
-			LOGGER.debug("Unable to process operation: " + e.getMessage());
-			return "redirect:/home?error=" + e.getMessage();
+			LOGGER.debug("Save operation: Unable to process operation: " + e.getMessage());
+			return "redirect:/bank?error=Unable to process operation.";
 		}
 		
-		return "redirect:/home?success=Operation succeed.";
+		return "redirect:/bank?success=Operation succeed.";
 	}
 	
 	@PostMapping("/saveTransfer")
@@ -90,24 +117,24 @@ public class OperationController {
 			StringBuilder sb = new StringBuilder();
 			errors.getAllErrors().stream().forEach(e -> sb.append(e.getDefaultMessage() + " "));
 			LOGGER.debug("has errors:" + sb);
-			return "redirect:/home?error=" + sb;
+			return "redirect:/transaction?error=" + sb;
 		}
 		
 		Principal principal = request.getUserPrincipal();
 		try {
 			operationService.transfer(principal.getName(), newTransferDTO);
 		} catch (UserNotFoundException e) {
-			LOGGER.debug("User not found: " + e.getMessage());
-			return "redirect:/transfer?error=User not found";
+			LOGGER.debug("Save transfer: User not found: " + e.getMessage());
+			return "redirect:/transaction?error=User not found.";
 		} catch (OperationForbiddenException e) {
-			LOGGER.debug("Operation forbidden: " + e.getMessage());
-			return "redirect:/transfer?error=Operation forbidden.";
+			LOGGER.debug("Save transfer: Operation forbidden: " + e.getMessage());
+			return "redirect:/transaction?error=Operation forbidden.";
 		} catch (Exception e) {
-			LOGGER.debug("Unable to process operation: " + e.getMessage());
-			return "redirect:/transfer?error=Unable to process transfer.";
+			LOGGER.debug("Save transfer: Unable to process operation: " + e.getMessage());
+			return "redirect:/transaction?error=Unable to process transfer.";
 		}
 		
-		return "redirect:/transfer?success=Operation succeed.";
+		return "redirect:/transaction?success=Operation succeed.";
 		
 	}
 }

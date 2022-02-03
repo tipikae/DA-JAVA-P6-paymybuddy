@@ -18,11 +18,8 @@ class ConnectionRepositoryIT {
 	private IConnectionRepository connectionRepository;
 
 	@Test
-	void testFindByConnectionId() {
-		String emailSrc = "alice@alice.com";
-		String emailDest = "bob@bob.com";
-		assertEquals(emailSrc, 
-				connectionRepository.findByConnectionId(emailSrc, emailDest).get().getSrcUser().getEmail());
+	void testGetPotentialFriends() {
+		assertEquals(0, connectionRepository.getPotentialConnections(1).size());
 	}
 
 }

@@ -1,6 +1,9 @@
 package com.tipikae.paymybuddy.controllers;
 
+import java.security.Principal;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -15,8 +18,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.tipikae.paymybuddy.dto.UserDTO;
+import com.tipikae.paymybuddy.dto.NewUserDTO;
+import com.tipikae.paymybuddy.exceptions.ConverterException;
 import com.tipikae.paymybuddy.exceptions.UserAlreadyExistException;
+import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.services.IUserService;
 
 /**
@@ -48,7 +53,7 @@ public class UserController {
 			Model model) {
 		LOGGER.debug("Get registration page.");
 		
-		UserDTO userDTO = new UserDTO();
+		NewUserDTO userDTO = new NewUserDTO();
 		model.addAttribute("user", userDTO);
 		return "registration";
 		
@@ -63,7 +68,7 @@ public class UserController {
 	 */
 	@PostMapping("/user/registration")
 	public ModelAndView registerNewUser(
-			  @ModelAttribute("user") @Valid UserDTO userDTO,
+			  @ModelAttribute("user") @Valid NewUserDTO userDTO,
 			  Errors errors,
 			  HttpServletRequest request) {
 
@@ -78,12 +83,12 @@ public class UserController {
 		try {
 			userService.registerNewUser(userDTO);
 		} catch(UserAlreadyExistException e) {
-			LOGGER.debug("An user for that email already exists.");
+			LOGGER.debug("Register: An user for that email already exists.");
 			ModelAndView mav = new ModelAndView("registration", "user", userDTO);
 			mav.addObject("message", "An user for that email already exists.");
 	        return mav;
 		} catch(Exception e) {
-			LOGGER.debug("Unable to register: " + e.getMessage());
+			LOGGER.debug("Register: Unable to register: " + e.getMessage());
 			ModelAndView mav = new ModelAndView("registration", "user", userDTO);
 			mav.addObject("message", "Unable to register.");
 	        return mav;
@@ -91,5 +96,81 @@ public class UserController {
 
 		LOGGER.debug("Registration succeed.");
 		return new ModelAndView("registration_success", "", null);
+	}
+	
+	/**
+	 * Get home mapping.
+	 * @param request
+	 * @param model
+	 * @return String
+	 */
+	@GetMapping("/home")
+	public String getHome(HttpServletRequest request, Model model, HttpSession session) {
+		LOGGER.debug("getHome");
+		Principal principal = request.getUserPrincipal();
+		try {
+			session.setAttribute("page", "Home");
+			model.addAttribute("home", userService.getHomeDetails(principal.getName()));
+		} catch (UserNotFoundException e) {
+			LOGGER.debug("Get home: UserNotFoundException: " + e.getMessage());
+			return "error/404";
+		} catch (ConverterException e) {
+			LOGGER.debug("Get home: DTO converter exception: " + e.getMessage());
+			return "error/400";
+		} catch(Exception e) {
+			LOGGER.debug("Get home: Exception: " + e.getMessage());
+			return "error/400";
+		}
+		
+		return "home";
+	}
+	
+	/**
+	 * Get the user profile page.
+	 * @param request
+	 * @param model
+	 * @return String
+	 */
+	@GetMapping("/profile")
+	public String getProfile(HttpServletRequest request, Model model, HttpSession session) {
+		LOGGER.debug("Get profile");
+		Principal principal = request.getUserPrincipal();
+		try {
+			session.setAttribute("page", "Profile");
+			model.addAttribute("profile", userService.getProfileDetails(principal.getName()));
+		} catch (UserNotFoundException e) {
+			LOGGER.debug("Get profile: UserNotFoundException: " + e.getMessage());
+			return "error/404";
+		} catch (ConverterException e) {
+			LOGGER.debug("Get profile: DTO converter exception: " + e.getMessage());
+			return "error/400";
+		} catch(Exception e) {
+			LOGGER.debug("Get profile: Exception: " + e.getMessage());
+			return "error/400";
+		}
+		return "profile";
+	}
+	
+	/**
+	 * Get the bank page.
+	 * @param request
+	 * @param model
+	 * @return String
+	 */
+	@GetMapping("/bank")
+	public String getBank(HttpServletRequest request, HttpSession session) {
+		LOGGER.debug("Get bank");
+		Principal principal = request.getUserPrincipal();
+		try {
+			session.setAttribute("page", "Bank");
+			userService.getBank(principal.getName());
+		} catch (UserNotFoundException e) {
+			LOGGER.debug("Get bank: UserNotFoundException: " + e.getMessage());
+			return "error/404";
+		} catch(Exception e) {
+			LOGGER.debug("Get bank: Exception: " + e.getMessage());
+			return "error/400";
+		}
+		return "bank";
 	}
 }

@@ -1,6 +1,7 @@
 package com.tipikae.paymybuddy.entities;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -54,38 +55,24 @@ public abstract class Operation implements Serializable {
 	 * Amount.
 	 */
 	@Column(name = "amount")
-	private double amount;
-
-	/**
-	 * Description.
-	 */
-	@Column(name = "description")
-	private String description;
-
-	/**
-	 * Fee.
-	 */
-	@Column(name = "fee")
-	private double fee;
+	private BigDecimal amount;
 
 	/**
 	 * Account.
 	 */
 	@ManyToOne
-	@JoinColumn(name = "email_account")
+	@JoinColumn(name = "id_account")
 	private Account account;
 	
 	public Operation() {
 		super();
 	}
 
-	public Operation(int number, Date dateOperation, double amount, String description, double fee, Account account) {
+	public Operation(int number, Date dateOperation, BigDecimal amount, Account account) {
 		super();
 		this.number = number;
 		this.dateOperation = dateOperation;
 		this.amount = amount;
-		this.description = description;
-		this.fee = fee;
 		this.account = account;
 	}
 	

@@ -1,6 +1,7 @@
 package com.tipikae.paymybuddy.entities;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -30,11 +31,11 @@ public class Account implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * User email.
+	 * User id.
 	 */
 	@Id
-	@Column(name = "email_user")
-	private String emailUser;
+	@Column(name = "id_user")
+	private int idUser;
 
 	/**
 	 * Created date.
@@ -46,14 +47,14 @@ public class Account implements Serializable {
 	 * Balance.
 	 */
 	@Column(name = "balance")
-	private double balance;
+	private BigDecimal balance;
 
 	/**
 	 * User object.
 	 */
 	@OneToOne
 	@MapsId
-	@JoinColumn(name = "email_user")
+	@JoinColumn(name = "id_user")
 	private User user;
 
 	/**

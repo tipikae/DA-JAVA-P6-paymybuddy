@@ -2,12 +2,14 @@ package com.tipikae.paymybuddy.unit.services;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,81 +18,115 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.tipikae.paymybuddy.dto.OperationDTO;
+import com.tipikae.paymybuddy.converters.IConverterListConnectionToConnectionDTO;
+import com.tipikae.paymybuddy.converters.IConverterListOperationToOperationDTO;
+import com.tipikae.paymybuddy.dto.NewOperationDTO;
 import com.tipikae.paymybuddy.entities.Account;
+import com.tipikae.paymybuddy.entities.Operation;
 import com.tipikae.paymybuddy.entities.User;
+import com.tipikae.paymybuddy.exceptions.ConverterException;
 import com.tipikae.paymybuddy.exceptions.OperationForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
-import com.tipikae.paymybuddy.repositories.IAccountRepository;
-import com.tipikae.paymybuddy.repositories.IUserRepository;
+import com.tipikae.paymybuddy.repositories.IOperationRepository;
+import com.tipikae.paymybuddy.services.IUserService;
 import com.tipikae.paymybuddy.services.OperationServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 class OperationServiceTest {
 	
 	@Mock
-	private IUserRepository userRepository;
+	private IUserService userService;
 	@Mock
-	private IAccountRepository accountRepository;
+	private IOperationRepository operationRepository;
+	@Mock
+	private IConverterListConnectionToConnectionDTO converterConnectionToConnectionDTO;
+	@Mock
+	private IConverterListOperationToOperationDTO converterOperationToOperationDTO;
 	
 	@InjectMocks
 	private OperationServiceImpl operationService;
 
 	@Test
-	void depositThrowsUserNotFoundExceptionWhenEmailNotFound() {
-		OperationDTO operationDTO = new OperationDTO();
-		operationDTO.setAmount(1000.0);
-		when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
-		assertThrows(UserNotFoundException.class, () -> operationService.deposit("bob@bob.com", operationDTO));
+	void getOperationsThrowsExceptionWhenEmailNotFound() throws UserNotFoundException {
+		when(userService.isUserExists(anyString())).thenThrow(UserNotFoundException.class);
+		assertThrows(UserNotFoundException.class, () -> operationService.getOperations("alice@alice.com"));
+	}
+	
+	@Test
+	void getOperationsReturnsDTOswhenOk() throws UserNotFoundException, ConverterException {
+		Account account = new Account();
+		User user = new User();
+		user.setId(1);
+		user.setConnections(new ArrayList<>());
+		account.setIdUser(user.getId());
+		user.setAccount(account);
+		when(userService.isUserExists(anyString())).thenReturn(user);
+		when(operationRepository.findOperationsByIdSrc(anyInt())).thenReturn(new ArrayList<>());
+		when(converterOperationToOperationDTO.convertToListDTOs(anyList())).thenReturn(new ArrayList<>());
+		assertEquals(0, operationService.getOperations("alice@alice.com").size());
+	}
+	
+	@Test
+	void depositThrowsUserNotFoundExceptionWhenEmailNotFound() throws UserNotFoundException {
+		NewOperationDTO operationDTO = new NewOperationDTO();
+		operationDTO.setTypeOperation("DEP");
+		operationDTO.setAmount(new BigDecimal(1000.0));
+		when(userService.isUserExists(anyString())).thenThrow(UserNotFoundException.class);
+		assertThrows(UserNotFoundException.class, () -> operationService.operation("bob@bob.com", operationDTO));
 	}
 
 	@Test
-	void depositCallSaveWhenEmailFound() throws UserNotFoundException {
-		OperationDTO operationDTO = new OperationDTO();
-		operationDTO.setAmount(1000.0);
+	void depositCallSaveWhenEmailFound() throws UserNotFoundException, OperationForbiddenException {
+		NewOperationDTO operationDTO = new NewOperationDTO();
+		operationDTO.setTypeOperation("DEP");
+		operationDTO.setAmount(new BigDecimal(1000.0));
 		Account account = new Account();
+		account.setBalance(new BigDecimal(0));
 		account.setOperations(new ArrayList<>());
 		User user = new User();
 		user.setAccount(account);
-		when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
-		operationService.deposit("bob@bob.com", operationDTO);
-		verify(accountRepository, Mockito.times(1)).save(any(Account.class));
+		when(userService.isUserExists(anyString())).thenReturn(user);
+		operationService.operation("bob@bob.com", operationDTO);
+		verify(operationRepository, Mockito.times(1)).save(any(Operation.class));
 	}
 
 	@Test
-	void withdrawalThrowsUserNotFoundExceptionWhenEmailNotFound() {
-		OperationDTO operationDTO = new OperationDTO();
-		operationDTO.setAmount(1000.0);
-		when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
-		assertThrows(UserNotFoundException.class, () -> operationService.withdrawal("bob@bob.com", operationDTO));
+	void withdrawalThrowsUserNotFoundExceptionWhenEmailNotFound() throws UserNotFoundException {
+		NewOperationDTO operationDTO = new NewOperationDTO();
+		operationDTO.setTypeOperation("WIT");
+		operationDTO.setAmount(new BigDecimal(1000.0));
+		when(userService.isUserExists(anyString())).thenThrow(UserNotFoundException.class);
+		assertThrows(UserNotFoundException.class, () -> operationService.operation("bob@bob.com", operationDTO));
 	}
 
 	@Test
 	void withdrawalCallSaveWhenEmailFound() throws UserNotFoundException, OperationForbiddenException {
-		OperationDTO operationDTO = new OperationDTO();
-		operationDTO.setAmount(1000.0);
+		NewOperationDTO operationDTO = new NewOperationDTO();
+		operationDTO.setTypeOperation("WIT");
+		operationDTO.setAmount(new BigDecimal(1000.0));
 		Account account = new Account();
-		account.setBalance(2000);
+		account.setBalance(new BigDecimal(2000.0));
 		account.setOperations(new ArrayList<>());
 		User user = new User();
 		user.setAccount(account);
-		when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
-		operationService.withdrawal("bob@bob.com", operationDTO);
-		verify(accountRepository, Mockito.times(1)).save(any(Account.class));
+		when(userService.isUserExists(anyString())).thenReturn(user);
+		operationService.operation("bob@bob.com", operationDTO);
+		verify(operationRepository, Mockito.times(1)).save(any(Operation.class));
 	}
 
 	@Test
 	void withdrawalThrowsOperationForbiddenExceptionWhenBalanceNotEnough() 
 			throws UserNotFoundException, OperationForbiddenException {
-		OperationDTO operationDTO = new OperationDTO();
-		operationDTO.setAmount(1000.0);
+		NewOperationDTO operationDTO = new NewOperationDTO();
+		operationDTO.setTypeOperation("WIT");
+		operationDTO.setAmount(new BigDecimal(1000.0));
 		Account account = new Account();
-		account.setBalance(500);
+		account.setBalance(new BigDecimal(500.0));
 		account.setOperations(new ArrayList<>());
 		User user = new User();
 		user.setAccount(account);
-		when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
-		assertThrows(OperationForbiddenException.class, () -> operationService.withdrawal("bob@bob.com", operationDTO));
+		when(userService.isUserExists(anyString())).thenReturn(user);
+		assertThrows(OperationForbiddenException.class, () -> operationService.operation("bob@bob.com", operationDTO));
 	}
 
 }

@@ -10,36 +10,14 @@
 <body>
 	<div layout:fragment="content">
 		<section>
-			<div class="col-md-6">
+			<div class="col-md-12">
 				<div class="" th:if="home">
-					<h2>Welcome <span th:text="${home.email}"></span> !</h2>
+					<h2>Welcome <span th:text="${home.firstname} + ' ' + ${home.lastname}"></span> !</h2>
 					<div>
 						<label>Balance:</label>
 						<label th:text="${home.balance}">€</label>
 					</div>
 				</div>
-			</div>
-			<div class="col-md-6">
-				<h2>Bank operation:</h2>
-				<form th:action="@{/saveOperation}" method="post">
-					<div>
-						<input type="radio" id="deposit"
-					           name="typeOperation" value="DEP" checked>
-					    <label for="deposit">Deposit</label>
-					    <input type="radio" id="withdrawal"
-					           name="typeOperation" value=WIT>
-					    <label for="withdrawal">Withdrawal</label>
-					</div>
-					<div>
-					  	<label>Amount:</label>
-					  	<input type="text" name="amount" value="0">
-					</div>
-					<div class="red" th:text="${#httpServletRequest.getParameter('error')}"></div>
-					<div class="green" th:text="${#httpServletRequest.getParameter('success')}"></div>
-					<div>
-					    <button type="submit" class="btn btn-primary">Save operation</button>
-					</div>
-				</form>
 			</div>
 		</section>
 	</div>

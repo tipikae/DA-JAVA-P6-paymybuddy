@@ -1,8 +1,12 @@
 package com.tipikae.paymybuddy.services;
 
-import com.tipikae.paymybuddy.dto.ContactDTO;
+import java.util.List;
+
+import com.tipikae.paymybuddy.dto.ConnectionDTO;
 import com.tipikae.paymybuddy.dto.NewContactDTO;
+import com.tipikae.paymybuddy.entities.Connection;
 import com.tipikae.paymybuddy.exceptions.ConnectionForbiddenException;
+import com.tipikae.paymybuddy.exceptions.ConverterException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 
 /**
@@ -12,22 +16,33 @@ import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
  *
  */
 public interface IConnectionService {
-
+	
 	/**
-	 * Get all connections of a user.
+	 * Get connections.
 	 * @param srcEmail
-	 * @return ContactDTO
+	 * @return List<ConnectionDTO>
 	 * @throws UserNotFoundException
+	 * @throws ConverterException
 	 */
-	ContactDTO getContact(String srcEmail) throws UserNotFoundException;
+	List<ConnectionDTO> getConnections(String srcEmail) throws UserNotFoundException, ConverterException;
+	
+	/**
+	 * Get potential connections.
+	 * @param srcEmail
+	 * @return List<ConnectionDTO>
+	 * @throws UserNotFoundException
+	 * @throws ConverterException
+	 */
+	List<ConnectionDTO> getPotentialConnections(String srcEmail) throws UserNotFoundException, ConverterException;
 	
 	/**
 	 * Add a new Connection.
 	 * @param srcEmail
 	 * @param newContactDTO
+	 * @return Connection
 	 * @throws UserNotFoundException
 	 * @throws ConnectionForbiddenException 
 	 */
-	void addConnection(String srcEmail, NewContactDTO newContactDTO) 
+	Connection addConnection(String srcEmail, NewContactDTO newContactDTO) 
 			throws UserNotFoundException, ConnectionForbiddenException;
 }

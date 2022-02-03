@@ -5,22 +5,22 @@
 	layout:decorate="~{template1}">
 <head>
 <meta charset="UTF-8">
-<title>Transfer</title>
+<title>Transaction</title>
 </head>
 <body>
 	<div layout:fragment="content">
-		<section  th:object="${transfer}">
+		<section>
 			<div class="col-md-12">
 				<div>
 					<a th:href="@{/contact}" class="btn btn-primary">Add a connection</a>
 				</div>
-				<div th:if="*{connections}">
+				<div th:if="${connections}">
 					<h2>Send money</h2>
 					<form th:action="@{/saveTransfer}" method="post">
 						<select name="destEmail">
 							<option value="">Select a connection</option>
 							<option 
-								th:each="c:*{connections}" 
+								th:each="c:${connections}" 
 								th:value="${c.email}" 
 								th:text="${c.firstname} + ' ' + ${c.lastname} + ' ' + ${c.email}">
 							</option>
@@ -36,19 +36,23 @@
 						</div>
 					</form>
 				</div>
-				<div class="" th:if="*{transactions}">
+				<div class="" th:if="${operations}">
 					<h2>My transactions</h2>
 					<div>
 						<table class="table table-striped">
 							<tr>
-								<th>Connections</th>
+								<th>Transaction</th>
+								<th>Connection</th>
 								<th>Description</th>
 								<th>Amount</th>
+								<th>Fee</th>
 							</tr>
-							<tr th:each="t:*{transactions}">
-								<td th:text="${t.connection}"></td>
-								<td th:text="${t.description}"></td>
-								<td th:text="${t.amount}"></td>
+							<tr th:each="o:${operations}">
+								<td th:text="${o.type}"></td>
+								<td th:text="${o.connection}"></td>
+								<td th:text="${o.description}"></td>
+								<td th:text="${o.amount}"></td>
+								<td th:text="${o.fee}"></td>
 							</tr>
 						</table>
 					</div>

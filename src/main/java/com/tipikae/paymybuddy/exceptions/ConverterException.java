@@ -1,16 +1,17 @@
 package com.tipikae.paymybuddy.exceptions;
 
 /**
- * User not found exception.
+ * Converter exception.
  * @author tipikae
  * @version 1.0
  *
  */
-public class UserNotFoundException extends PayMyBuddyException {
+public class ConverterException extends PayMyBuddyException {
 
 	private static final long serialVersionUID = 1L;
 
-	public UserNotFoundException(String message) {
+	public ConverterException(String message) {
 		super(message);
 	}
+
 }

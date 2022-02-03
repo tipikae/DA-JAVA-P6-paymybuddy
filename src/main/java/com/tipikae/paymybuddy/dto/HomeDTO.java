@@ -1,6 +1,7 @@
 package com.tipikae.paymybuddy.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import lombok.Data;
 
@@ -21,8 +22,18 @@ public class HomeDTO implements Serializable {
 	private String email;
 	
 	/**
+	 * Firstname.
+	 */
+	private String firstname;
+	
+	/**
+	 * Lastname.
+	 */
+	private String lastname;
+	
+	/**
 	 * Balance.
 	 */
-	private double balance;
+	private BigDecimal balance;
 
 }

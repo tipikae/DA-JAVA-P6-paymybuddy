@@ -7,6 +7,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
@@ -30,12 +32,21 @@ import lombok.Data;
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Id
+	 */
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
+	private int id;
 
 	/**
 	 * Email.
 	 */
-	@Id
-	@Column(name = "email")
+	@Column(
+			name = "email",
+			unique = true)
 	private String email;
 
 	/**
@@ -62,7 +73,7 @@ public class User implements Serializable {
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 			  name = "users_roles", 
-			  joinColumns = @JoinColumn(name = "email_user"), 
+			  joinColumns = @JoinColumn(name = "id_user"), 
 			  inverseJoinColumns = @JoinColumn(name = "role"))
 	private List<Role> roles;
 

@@ -8,7 +8,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,28 +16,39 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.tipikae.paymybuddy.converters.IConverterListConnectionToConnectionDTO;
+import com.tipikae.paymybuddy.converters.IConverterListUserToConnectionDTO;
+import com.tipikae.paymybuddy.dto.ConnectionDTO;
 import com.tipikae.paymybuddy.dto.NewContactDTO;
 import com.tipikae.paymybuddy.entities.Connection;
 import com.tipikae.paymybuddy.entities.User;
 import com.tipikae.paymybuddy.exceptions.ConnectionForbiddenException;
+import com.tipikae.paymybuddy.exceptions.ConverterException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.repositories.IConnectionRepository;
 import com.tipikae.paymybuddy.repositories.IUserRepository;
 import com.tipikae.paymybuddy.services.ConnectionServiceImpl;
+import com.tipikae.paymybuddy.services.IUserService;
 
 @ExtendWith(MockitoExtension.class)
 class ConnectionServiceTest {
 	
 	@Mock
+	private IUserService userService;
+	@Mock
 	private IUserRepository userRepository;
 	@Mock
 	private IConnectionRepository connectionRepository;
+	@Mock
+	private IConverterListConnectionToConnectionDTO converterConnectionToConnectionDTO;
+	@Mock
+	private IConverterListUserToConnectionDTO converterUserToConnectionDTO;
 	
 	@InjectMocks
 	private ConnectionServiceImpl connectionService;
 
 	@Test
-	void getConnectionsReturnsListWhenEmailFound() throws UserNotFoundException {
+	void getConnectionsReturnsListWhenEmailFound() throws UserNotFoundException, ConverterException {
 		User alice = new User();
 		alice.setEmail("alice@alice.com");
 		User bob = new User();
@@ -49,14 +59,20 @@ class ConnectionServiceTest {
 		List<Connection> connections = new ArrayList<>();
 		connections.add(connection);
 		alice.setConnections(connections);
-		when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(alice));
-		assertEquals("bob@bob.com", connectionService.getContact("alice@alice.com").getConnections().get(0).getEmail());
+		ConnectionDTO connectionDTO = new ConnectionDTO();
+		connectionDTO.setEmail(bob.getEmail());
+		List<ConnectionDTO> connectionsDTO = new ArrayList<ConnectionDTO>();
+		connectionsDTO.add(connectionDTO);
+		when(userService.isUserExists(anyString())).thenReturn(alice);
+		when(converterConnectionToConnectionDTO.convertToListDTOs(connections)).thenReturn(connectionsDTO);
+		assertEquals("bob@bob.com", 
+				connectionService.getConnections("alice@alice.com").get(0).getEmail());
 	}
 
 	@Test
-	void getConnectionsThrowsUserNotFoundExceptionWhenEmailNotFound() {
-		when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
-		assertThrows(UserNotFoundException.class, () -> connectionService.getContact("bob@bob.com"));
+	void getConnectionsThrowsUserNotFoundExceptionWhenEmailNotFound() throws UserNotFoundException {
+		when(userService.isUserExists(anyString())).thenThrow(UserNotFoundException.class);
+		assertThrows(UserNotFoundException.class, () -> connectionService.getConnections("bob@bob.com"));
 	}
 	
 	@Test
@@ -67,7 +83,7 @@ class ConnectionServiceTest {
 		bob.setEmail("bob@bob.com");
 		NewContactDTO newContactDTO = new NewContactDTO();
 		newContactDTO.setDestEmail("bob@bob.com");
-		when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(alice), Optional.of(bob));
+		when(userService.isUserExists(anyString())).thenReturn(alice, bob);
 		connectionService.addConnection("alice@alice.com", newContactDTO);
 		verify(connectionRepository, Mockito.times(1)).save(any(Connection.class));
 	}
@@ -81,19 +97,19 @@ class ConnectionServiceTest {
 	}
 	
 	@Test
-	void addConnectionThrowsUserNotFoundExceptionWhenSrcNotFound() {
+	void addConnectionThrowsUserNotFoundExceptionWhenSrcNotFound() throws UserNotFoundException {
 		NewContactDTO newContactDTO = new NewContactDTO();
 		newContactDTO.setDestEmail("bob@bob.com");
-		when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty(), Optional.of(new User()));
+		when(userService.isUserExists(anyString())).thenThrow(UserNotFoundException.class);
 		assertThrows(UserNotFoundException.class, 
 				() -> connectionService.addConnection("alice@alice.com", newContactDTO));
 	}
 	
 	@Test
-	void addConnectionThrowsUserNotFoundExceptionWhenDestNotFound() {
+	void addConnectionThrowsUserNotFoundExceptionWhenDestNotFound() throws UserNotFoundException {
 		NewContactDTO newContactDTO = new NewContactDTO();
 		newContactDTO.setDestEmail("bob@bob.com");
-		when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(new User()), Optional.empty());
+		when(userService.isUserExists(anyString())).thenThrow(UserNotFoundException.class);
 		assertThrows(UserNotFoundException.class, 
 				() -> connectionService.addConnection("alice@alice.com", newContactDTO));
 	}
