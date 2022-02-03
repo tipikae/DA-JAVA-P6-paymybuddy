@@ -21,6 +21,7 @@ import com.tipikae.paymybuddy.exceptions.ConnectionForbiddenException;
 import com.tipikae.paymybuddy.exceptions.ConverterException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.services.IConnectionService;
+import com.tipikae.paymybuddy.util.IBreadcrumb;
 
 /**
  * Connection controller
@@ -37,6 +38,12 @@ public class ConnectionController {
 	private IConnectionService connectionService;
 	
 	/**
+	 * Breadcrumb interface.
+	 */
+	@Autowired
+	private IBreadcrumb breadcrumb;
+	
+	/**
 	 * Get contact mapping.
 	 * @param request
 	 * @param model
@@ -47,7 +54,7 @@ public class ConnectionController {
 		LOGGER.debug("Get contact");
 		try {
 			Principal principal = request.getUserPrincipal();
-			session.setAttribute("page", "Contact");
+			session.setAttribute("breadcrumb", breadcrumb.getBreadCrumb("/contact", "Contact"));
 			model.addAttribute("connections", connectionService.getConnections(principal.getName()));
 			model.addAttribute("others", connectionService.getPotentialConnections(principal.getName()));
 		} catch (UserNotFoundException e) {
