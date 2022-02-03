@@ -3,6 +3,7 @@ package com.tipikae.paymybuddy.services;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -13,8 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.tipikae.paymybuddy.converters.IConverterListUserToConnectionDTO;
 import com.tipikae.paymybuddy.converters.IConverterUserToHomeDTO;
 import com.tipikae.paymybuddy.converters.IConverterUserToProfileDTO;
+import com.tipikae.paymybuddy.dto.ConnectionDTO;
 import com.tipikae.paymybuddy.dto.HomeDTO;
 import com.tipikae.paymybuddy.dto.ProfileDTO;
 import com.tipikae.paymybuddy.dto.NewUserDTO;
@@ -60,6 +63,12 @@ public class UserServiceImpl implements IUserService {
 	 */
 	@Autowired
 	private IConverterUserToProfileDTO converterUserToProfileDTO;
+	
+	/**
+	 * Converter User to ConnectionDTO.
+	 */
+	@Autowired
+	private IConverterListUserToConnectionDTO converterUserToConnectionDTO;
 
 	/**
 	 * {@inheritDoc}
@@ -95,6 +104,19 @@ public class UserServiceImpl implements IUserService {
 		userRepository.save(user);
 		
 		return user;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<ConnectionDTO> getPotentialConnections(String srcEmail)
+			throws UserNotFoundException, ConverterException {
+		LOGGER.debug("Getting potential connections: source email=" + srcEmail);
+		User user = isUserExists(srcEmail);
+		
+		return converterUserToConnectionDTO.convertToListDTOs(
+				userRepository.getPotentialConnections(user.getId()));
 	}
 
 	/**

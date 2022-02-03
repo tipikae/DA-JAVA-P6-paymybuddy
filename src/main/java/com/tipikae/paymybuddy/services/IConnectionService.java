@@ -27,15 +27,6 @@ public interface IConnectionService {
 	List<ConnectionDTO> getConnections(String srcEmail) throws UserNotFoundException, ConverterException;
 	
 	/**
-	 * Get potential connections.
-	 * @param srcEmail
-	 * @return List<ConnectionDTO>
-	 * @throws UserNotFoundException
-	 * @throws ConverterException
-	 */
-	List<ConnectionDTO> getPotentialConnections(String srcEmail) throws UserNotFoundException, ConverterException;
-	
-	/**
 	 * Add a new Connection.
 	 * @param srcEmail
 	 * @param newContactDTO

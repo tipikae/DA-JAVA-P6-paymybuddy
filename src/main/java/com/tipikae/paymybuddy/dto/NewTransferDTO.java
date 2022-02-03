@@ -23,13 +23,13 @@ public class NewTransferDTO implements Serializable {
 	/**
 	 * Dest email.
 	 */
-	@NotBlank(message = "Type must not be empty.")
+	@NotBlank(message = "Connection must not be empty.")
 	private String destEmail;
 	
 	/**
 	 * Description.
 	 */
-	@NotBlank(message = "Type must not be empty.")
+	@NotBlank(message = "Description must not be empty.")
 	private String description;
 	
 	/**

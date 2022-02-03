@@ -1,6 +1,7 @@
 package com.tipikae.paymybuddy.unit.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,6 +29,7 @@ import com.tipikae.paymybuddy.exceptions.OperationForbiddenException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.services.IConnectionService;
 import com.tipikae.paymybuddy.services.IOperationService;
+import com.tipikae.paymybuddy.util.IBreadcrumb;
 
 @WebMvcTest(controllers = OperationController.class)
 class OperationControllerTest {
@@ -40,6 +43,8 @@ class OperationControllerTest {
 	private IOperationService operationService;
 	@MockBean
 	private IConnectionService connectionService;
+	@MockBean
+	private IBreadcrumb breadcrumb;
 	
 	private static NewOperationDTO rightDepOperationDTO;
 	private static NewOperationDTO rightWitOperationDTO;
@@ -63,7 +68,7 @@ class OperationControllerTest {
 	@WithMockUser
 	@Test
 	void getTransactionsReturnsErrorWhenUserNotFoundException() throws Exception {
-		doThrow(UserNotFoundException.class).when(operationService).getOperations(anyString());
+		doThrow(UserNotFoundException.class).when(operationService).getOperations(anyString(), anyInt(), anyInt());
 		mockMvc.perform(get("/transaction"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("error/404"));
@@ -72,7 +77,8 @@ class OperationControllerTest {
 	@WithMockUser
 	@Test
 	void getTransactionsReturnsTransferWhenOk() throws Exception {
-		when(operationService.getOperations(anyString())).thenReturn(new ArrayList<>());
+		when(operationService.getOperations(anyString(), anyInt(), anyInt()))
+			.thenReturn(new PageImpl(new ArrayList<>()));
 		mockMvc.perform(get("/transaction"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("transaction"));

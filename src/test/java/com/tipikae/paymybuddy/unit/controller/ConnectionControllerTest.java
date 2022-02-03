@@ -22,6 +22,8 @@ import com.tipikae.paymybuddy.controllers.ConnectionController;
 import com.tipikae.paymybuddy.dto.NewContactDTO;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.services.IConnectionService;
+import com.tipikae.paymybuddy.services.IUserService;
+import com.tipikae.paymybuddy.util.IBreadcrumb;
 
 @WebMvcTest(controllers = ConnectionController.class)
 class ConnectionControllerTest {
@@ -33,6 +35,10 @@ class ConnectionControllerTest {
 	private UserDetailsService userDetailsService;
 	@MockBean
 	private IConnectionService connectionService;
+	@MockBean
+	private IUserService UserService;
+	@MockBean
+	private IBreadcrumb breadcrumb;
 	
 	private static NewContactDTO rightNewContactDTO;
 	private static NewContactDTO wrongNewContactDTO;
@@ -49,7 +55,7 @@ class ConnectionControllerTest {
 	@Test
 	void getContactReturnsContactPageWhenOk() throws Exception {
 		when(connectionService.getConnections(anyString())).thenReturn(new ArrayList<>());
-		when(connectionService.getPotentialConnections(anyString())).thenReturn(new ArrayList<>());
+		when(UserService.getPotentialConnections(anyString())).thenReturn(new ArrayList<>());
 		mockMvc.perform(get("/contact"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("contact"));

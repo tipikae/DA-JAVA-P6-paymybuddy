@@ -45,15 +45,9 @@ public class User implements Serializable {
 	 * Email.
 	 */
 	@Column(
-			name = "email",
-			unique = true)
+		name = "email",
+		unique = true)
 	private String email;
-
-	/**
-	 * Password.
-	 */
-	@Column(name = "password")
-	private String password;
 
 	/**
 	 * Firstname.
@@ -68,29 +62,35 @@ public class User implements Serializable {
 	private String lastname;
 
 	/**
+	 * Password.
+	 */
+	@Column(name = "password")
+	private String password;
+
+	/**
 	 * Roles list.
 	 */
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
-			  name = "users_roles", 
-			  joinColumns = @JoinColumn(name = "id_user"), 
-			  inverseJoinColumns = @JoinColumn(name = "role"))
+		  name = "users_roles", 
+		  joinColumns = @JoinColumn(name = "id_user"), 
+		  inverseJoinColumns = @JoinColumn(name = "role"))
 	private List<Role> roles;
 
 	/**
 	 * Connections list.
 	 */
 	@OneToMany(
-			mappedBy = "srcUser",
-			cascade = CascadeType.ALL)
+		mappedBy = "srcUser",
+		cascade = CascadeType.ALL)
 	private List<Connection> connections;
 	
 	/**
 	 * Account object.
 	 */
 	@OneToOne(
-			mappedBy = "user",
-			cascade = CascadeType.ALL)
+		mappedBy = "user",
+		cascade = CascadeType.ALL)
 	@PrimaryKeyJoinColumn
 	private Account account;
 }

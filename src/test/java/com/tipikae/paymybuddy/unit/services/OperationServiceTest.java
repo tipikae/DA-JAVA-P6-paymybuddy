@@ -3,7 +3,6 @@ package com.tipikae.paymybuddy.unit.services;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -17,10 +16,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import com.tipikae.paymybuddy.converters.IConverterListConnectionToConnectionDTO;
-import com.tipikae.paymybuddy.converters.IConverterListOperationToOperationDTO;
+import com.tipikae.paymybuddy.converters.IConverterPageOperationToOperationDTO;
 import com.tipikae.paymybuddy.dto.NewOperationDTO;
+import com.tipikae.paymybuddy.dto.OperationDTO;
 import com.tipikae.paymybuddy.entities.Account;
 import com.tipikae.paymybuddy.entities.Operation;
 import com.tipikae.paymybuddy.entities.User;
@@ -41,7 +44,7 @@ class OperationServiceTest {
 	@Mock
 	private IConverterListConnectionToConnectionDTO converterConnectionToConnectionDTO;
 	@Mock
-	private IConverterListOperationToOperationDTO converterOperationToOperationDTO;
+	private IConverterPageOperationToOperationDTO converterOperationToOperationDTO;
 	
 	@InjectMocks
 	private OperationServiceImpl operationService;
@@ -49,7 +52,7 @@ class OperationServiceTest {
 	@Test
 	void getOperationsThrowsExceptionWhenEmailNotFound() throws UserNotFoundException {
 		when(userService.isUserExists(anyString())).thenThrow(UserNotFoundException.class);
-		assertThrows(UserNotFoundException.class, () -> operationService.getOperations("alice@alice.com"));
+		assertThrows(UserNotFoundException.class, () -> operationService.getOperations("alice@alice.com", 1, 5));
 	}
 	
 	@Test
@@ -60,10 +63,14 @@ class OperationServiceTest {
 		user.setConnections(new ArrayList<>());
 		account.setIdUser(user.getId());
 		user.setAccount(account);
+		Page<Operation> page = new PageImpl(new ArrayList<Operation>());
+		Page<OperationDTO> pageDTO = new PageImpl(new ArrayList<Operation>());
 		when(userService.isUserExists(anyString())).thenReturn(user);
-		when(operationRepository.findOperationsByIdSrc(anyInt())).thenReturn(new ArrayList<>());
-		when(converterOperationToOperationDTO.convertToListDTOs(anyList())).thenReturn(new ArrayList<>());
-		assertEquals(0, operationService.getOperations("alice@alice.com").size());
+		when(operationRepository.findOperationsByIdSrc(anyInt(), any(Pageable.class)))
+			.thenReturn(page);
+		when(converterOperationToOperationDTO.convertToPageDTO(any(Page.class)))
+				.thenReturn(pageDTO);
+		assertEquals(0, operationService.getOperations("alice@alice.com", 1, 5).getNumberOfElements());
 	}
 	
 	@Test

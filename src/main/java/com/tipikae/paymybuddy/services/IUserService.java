@@ -1,5 +1,8 @@
 package com.tipikae.paymybuddy.services;
 
+import java.util.List;
+
+import com.tipikae.paymybuddy.dto.ConnectionDTO;
 import com.tipikae.paymybuddy.dto.HomeDTO;
 import com.tipikae.paymybuddy.dto.ProfileDTO;
 import com.tipikae.paymybuddy.dto.NewUserDTO;
@@ -23,6 +26,15 @@ public interface IUserService {
 	 * @throws UserAlreadyExistException
 	 */
 	User registerNewUser(NewUserDTO userDTO) throws UserAlreadyExistException;
+	
+	/**
+	 * Get potential connections.
+	 * @param srcEmail
+	 * @return List<ConnectionDTO>
+	 * @throws UserNotFoundException
+	 * @throws ConverterException
+	 */
+	List<ConnectionDTO> getPotentialConnections(String srcEmail) throws UserNotFoundException, ConverterException;
 	
 	/**
 	 * Get home details.

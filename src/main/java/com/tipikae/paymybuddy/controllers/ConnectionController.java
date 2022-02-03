@@ -22,6 +22,7 @@ import com.tipikae.paymybuddy.exceptions.ConnectionForbiddenException;
 import com.tipikae.paymybuddy.exceptions.ConverterException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.services.IConnectionService;
+import com.tipikae.paymybuddy.services.IUserService;
 import com.tipikae.paymybuddy.util.IBreadcrumb;
 
 /**
@@ -35,8 +36,17 @@ public class ConnectionController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionController.class);
 	
+	/**
+	 * Connection Service.
+	 */
 	@Autowired
 	private IConnectionService connectionService;
+	
+	/**
+	 * User Service.
+	 */
+	@Autowired
+	private IUserService userService;
 	
 	/**
 	 * Breadcrumb interface.
@@ -56,7 +66,7 @@ public class ConnectionController {
 		try {
 			Principal principal = request.getUserPrincipal();
 			model.addAttribute("connections", connectionService.getConnections(principal.getName()));
-			model.addAttribute("others", connectionService.getPotentialConnections(principal.getName()));
+			model.addAttribute("others", userService.getPotentialConnections(principal.getName()));
 			session.setAttribute("breadcrumb", breadcrumb.getBreadCrumb("/contact", "Contact"));
 		} catch (BreadcrumbException e) {
 			LOGGER.debug("Get contact: BreadcrumbException: " + e.getMessage());
@@ -68,6 +78,7 @@ public class ConnectionController {
 			return "error/400";
 		} catch (Exception e) {
 			LOGGER.debug("Get contact: Unable to process contact: " + e.getMessage());
+			e.printStackTrace();
 			return "error/400";
 		}
 		

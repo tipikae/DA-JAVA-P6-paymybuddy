@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tipikae.paymybuddy.converters.IConverterListConnectionToConnectionDTO;
-import com.tipikae.paymybuddy.converters.IConverterListUserToConnectionDTO;
 import com.tipikae.paymybuddy.dto.ConnectionDTO;
 import com.tipikae.paymybuddy.dto.NewContactDTO;
 import com.tipikae.paymybuddy.entities.Connection;
@@ -48,12 +47,6 @@ public class ConnectionServiceImpl implements IConnectionService {
 	private IConverterListConnectionToConnectionDTO converterConnectionToConnectionDTO;
 	
 	/**
-	 * Converter User to ConnectionDTO.
-	 */
-	@Autowired
-	private IConverterListUserToConnectionDTO converterUserToConnectionDTO;
-	
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -63,19 +56,6 @@ public class ConnectionServiceImpl implements IConnectionService {
 		User user = userService.isUserExists(srcEmail);
 		
 		return converterConnectionToConnectionDTO.convertToListDTOs(user.getConnections());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<ConnectionDTO> getPotentialConnections(String srcEmail)
-			throws UserNotFoundException, ConverterException {
-		LOGGER.debug("Getting potential connections: source email=" + srcEmail);
-		User user = userService.isUserExists(srcEmail);
-		
-		return converterUserToConnectionDTO.convertToListDTOs(
-				connectionRepository.getPotentialConnections(user.getId()));
 	}
 
 	/**

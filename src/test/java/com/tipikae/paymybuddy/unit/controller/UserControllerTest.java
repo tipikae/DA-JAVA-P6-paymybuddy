@@ -29,6 +29,7 @@ import com.tipikae.paymybuddy.entities.User;
 import com.tipikae.paymybuddy.exceptions.UserAlreadyExistException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.services.IUserService;
+import com.tipikae.paymybuddy.util.IBreadcrumb;
 
 @WebMvcTest(controllers = UserController.class)
 class UserControllerTest {
@@ -40,6 +41,8 @@ class UserControllerTest {
 	private UserDetailsService userDetailsService;
 	@MockBean
 	private IUserService userService;
+	@MockBean
+	private IBreadcrumb breadcrumb;
 	
 	private static NewUserDTO rightUserDTO;
 	private static NewUserDTO wrongUserDTO;
