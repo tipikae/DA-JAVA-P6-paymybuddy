@@ -2,18 +2,19 @@ package com.tipikae.paymybuddy.services;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.tipikae.paymybuddy.dto.NewOperationDTO;
 import com.tipikae.paymybuddy.dto.NewTransferDTO;
 import com.tipikae.paymybuddy.dto.OperationDTO;
-import com.tipikae.paymybuddy.converters.IConverterListOperationToOperationDTO;
+import com.tipikae.paymybuddy.converters.IConverterPageOperationToOperationDTO;
 import com.tipikae.paymybuddy.entities.Account;
 import com.tipikae.paymybuddy.entities.Deposit;
 import com.tipikae.paymybuddy.entities.Transfer;
@@ -48,10 +49,10 @@ public class OperationServiceImpl implements IOperationService {
 	private IOperationRepository operationRepository;
 	
 	/**
-	 * Converter Operation list to TransactionDTO list.
+	 * Converter Operation page to TransactionDTO page.
 	 */
 	@Autowired
-	private IConverterListOperationToOperationDTO converterOperationToTransactionDTO;
+	private IConverterPageOperationToOperationDTO converterOperationToTransactionDTO;
 	
 	/**
 	 * Rate property from application.properties.
@@ -63,13 +64,13 @@ public class OperationServiceImpl implements IOperationService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<OperationDTO> getOperations(String srcEmail) 
+	public Page<OperationDTO> getOperations(String srcEmail, int page, int size) 
 			throws UserNotFoundException, ConverterException {
 		LOGGER.debug("Getting operations for " + srcEmail);
 		User user = userService.isUserExists(srcEmail);
 		
-		return converterOperationToTransactionDTO.convertToListDTOs(
-				operationRepository.findOperationsByIdSrc(user.getAccount().getIdUser()));
+		return converterOperationToTransactionDTO.convertToPageDTO(
+				operationRepository.findOperationsByIdSrc(user.getAccount().getIdUser(), PageRequest.of(page, size)));
 	}
 
 	/**

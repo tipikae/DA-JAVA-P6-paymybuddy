@@ -1,6 +1,9 @@
 package com.tipikae.paymybuddy.controllers;
 
 import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -9,15 +12,18 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.tipikae.paymybuddy.dto.NewOperationDTO;
 import com.tipikae.paymybuddy.dto.NewTransferDTO;
+import com.tipikae.paymybuddy.dto.OperationDTO;
 import com.tipikae.paymybuddy.exceptions.BreadcrumbException;
 import com.tipikae.paymybuddy.exceptions.ConverterException;
 import com.tipikae.paymybuddy.exceptions.OperationForbiddenException;
@@ -62,12 +68,25 @@ public class OperationController {
 	 * @return
 	 */
 	@GetMapping("/transaction")
-	public String getTransactions(HttpServletRequest request, Model model, HttpSession session) {
+	public String getTransactions(HttpServletRequest request, Model model, HttpSession session, 
+			@RequestParam(name="page", defaultValue="1")int page, 
+			@RequestParam(name="size", defaultValue="5")int size) {
 		LOGGER.debug("Get transactions");
 		try {
 			Principal principal = request.getUserPrincipal();
+			Page<OperationDTO> pageOperations = 
+					operationService.getOperations(principal.getName(), page - 1, size);
+			
 			model.addAttribute("connections", connectionService.getConnections(principal.getName()));
-			model.addAttribute("operations", operationService.getOperations(principal.getName()));
+			model.addAttribute("operations", pageOperations);
+
+			if(pageOperations.getTotalPages() > 0) {
+				List<Integer> pages = IntStream.rangeClosed(1, pageOperations.getTotalPages())
+						.boxed()
+						.collect(Collectors.toList());
+				model.addAttribute("pages", pages);
+			}
+			
 			session.setAttribute("breadcrumb", breadcrumb.getBreadCrumb("/transaction", "Transactions"));
 		} catch (BreadcrumbException e) {
 			LOGGER.debug("Get transactions: BreadcrumbException: " + e.getMessage());

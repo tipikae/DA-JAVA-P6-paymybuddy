@@ -55,6 +55,14 @@
 								<td th:text="${o.fee}"></td>
 							</tr>
 						</table>
+						<div th:if="${pages}" class="pagination">
+							<ul class="nav nav-pills">
+								<li th:each="page:${pages}">
+									<a th:href="@{/transaction(page=${page})}" th:text="${page}"
+										th:class="${page == (operations.number + 1)} ? 'btn disabled'"></a>
+								</li>
+							</ul>
+						</div>
 					</div>
 				</div>
 			</div>

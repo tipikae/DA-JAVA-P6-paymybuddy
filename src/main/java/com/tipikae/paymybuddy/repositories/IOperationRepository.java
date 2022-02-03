@@ -1,7 +1,7 @@
 package com.tipikae.paymybuddy.repositories;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -24,7 +24,7 @@ public interface IOperationRepository extends JpaRepository<Operation, Integer> 
 	 * @return List<Operation>
 	 */
 	@Query(
-		value = "SELECT * FROM operation WHERE id_account = :idAccount",
+		value = "SELECT * FROM operation WHERE id_account = :idAccount ORDER BY date_operation DESC",
 		nativeQuery = true)
-	List<Operation> findOperationsByIdSrc(@Param("idAccount") int idAccount);
+	Page<Operation> findOperationsByIdSrc(@Param("idAccount") int idAccount, Pageable pageable);
 }
