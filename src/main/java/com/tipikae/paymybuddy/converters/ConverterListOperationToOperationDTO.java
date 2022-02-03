@@ -32,18 +32,18 @@ public class ConverterListOperationToOperationDTO implements IConverterListOpera
 		
 		try {
 			for(Operation operation: operations) {
-				OperationDTO transactionDTO = new OperationDTO();
-				transactionDTO.setType(operation.getClass().getSimpleName());
-				transactionDTO.setAmount(operation.getAmount());
+				OperationDTO operationDTO = new OperationDTO();
+				operationDTO.setType(operation.getClass().getSimpleName());
+				operationDTO.setAmount(operation.getAmount());
 				
 				if(operation instanceof Transfer) {
 					Transfer transfer = (Transfer) operation;
-					transactionDTO.setConnection(transfer.getDestUser().getFirstname());
-					transactionDTO.setDescription(transfer.getDescription());
-					transactionDTO.setFee(transfer.getFee());
+					operationDTO.setConnection(transfer.getDestUser().getFirstname());
+					operationDTO.setDescription(transfer.getDescription());
+					operationDTO.setFee(transfer.getFee());
 				}
 				
-				dtos.add(transactionDTO);
+				dtos.add(operationDTO);
 			}
 		} catch (Exception e) {
 			LOGGER.debug("ConverterException: " + e.getMessage());

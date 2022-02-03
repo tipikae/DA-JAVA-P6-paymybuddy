@@ -55,6 +55,13 @@
 								<td th:text="${o.fee}"></td>
 							</tr>
 						</table>
+						<div class="container">
+							<ul class="nav nav-pills">
+								<li th:each="p, status:${pages}">
+									<a th:href="@{/transaction(page=${status.index})}" th:text="${status.index}"></a>
+								</li>
+							</ul>
+						</div>
 					</div>
 				</div>
 			</div>

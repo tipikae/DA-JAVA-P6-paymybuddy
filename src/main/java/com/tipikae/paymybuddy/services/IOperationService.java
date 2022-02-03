@@ -1,6 +1,6 @@
 package com.tipikae.paymybuddy.services;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 import com.tipikae.paymybuddy.dto.NewOperationDTO;
 import com.tipikae.paymybuddy.dto.NewTransferDTO;
@@ -20,11 +20,14 @@ public interface IOperationService {
 	/**
 	 * Get operations.
 	 * @param srcEmail
-	 * @return List<OperationDTO>
+	 * @param page
+	 * @param size
+	 * @return Page<OperationDTO>
 	 * @throws UserNotFoundException
 	 * @throws ConverterException
 	 */
-	List<OperationDTO> getOperations(String srcEmail) throws UserNotFoundException, ConverterException;
+	Page<OperationDTO> getOperations(String srcEmail, int page, int size) 
+			throws UserNotFoundException, ConverterException;
 	
 	/**
 	 * Save a deposit or withdrawal operation.
