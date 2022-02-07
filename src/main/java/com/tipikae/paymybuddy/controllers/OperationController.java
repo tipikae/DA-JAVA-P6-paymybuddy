@@ -164,7 +164,7 @@ public class OperationController {
 			return "redirect:/transaction?error=User not found.";
 		} catch (OperationForbiddenException e) {
 			LOGGER.debug("Save transfer: Operation forbidden: " + e.getMessage());
-			return "redirect:/transaction?error=Operation forbidden.";
+			return "redirect:/transaction?error=" + e.getMessage();
 		} catch (Exception e) {
 			LOGGER.debug("Save transfer: Unable to process operation: " + e.getMessage());
 			return "redirect:/transaction?error=Unable to process transfer.";

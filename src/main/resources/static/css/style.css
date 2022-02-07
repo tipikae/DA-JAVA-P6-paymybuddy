@@ -40,6 +40,12 @@
 .green {
 	color: green;
 }
+.bold {
+	font-weight: bold;
+}
+.marginrt20 {
+	margin-right: 20px;
+}
 .logo {
 	display: inline-block;
 	width: 144px;
