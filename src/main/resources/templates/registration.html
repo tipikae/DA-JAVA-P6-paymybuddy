@@ -5,56 +5,59 @@
 <meta charset="UTF-8">
 <title>Registration form - PayMyBuddy</title>
 <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" /> 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body>
 	<div class="container">
 		<section>
-			<div class="col-md-12">
-				<h2>Registration form</h2>
-				<form action="/user/registration" th:object="${user}" method="POST" enctype="utf8">
-				    <div>
-				        <label>Firstname</label>
-				        <input type="text" name="firstname" th:value="*{firstname}"/>
-				        <p class="red" th:each="error: ${#fields.errors('firstname')}" 
-				          th:text="${error}">Validation error</p>
-				    </div>
-				    <div>
-				        <label>Lastname</label>
-				        <input type="text" name="lastname" th:value="*{lastname}"/>
-				        <p class="red" th:each="error : ${#fields.errors('lastname')}" 
-				          th:text="${error}">Validation error</p>
-				    </div>
-				    <div>
-				        <label>Email</label>
-				        <input type="email" name="email" th:value="*{email}"/>
-				        <p class="red" th:each="error : ${#fields.errors('email')}" 
-				          th:text="${error}">Validation error</p>
-				    </div>
-				    <div>
-				        <label>Password</label>
-				        <input type="password" name="password" th:value="*{password}"/>
-				        <p class="red" th:each="error : ${#fields.errors('password')}" 
-				          th:text="${error}">Validation error</p>
-				    </div>
-				    <div>
-				        <label>Confirm password</label>
-				        <input type="password" name="confirmedPassword" th:value="*{confirmedPassword}"/>
-				        <p class="red" th:each="error : ${#fields.errors('confirmedPassword')}" 
-				          th:text="${error}">Validation error</p>
-				        <p class="red"
-                          th:if="${#fields.hasGlobalErrors()}"
-                          th:each="error : ${#fields.errors('global')}"
-                          th:text="${error}">Validation error</p>
-				    </div>
-				    <button type="submit" class="btn btn-primary">Register</button>
-				</form>
-				
-				<a th:href="@{/login}" class="btn btn-light">Login</a>
+			<div class="col-md-12 spacer40">
+				<div class="custom-form center border1 radius padding40">
+					<div class="logo"></div>
+					<h2 class="spacer20">Registration form</h2>
+					<form action="/user/registration" th:object="${user}" method="POST" enctype="utf8">
+					    <div>
+					        <input type="text" name="firstname" th:value="*{firstname}" placeholder="Firstname"/>
+					        <p class="red" th:each="error: ${#fields.errors('firstname')}" 
+					          th:text="${error}">Validation error</p>
+					    </div>
+					    <div>
+					        <input type="text" name="lastname" th:value="*{lastname}" placeholder="Lastname"/>
+					        <p class="red" th:each="error : ${#fields.errors('lastname')}" 
+					          th:text="${error}">Validation error</p>
+					    </div>
+					    <div>
+					        <input type="email" name="email" th:value="*{email}" placeholder="Email"/>
+					        <p class="red" th:each="error : ${#fields.errors('email')}" 
+					          th:text="${error}">Validation error</p>
+					    </div>
+					    <div>
+					        <input type="password" name="password" th:value="*{password}" placeholder="Password"/>
+					        <p class="red" th:each="error : ${#fields.errors('password')}" 
+					          th:text="${error}">Validation error</p>
+					    </div>
+					    <div>
+					        <input type="password" name="confirmedPassword" th:value="*{confirmedPassword}" 
+					        	 placeholder="Confirm password"/>
+					        <p class="red" th:each="error : ${#fields.errors('confirmedPassword')}" 
+					          th:text="${error}">Validation error</p>
+					        <p class="red"
+	                          th:if="${#fields.hasGlobalErrors()}"
+	                          th:each="error : ${#fields.errors('global')}"
+	                          th:text="${error}">Validation error</p>
+					    </div>
+					    <div>
+					    	<button type="submit" class="btn btn-primary">Register</button>
+					    </div>
+					</form>
+					<div>
+						<a th:href="@{/login}" class="btn btn-light">Login</a>
+					</div>
+				</div>
 			</div>
 		</section>
 	</div>
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 </html>

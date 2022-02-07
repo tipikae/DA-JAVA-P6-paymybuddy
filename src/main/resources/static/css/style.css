@@ -53,7 +53,10 @@
 li.nav-item.active a.nav-link {
 	color: #337ab7 !important;
 }
-#login {
+.custom-form {
 	max-width: 400px;
 	margin: 0 auto;
+}
+.custom-form div {
+	margin-top: 20px;
 }
