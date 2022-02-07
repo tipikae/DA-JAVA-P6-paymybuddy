@@ -10,12 +10,30 @@
 <body>
 	<div layout:fragment="content">
 		<section>
-			<div class="col-md-6">
-				<div class="" th:if="${connections}">
+			<div class="col-md-12">
+				<div th:if="${others}">
+					<h2>Add a connection</h2>
+					<div class="center padding40 bg-light">
+						<form th:action="@{/saveContact}" method="post">
+							<select name="destEmail" class="height30">
+								<option value="">Select a contact</option>
+								<option 
+									th:each="o:${others}" 
+									th:value="${o.email}" 
+									th:text="${o.firstname} + ' ' + ${o.lastname} + ' ' + ${o.email}">
+								</option>
+							</select>
+							<div class="red" th:text="${#httpServletRequest.getParameter('error')}"></div>
+							<div class="green" th:text="${#httpServletRequest.getParameter('success')}"></div>
+							<button type="submit" class="btn btn-primary spacer20">Add a connection</button>
+						</form>
+					</div>
+				</div>
+				<div class="spacer40" th:if="${connections}">
 					<h2>Connection list</h2>
 					<div>
 						<table class="table table-striped">
-							<tr>
+							<tr class=bg-success>
 								<th>Firstname</th>
 								<th>Lastname</th>
 								<th>Email</th>
@@ -27,26 +45,6 @@
 							</tr>
 						</table>
 					</div>
-				</div>
-			</div>
-			<div class="col-md-6">
-				<div class="" th:if="${others}">
-					<h2>Add a connection</h2>
-					<form th:action="@{/saveContact}" method="post">
-						<select name="destEmail">
-							<option value="">Select a contact</option>
-							<option 
-								th:each="o:${others}" 
-								th:value="${o.email}" 
-								th:text="${o.firstname} + ' ' + ${o.lastname} + ' ' + ${o.email}">
-							</option>
-						</select>
-						<div class="red" th:text="${#httpServletRequest.getParameter('error')}"></div>
-						<div class="green" th:text="${#httpServletRequest.getParameter('success')}"></div>
-						<div>
-						    <button type="submit" class="btn btn-primary">Add a connection</button>
-						</div>
-					</form>
 				</div>
 			</div>
 		</section>
