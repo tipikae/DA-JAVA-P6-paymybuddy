@@ -16,6 +16,9 @@
 .center {
 	text-align: center;
 }
+.text-left {
+	text-align: left;
+}
 .width200 {
 	width: 200px;
 }
@@ -31,7 +34,7 @@
 .green {
 	color: green;
 }
-#logo {
+.logo {
 	display: inline-block;
 	width: 144px;
 	height: 42px;
@@ -44,6 +47,6 @@
 li.nav-item.active a.nav-link {
 	color: #337ab7 !important;
 }
-table {
+border1 {
 	border: 1px solid black;
 }
