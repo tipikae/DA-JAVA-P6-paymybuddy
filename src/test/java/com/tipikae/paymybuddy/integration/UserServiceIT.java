@@ -1,4 +1,4 @@
-package com.tipikae.paymybuddy.integration.services;
+package com.tipikae.paymybuddy.integration;
 
 import static org.junit.jupiter.api.Assertions.*;
 

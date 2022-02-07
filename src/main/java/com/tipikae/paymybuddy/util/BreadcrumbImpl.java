@@ -35,7 +35,7 @@ public class BreadcrumbImpl implements IBreadcrumb {
 			dto.setQuery(query);
 			breadcrumb.add(dto);
 		} catch (Exception e) {
-			LOGGER.debug("GetOneBreadCrumb exception: " + e.getMessage());
+			LOGGER.debug("GetBreadCrumb exception: " + e.getMessage());
 			throw new BreadcrumbException("Error when creating DTO.");
 		}
 		
