@@ -49,10 +49,10 @@
                           th:each="error : ${#fields.errors('global')}"
                           th:text="${error}">Validation error</p>
 				    </div>
-				    <button type="submit">Register</button>
+				    <button type="submit" class="btn btn-primary">Register</button>
 				</form>
 				
-				<a th:href="@{/login}">Login</a>
+				<a th:href="@{/login}" class="btn btn-light">Login</a>
 			</div>
 		</section>
 	</div>
