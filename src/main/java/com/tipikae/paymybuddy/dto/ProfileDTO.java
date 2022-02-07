@@ -1,7 +1,7 @@
 package com.tipikae.paymybuddy.dto;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 import lombok.Data;
 
@@ -34,5 +34,5 @@ public class ProfileDTO implements Serializable {
 	/**
 	 * Registration date.
 	 */
-	private Date dateCreated;
+	private LocalDate dateCreated;
 }

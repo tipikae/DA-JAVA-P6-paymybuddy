@@ -1,5 +1,7 @@
 package com.tipikae.paymybuddy.converters;
 
+import java.time.ZoneId;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -29,7 +31,10 @@ public class ConverterUserToProfileDTO implements IConverterUserToProfileDTO {
 			profileDTO.setEmail(user.getEmail());
 			profileDTO.setFirstname(user.getFirstname());
 			profileDTO.setLastname(user.getLastname());
-			profileDTO.setDateCreated(user.getAccount().getDateCreated());
+			profileDTO.setDateCreated(user.getAccount().getDateCreated()
+					.toInstant()
+					.atZone(ZoneId.systemDefault())
+					.toLocalDate());
 		} catch (Exception e) {
 			LOGGER.debug("ConverterException: " + e.getMessage());
 			throw new ConverterException(e.getMessage());

@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -105,7 +105,7 @@ class UserControllerTest {
 		profileDTO.setEmail("bob@bob.com");
 		profileDTO.setFirstname("bob");
 		profileDTO.setLastname("Bob");
-		profileDTO.setDateCreated(new Date());
+		profileDTO.setDateCreated(LocalDate.now());
 		when(userService.getProfileDetails(anyString())).thenReturn(profileDTO);
 		mockMvc.perform(get("/profile"))
 			.andExpect(status().isOk())
