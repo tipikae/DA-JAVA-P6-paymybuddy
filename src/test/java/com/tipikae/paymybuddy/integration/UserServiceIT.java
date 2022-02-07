@@ -2,12 +2,11 @@ package com.tipikae.paymybuddy.integration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import javax.transaction.Transactional;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tipikae.paymybuddy.dto.NewUserDTO;
 import com.tipikae.paymybuddy.exceptions.UserAlreadyExistException;
