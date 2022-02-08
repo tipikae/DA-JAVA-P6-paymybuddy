@@ -17,7 +17,7 @@ public interface IConverterListToDTO<E, D> {
 
 	/**
 	 * Convert an entities list to a dtos list.
-	 * @param dtos
+	 * @param entities
 	 * @return List<E>
 	 * @throws ConverterException
 	 */

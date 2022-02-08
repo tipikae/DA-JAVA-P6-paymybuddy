@@ -65,7 +65,10 @@ public class OperationController {
 	 * Get transactions page.
 	 * @param request
 	 * @param model
-	 * @return
+	 * @param session
+	 * @param page
+	 * @param size
+	 * @return String
 	 */
 	@GetMapping("/transaction")
 	public String getTransactions(HttpServletRequest request, Model model, HttpSession session, 
@@ -105,10 +108,9 @@ public class OperationController {
 	
 	/**
 	 * Save operation for deposit and withdrawal.
+	 * @param operationDTO
+	 * @param errors
 	 * @param request
-	 * @param model
-	 * @param typeOperation
-	 * @param amount
 	 * @return String
 	 */
 	@PostMapping("/saveOperation")
@@ -142,6 +144,13 @@ public class OperationController {
 		return "redirect:/bank?success=Operation succeed.";
 	}
 	
+	/**
+	 * Save transfer.
+	 * @param newTransferDTO
+	 * @param errors
+	 * @param request
+	 * @return String
+	 */
 	@PostMapping("/saveTransfer")
 	public String saveTransfer(
 			@ModelAttribute("transfer") @Valid NewTransferDTO newTransferDTO,
