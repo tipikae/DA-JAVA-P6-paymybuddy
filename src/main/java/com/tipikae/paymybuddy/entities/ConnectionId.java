@@ -28,8 +28,8 @@ public class ConnectionId implements Serializable {
 	 */
 	private int idUserDest;
 	
-	/*public ConnectionId() {
-	}*/
+	public ConnectionId() {
+	}
 	
 	public ConnectionId(int idUserSrc, int idUserDest) {
 		this.idUserSrc = idUserSrc;
