@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{template1}">
+<head>
+<meta charset="UTF-8">
+<title>Home</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<section>
+			<div class="col-md-12">
+				<div class="center bg-light padding40" th:if="home">
+					<h2>Welcome <span th:text="${home.firstname} + ' ' + ${home.lastname}"></span> !</h2>
+					<div class="font25">
+						<label>Balance (€):</label>
+						<label th:text="${home.balance}"></label>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+</body>
+</html>
