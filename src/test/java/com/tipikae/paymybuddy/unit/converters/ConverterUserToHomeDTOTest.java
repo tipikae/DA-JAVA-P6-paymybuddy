@@ -15,7 +15,7 @@ import com.tipikae.paymybuddy.entities.User;
 import com.tipikae.paymybuddy.exceptions.ConverterException;
 
 @SpringBootTest
-class ConvertUserToHomeDTOTest {
+class ConverterUserToHomeDTOTest {
 	
 	@Autowired
 	private IConverterUserToHomeDTO converterUserToHomeDTO;
@@ -34,4 +34,17 @@ class ConvertUserToHomeDTOTest {
 		assertEquals(balance, dto.getBalance());
 	}
 
+	@Test
+	void convertToDTOThrowsConverterExceptionWhenEmptyField() {
+		BigDecimal balance = new BigDecimal(1000);
+		Account account = new Account();
+		account.setBalance(balance);
+		User alice = new User();
+		alice.setFirstname("");
+		alice.setLastname("ALICE");
+		alice.setEmail("alice@alice.com");
+		alice.setAccount(account);
+		assertThrows(ConverterException.class,
+				() -> converterUserToHomeDTO.convertToDTO(alice));
+	}
 }

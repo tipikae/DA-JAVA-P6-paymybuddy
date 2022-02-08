@@ -29,18 +29,19 @@ public class ConverterListConnectionToConnectionDTO implements IConverterListCon
 	@Override
 	public List<ConnectionDTO> convertToListDTOs(List<Connection> connections) throws ConverterException {
 		List<ConnectionDTO> connectionsDTO = new ArrayList<>();
-		try {
-			for(Connection connection: connections) {
-				User destUser = connection.getDestUser();
-				ConnectionDTO connectionDTO = new ConnectionDTO();
-				connectionDTO.setEmail(destUser.getEmail());
-				connectionDTO.setFirstname(destUser.getFirstname());
-				connectionDTO.setLastname(destUser.getLastname());
-				connectionsDTO.add(connectionDTO);
+		for(Connection connection: connections) {
+			User destUser = connection.getDestUser();
+			if(destUser.getEmail().equals("") || destUser.getFirstname().equals("") 
+					|| destUser.getLastname().equals("")) {
+				LOGGER.debug("ConverterException: Empty field: email=" + destUser.getEmail() 
+					+ " firstname=" + destUser.getFirstname() + " lastname=" + destUser.getLastname());
+				throw new ConverterException("Empty field.");
 			}
-		} catch (Exception e) {
-			LOGGER.debug("ConverterException: " + e.getMessage());
-			throw new ConverterException(e.getMessage());
+			ConnectionDTO connectionDTO = new ConnectionDTO();
+			connectionDTO.setEmail(destUser.getEmail());
+			connectionDTO.setFirstname(destUser.getFirstname());
+			connectionDTO.setLastname(destUser.getLastname());
+			connectionsDTO.add(connectionDTO);
 		}
 		return connectionsDTO;
 	}

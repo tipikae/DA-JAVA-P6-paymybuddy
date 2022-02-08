@@ -38,4 +38,20 @@ class ConverterListUserToConnectionDTOTest {
 		assertEquals("BOB", connections.get(1).getLastname());
 	}
 
+	@Test
+	void convertToListDTOsThrowsConverterExceptionWhenEmptyField() {
+		User allFields = new User();
+		allFields.setEmail("alice@alice.com");
+		allFields.setFirstname("Alice");
+		allFields.setLastname("ALICE");
+		User notAllFields = new User();
+		notAllFields.setEmail("");
+		notAllFields.setFirstname("Bob");
+		notAllFields.setLastname("BOB");
+		List<User> users = new ArrayList<>();
+		users.add(allFields);
+		users.add(notAllFields);
+		assertThrows(ConverterException.class, 
+				() -> converterListUserToConnectionDTO.convertToListDTOs(users));
+	}
 }

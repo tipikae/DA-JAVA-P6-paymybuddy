@@ -27,18 +27,19 @@ public class ConverterUserToProfileDTO implements IConverterUserToProfileDTO {
 	@Override
 	public ProfileDTO convertToDTO(User user) throws ConverterException {
 		ProfileDTO profileDTO = new ProfileDTO();
-		try {
-			profileDTO.setEmail(user.getEmail());
-			profileDTO.setFirstname(user.getFirstname());
-			profileDTO.setLastname(user.getLastname());
-			profileDTO.setDateCreated(user.getAccount().getDateCreated()
-					.toInstant()
-					.atZone(ZoneId.systemDefault())
-					.toLocalDate());
-		} catch (Exception e) {
-			LOGGER.debug("ConverterException: " + e.getMessage());
-			throw new ConverterException(e.getMessage());
+		if(user.getEmail().equals("") || user.getFirstname().equals("") 
+				|| user.getLastname().equals("")) {
+			LOGGER.debug("ConverterException: Empty field: email=" + user.getEmail() 
+				+ " firstname=" + user.getFirstname() + " lastname=" + user.getLastname());
+			throw new ConverterException("Empty field.");
 		}
+		profileDTO.setEmail(user.getEmail());
+		profileDTO.setFirstname(user.getFirstname());
+		profileDTO.setLastname(user.getLastname());
+		profileDTO.setDateCreated(user.getAccount().getDateCreated()
+				.toInstant()
+				.atZone(ZoneId.systemDefault())
+				.toLocalDate());
 		
 		return profileDTO;
 	}

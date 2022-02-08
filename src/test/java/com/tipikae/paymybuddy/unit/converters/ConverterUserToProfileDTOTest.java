@@ -31,4 +31,15 @@ class ConverterUserToProfileDTOTest {
 		assertEquals("Alice", converterUserToProfileDTO.convertToDTO(alice).getFirstname());
 	}
 
+	@Test
+	void convertToDTOThrowsConverterExceptionWhenEmptyField() {
+		Account account = new Account();
+		account.setDateCreated(new Date());;
+		User alice = new User();
+		alice.setFirstname("Alice");
+		alice.setLastname("");
+		alice.setEmail("alice@alice.com");
+		alice.setAccount(account);
+		assertThrows(ConverterException.class, () -> converterUserToProfileDTO.convertToDTO(alice));
+	}
 }
