@@ -16,6 +16,7 @@ import com.tipikae.paymybuddy.exceptions.ConverterException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.services.IConnectionService;
 
+@Transactional
 @SpringBootTest
 class ConnectionServiceIT {
 	
@@ -37,7 +38,6 @@ class ConnectionServiceIT {
 		assertThrows(UserNotFoundException.class, () -> connectionService.getConnections("test@test.com"));
 	}
 
-	@Transactional
 	@Test
 	void addConnectionReturnsConnectionWhenOk() throws UserNotFoundException, ConnectionForbiddenException {
 		NewContactDTO newContactDTO = new NewContactDTO();

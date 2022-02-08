@@ -2,13 +2,21 @@ package com.tipikae.paymybuddy.integration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.tipikae.paymybuddy.dto.ConnectionDTO;
+import com.tipikae.paymybuddy.dto.HomeDTO;
 import com.tipikae.paymybuddy.dto.NewUserDTO;
+import com.tipikae.paymybuddy.dto.ProfileDTO;
+import com.tipikae.paymybuddy.exceptions.ConverterException;
 import com.tipikae.paymybuddy.exceptions.UserAlreadyExistException;
+import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.services.IUserService;
 
 @SpringBootTest
@@ -41,14 +49,69 @@ class UserServiceIT {
 		newUserDTO.setConfirmedPassword("victor");
 	}
 
+	@Transactional
+	@Test
+	void registerNewUserReturnsUserWhenOk() throws UserAlreadyExistException {
+		assertEquals("victor@victor.com", userService.registerNewUser(newUserDTO).getEmail());
+	}
+
+	@Transactional
 	@Test
 	void registerNewUserThrowsUserAlreadyExistExceptionWhenEmailExists() {
 		assertThrows(UserAlreadyExistException.class, () -> userService.registerNewUser(existingUserDTO));
 	}
 
 	@Test
-	void registerNewUserReturnsUserWhenEmailNotFound() throws UserAlreadyExistException {
-		assertEquals("victor@victor.com", userService.registerNewUser(newUserDTO).getEmail());
+	void getPotentialConnectionsReturnsListConnectionDTOWhenOk() 
+			throws UserNotFoundException, ConverterException {
+		List<ConnectionDTO> connections = userService.getPotentialConnections("bob@bob.com");
+		assertEquals("alice@alice.com", connections.get(0).getEmail());
 	}
 
+	@Test
+	void getPotentialConnectionsThrowsUserNotFoundWhenEmailNotFound() {
+		assertThrows(UserNotFoundException.class, () -> userService.getPotentialConnections("test@test.com"));
+	}
+	
+	@Test
+	void getHomeDetailsReturnsHomeDTOWhenOk() throws UserNotFoundException, ConverterException {
+		HomeDTO homeDTO = userService.getHomeDetails("alice@alice.com");
+		assertEquals("Alice", homeDTO.getFirstname());
+	}
+	
+	@Test
+	void getHomeDetailsThrowsUserNotFoundExceptionWhenEmailNotFound() {
+		assertThrows(UserNotFoundException.class, () -> userService.getHomeDetails("test@test.com"));
+	}
+	
+	@Test
+	void getProfileReturnsProfileDTOWhenOk() throws UserNotFoundException, ConverterException {
+		ProfileDTO profileDTO = userService.getProfileDetails("alice@alice.com");
+		assertEquals("Alice", profileDTO.getFirstname());
+	}
+	
+	@Test
+	void getProfileThrowsUserNotFoundExceptionWhenEmailNotFound() {
+		assertThrows(UserNotFoundException.class, () -> userService.getProfileDetails("test@test.com"));
+	}
+	
+	@Test
+	void getBankWhenOk() throws UserNotFoundException {
+		userService.getBank("alice@alice.com");
+	}
+	
+	@Test
+	void getBankThrowsUserNotFoundExceptionWhenEmailNotFound() {
+		assertThrows(UserNotFoundException.class, () -> userService.getBank("test@test.com"));
+	}
+
+	@Test
+	void isUserExistsWhenOk() throws UserNotFoundException {
+		assertEquals("ALICE", userService.isUserExists("alice@alice.com").getLastname());
+	}
+	
+	@Test
+	void isUserExistsThrowsUserNotFoundExceptionWhenEmailNotFound() {
+		assertThrows(UserNotFoundException.class, () -> userService.isUserExists("test@test.com"));
+	}
 }
