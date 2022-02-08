@@ -6,12 +6,15 @@ import java.util.Date;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
+import lombok.Data;
+
 /**
  * Entity class for deposit operations.
  * @author tipikae
  * @version 1.0
  *
  */
+@Data
 @Entity
 @DiscriminatorValue("DEP")
 public class Deposit extends Operation {
@@ -22,9 +25,9 @@ public class Deposit extends Operation {
 		super();
 	}
 
-	public Deposit(int number, Date dateOperation, BigDecimal amount, Account account) {
+	/*public Deposit(int number, Date dateOperation, BigDecimal amount, Account account) {
 		super(number, dateOperation, amount, account);
-	}
+	}*/
 
 	
 }
