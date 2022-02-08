@@ -78,7 +78,6 @@ public class ConnectionController {
 			return "error/400";
 		} catch (Exception e) {
 			LOGGER.debug("Get contact: Unable to process contact: " + e.getMessage());
-			e.printStackTrace();
 			return "error/400";
 		}
 		
