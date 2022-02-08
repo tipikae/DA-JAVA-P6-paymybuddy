@@ -8,6 +8,8 @@ With only one click, you can pay your friends and manage your money.
 - Java 1.8
 - Maven 3.6.0
 - MySQL 5.7.36
+- Thymeleaf
+- Bootstrap 4.0.0
 
 ### Installing
 A step by step series of examples that tell you how to get an environment running:
