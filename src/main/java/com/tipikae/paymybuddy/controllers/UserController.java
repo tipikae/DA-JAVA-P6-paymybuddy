@@ -110,6 +110,7 @@ public class UserController {
 	 * Get home mapping.
 	 * @param request
 	 * @param model
+	 * @param session
 	 * @return String
 	 */
 	@GetMapping("/home")
@@ -139,6 +140,7 @@ public class UserController {
 	 * Get the user profile page.
 	 * @param request
 	 * @param model
+	 * @param session
 	 * @return String
 	 */
 	@GetMapping("/profile")
@@ -166,7 +168,7 @@ public class UserController {
 	/**
 	 * Get the bank page.
 	 * @param request
-	 * @param model
+	 * @param session
 	 * @return String
 	 */
 	@GetMapping("/bank")

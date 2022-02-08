@@ -25,15 +25,15 @@ public class ConverterUserToHomeDTO implements IConverterUserToHomeDTO {
 	@Override
 	public HomeDTO convertToDTO(User user) throws ConverterException {
 		HomeDTO homeDTO = new HomeDTO();
-		try {
-			homeDTO.setFirstname(user.getFirstname());
-			homeDTO.setLastname(user.getLastname());
-			homeDTO.setEmail(user.getEmail());
-			homeDTO.setBalance(user.getAccount().getBalance());
-		} catch (Exception e) {
-			LOGGER.debug("ConverterException: " + e.getMessage());
-			throw new ConverterException(e.getMessage());
+		if(user.getFirstname().equals("") || user.getLastname().equals("") || user.getEmail().equals("")) {
+			LOGGER.debug("ConverterException: Empty field: email=" + user.getEmail() 
+				+ " firstname=" + user.getFirstname() + " lastname=" + user.getLastname());
+			throw new ConverterException("Empty field.");
 		}
+		homeDTO.setFirstname(user.getFirstname());
+		homeDTO.setLastname(user.getLastname());
+		homeDTO.setEmail(user.getEmail());
+		homeDTO.setBalance(user.getAccount().getBalance());
 		
 		return homeDTO;
 	}

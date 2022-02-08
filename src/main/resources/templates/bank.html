@@ -11,26 +11,30 @@
 	<div layout:fragment="content">
 		<section>
 			<div class="col-md-12">
-				<h2>Bank operation:</h2>
-				<form th:action="@{/saveOperation}" method="post">
-					<div>
-						<input type="radio" id="deposit"
-					           name="typeOperation" value="DEP" checked>
-					    <label for="deposit">Deposit</label>
-					    <input type="radio" id="withdrawal"
-					           name="typeOperation" value=WIT>
-					    <label for="withdrawal">Withdrawal</label>
+				<div class="center">
+					<h2>Bank operation</h2>
+					<div class="bg-light padding40">
+						<form th:action="@{/saveOperation}" method="post">
+							<div>
+								<input type="radio" id="deposit"
+							           name="typeOperation" value="DEP" checked>
+							    <label for="deposit">Deposit</label>
+							    <input type="radio" id="withdrawal"
+							           name="typeOperation" value=WIT>
+							    <label for="withdrawal">Withdrawal</label>
+							</div>
+							<div class="spacer20">
+							  	<label for="amount">Amount (€):</label>
+							  	<input type="number" name="amount" min="0" step="1" value="0">
+							</div>
+							<div class="red" th:text="${#httpServletRequest.getParameter('error')}"></div>
+							<div class="green" th:text="${#httpServletRequest.getParameter('success')}"></div>
+							<div class="spacer20">
+							    <button type="submit" class="btn btn-primary">Save operation</button>
+							</div>
+						</form>
 					</div>
-					<div>
-					  	<label>Amount:</label>
-					  	<input type="text" name="amount" value="0">
-					</div>
-					<div class="red" th:text="${#httpServletRequest.getParameter('error')}"></div>
-					<div class="green" th:text="${#httpServletRequest.getParameter('success')}"></div>
-					<div>
-					    <button type="submit" class="btn btn-primary">Save operation</button>
-					</div>
-				</form>
+				</div>
 			</div>
 		</section>
 	</div>

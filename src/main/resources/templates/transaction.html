@@ -11,41 +11,49 @@
 	<div layout:fragment="content">
 		<section>
 			<div class="col-md-12">
-				<div>
-					<a th:href="@{/contact}" class="btn btn-primary">Add a connection</a>
-				</div>
 				<div th:if="${connections}">
-					<h2>Send money</h2>
-					<form th:action="@{/saveTransfer}" method="post">
-						<select name="destEmail">
-							<option value="">Select a connection</option>
-							<option 
-								th:each="c:${connections}" 
-								th:value="${c.email}" 
-								th:text="${c.firstname} + ' ' + ${c.lastname} + ' ' + ${c.email}">
-							</option>
-						</select>
-						<label for="amout">Amount</label>
-						<input type="number" name="amount" min="0" step="1" value="0">
-						<label for="description">Description</label>
-						<input type="text" name="description">
+					<div>
+						<div class="inline"><h2>Send money</h2></div>
+						<div class="inline right"><a th:href="@{/contact}" class="btn btn-primary">Add a connection</a></div>
+					</div>
+					<form th:action="@{/saveTransfer}" method="post" class="bg-light padding40">
+						<div>
+							<div class="inline">
+								<select name="destEmail" class="form-select height30">
+									<option value="" class="dropdown-item">Select a connection</option>
+									<option 
+										th:each="c:${connections}" 
+										th:value="${c.email}" 
+										th:text="${c.firstname} + ' ' + ${c.lastname} + ' ' + ${c.email}">
+									</option>
+								</select>
+							</div>
+							<div class="inline right">
+								<label for="amount">Amount (€)</label>
+								<input type="number" name="amount" min="0" step="1" value="0">
+							</div>
+						</div>
+						<div class="spacer20">
+							<label for="description">Description</label>
+							<input type="text" name="description">
+						</div>
 						<div class="red" th:text="${#httpServletRequest.getParameter('error')}"></div>
 						<div class="green" th:text="${#httpServletRequest.getParameter('success')}"></div>
-						<div>
-						    <button type="submit" class="btn btn-primary">Pay</button>
+						<div class="spacer20 center">
+							<button type="submit" class="btn btn-success width200">Pay</button>
 						</div>
 					</form>
 				</div>
-				<div class="" th:if="${operations}">
+				<div class="spacer40" th:if="${operations}">
 					<h2>My transactions</h2>
 					<div>
-						<table class="table table-striped">
-							<tr>
-								<th>Transaction</th>
+						<table class="table table-striped border1">
+							<tr class="bg-success">
+								<th>Type</th>
 								<th>Connection</th>
 								<th>Description</th>
-								<th>Amount</th>
-								<th>Fee</th>
+								<th>Amount (€)</th>
+								<th>Fee (€)</th>
 							</tr>
 							<tr th:each="o:${operations}">
 								<td th:text="${o.type}"></td>

@@ -2,12 +2,11 @@ package com.tipikae.paymybuddy.services;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tipikae.paymybuddy.converters.IConverterListConnectionToConnectionDTO;
 import com.tipikae.paymybuddy.dto.ConnectionDTO;
@@ -26,6 +25,7 @@ import com.tipikae.paymybuddy.repositories.IConnectionRepository;
  * @version 1.0
  *
  */
+@Transactional
 @Service
 public class ConnectionServiceImpl implements IConnectionService {
 	
@@ -61,7 +61,6 @@ public class ConnectionServiceImpl implements IConnectionService {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Transactional
 	@Override
 	public Connection addConnection(String srcEmail, NewContactDTO newContactDTO) 
 			throws UserNotFoundException, ConnectionForbiddenException {

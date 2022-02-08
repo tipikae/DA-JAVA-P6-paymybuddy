@@ -2,12 +2,16 @@ package com.tipikae.paymybuddy.unit.services;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -18,8 +22,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.tipikae.paymybuddy.converters.IConverterListUserToConnectionDTO;
 import com.tipikae.paymybuddy.converters.IConverterUserToHomeDTO;
 import com.tipikae.paymybuddy.converters.IConverterUserToProfileDTO;
+import com.tipikae.paymybuddy.dto.ConnectionDTO;
 import com.tipikae.paymybuddy.dto.HomeDTO;
 import com.tipikae.paymybuddy.dto.NewUserDTO;
 import com.tipikae.paymybuddy.dto.ProfileDTO;
@@ -43,6 +49,8 @@ class UserServiceTest {
 	private IConverterUserToHomeDTO converterUserToHomeDTO;
 	@Mock
 	private IConverterUserToProfileDTO converterUserToProfileDTO;
+	@Mock
+	private IConverterListUserToConnectionDTO converterUserToConnectionDTO;
 	
 	@InjectMocks
 	private static UserServiceImpl userService;
@@ -125,5 +133,53 @@ class UserServiceTest {
 		when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
 		assertThrows(UserNotFoundException.class, () -> userService.getHomeDetails("bob@bob.com"));
 	}
+	
+	@Test
+	void getPotentialConnectionsReturnsListConnectionDTOWhenOk() 
+			throws UserNotFoundException, ConverterException {
+		User alice = new User();
+		alice.setEmail("alice@alice.com");
+		User bob = new User();
+		bob.setEmail("bob@bob.com");
+		List<User> users = new ArrayList<>();
+		users.add(alice);
+		users.add(bob);
+		ConnectionDTO aliceDTO = new ConnectionDTO();
+		aliceDTO.setEmail(alice.getEmail());
+		ConnectionDTO bobDTO = new ConnectionDTO();
+		bob.setEmail(bob.getEmail());
+		List<ConnectionDTO> connectionsDTO = new ArrayList<>();
+		connectionsDTO.add(aliceDTO);
+		connectionsDTO.add(bobDTO);
+		when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(new User()));
+		when(userRepository.getPotentialConnections(anyInt())).thenReturn(users);
+		when(converterUserToConnectionDTO.convertToListDTOs(users)).thenReturn(connectionsDTO);
+		assertEquals(2, userService.getPotentialConnections("prout@prout.com").size());
+	}
+	
+	@Test
+	void getPotentialConnectionsThrowsUserNotFoundExceptionWhenEmailNotFound() {
+		when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+		assertThrows(UserNotFoundException.class, () -> userService.getPotentialConnections("alice@alice.com"));
+	}
+	
+	@Test
+	void getPotentialConnectionsThrowsConverterExceptionWhenConverterError() throws ConverterException {
+		when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(new User()));
+		when(userRepository.getPotentialConnections(anyInt())).thenReturn(new ArrayList<>());
+		doThrow(ConverterException.class).when(converterUserToConnectionDTO).convertToListDTOs(new ArrayList<>());
+		assertThrows(ConverterException.class, () -> userService.getPotentialConnections("alice@alice.com"));
+	}
 
+	@Test
+	void getBankThrowsNothingWhenOk() throws UserNotFoundException {
+		when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(new User()));
+		userService.getBank("alice@alice.com");
+	}
+	
+	@Test
+	void getBankThrowsUserNotFoundExceptionWhenEmailNotFound() {
+		when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+		assertThrows(UserNotFoundException.class, () -> userService.getBank("alice@alice.com"));
+	}
 }

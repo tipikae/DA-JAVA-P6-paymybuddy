@@ -1,37 +1,54 @@
 <!DOCTYPE html >
 <html xmlns="http://www.w3.org/1999/xhtml" 
 	xmlns:th="http://www.thymeleaf.org" 
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	lang="en">
 	<head>
 		<meta charset="UTF-8">
 		<title>Pay My Buddy</title>
 		<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 	</head>
 	<body>
 		<header>
-			<div id="header" class="navbar navbar-default">
-				<div class="container-fluid">
-					<div id="logo"></div>
-					<ul class="nav navbar-nav navbar-right">
-						<li><a th:href="@{/home}">Home</a></li>
-						<li><a th:href="@{/transaction}">Transactions</a></li>
-						<li><a th:href="@{/bank}">Bank</a></li>
-						<li><a th:href="@{/profile}">Profile</a></li>
-						<li><a th:href="@{/contact}">Contact</a></li>
-						<li><a th:href="@{/logout}">Logout</a></li>
-					</ul>
-				</div>
-			</div>
+			<nav class="navbar navbar-expand-lg navbar-light bg-white">
+				<div class="logo"></div>
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item" 
+						th:classappend="${#request.requestURI.startsWith('/home') ? 'active' : ''}">
+						<a class="nav-link" th:href="@{/home}">Home</a>
+					</li>
+					<li class="nav-item" 
+						th:classappend="${#request.requestURI.startsWith('/transaction') ? 'active' : ''}">
+						<a class="nav-link" th:href="@{/transaction}">Transactions</a>
+					</li>
+					<li class="nav-item" 
+						th:classappend="${#request.requestURI.startsWith('/bank') ? 'active' : ''}">
+						<a class="nav-link" th:href="@{/bank}">Bank</a>
+					</li>
+					<li class="nav-item" 
+						th:classappend="${#request.requestURI.startsWith('/profile') ? 'active' : ''}">
+						<a class="nav-link" th:href="@{/profile}">Profile</a>
+					</li>
+					<li class="nav-item" 
+						th:classappend="${#request.requestURI.startsWith('/contact') ? 'active' : ''}">
+						<a class="nav-link" th:href="@{/contact}">Contacts</a>
+					</li>
+					<li class="nav-item" 
+						th:classappend="${#request.requestURI.startsWith('/logout') ? 'active' : ''}">
+						<a class="nav-link" th:href="@{/logout}">Logout</a>
+					</li>
+				</ul>
+			</nav>
 			<div th:if="${session.breadcrumb}">
-				<ul class="breadcrumb">
-					<li th:each="entry : ${session.breadcrumb}">
-				         <a th:href="${entry.query}" th:unless="${entry.isCurrent}" th:text="${entry.label}">Home</a>
-				         <span th:if="${entry.isCurrent and entry.label != 'Home'}" th:text="${entry.label}">Home</span>
-				    </li>
-				 </ul>
+				<nav aria-label="breadcrumb">
+				  	<ol class="breadcrumb">
+				    	<li th:each="entry : ${session.breadcrumb}" class="breadcrumb-item">
+				    		<a th:href="${entry.query}" th:unless="${entry.isCurrent}" th:text="${entry.label}">Home</a>
+				         	<span th:if="${entry.isCurrent and entry.label != 'Home'}" th:text="${entry.label}">Home</span>
+				    	</li>
+				  	</ol>
+				</nav>
 			</div>
 		</header>
 		<div class="container">
@@ -42,5 +59,8 @@
 				<small></small>
 			</div>
 		</footer>
+		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 	</body>
 </html>

@@ -4,12 +4,15 @@ import java.io.Serializable;
 
 import javax.persistence.Embeddable;
 
+import lombok.Data;
+
 /**
  * Class for composite primary key of Connection entity.
  * @author tipikae
  * @version 1.0
  *
  */
+@Data
 @Embeddable
 public class ConnectionId implements Serializable {
 
@@ -25,17 +28,9 @@ public class ConnectionId implements Serializable {
 	 */
 	private int idUserDest;
 	
-	/**
-	 * Default constructor.
-	 */
 	public ConnectionId() {
 	}
 	
-	/**
-	 * Constructor with fields.
-	 * @param idUserSrc
-	 * @param idUserDest
-	 */
 	public ConnectionId(int idUserSrc, int idUserDest) {
 		this.idUserSrc = idUserSrc;
 		this.idUserDest = idUserDest;
@@ -44,7 +39,7 @@ public class ConnectionId implements Serializable {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	/*@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
             return true;
@@ -64,18 +59,18 @@ public class ConnectionId implements Serializable {
         } else if (idUserDest != other.idUserDest)
             return false;
         return true;
-	}
+	}*/
 
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	/*@Override
 	public int hashCode() {
 		final int prime = 31;
         int result = 1;
         result = prime * result + ((idUserSrc == 0) ? 0 : Integer.valueOf(idUserSrc).hashCode());
         result = prime * result + ((idUserDest == 0) ? 0 : Integer.valueOf(idUserDest).hashCode());
         return result;
-	}
+	}*/
 	
 }

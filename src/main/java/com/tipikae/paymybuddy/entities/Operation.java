@@ -68,12 +68,12 @@ public abstract class Operation implements Serializable {
 		super();
 	}
 
-	public Operation(int number, Date dateOperation, BigDecimal amount, Account account) {
+	/*public Operation(int number, Date dateOperation, BigDecimal amount, Account account) {
 		super();
 		this.number = number;
 		this.dateOperation = dateOperation;
 		this.amount = amount;
 		this.account = account;
-	}
+	}*/
 	
 }

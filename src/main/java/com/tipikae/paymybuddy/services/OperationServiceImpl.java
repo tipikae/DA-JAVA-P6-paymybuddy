@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tipikae.paymybuddy.dto.NewOperationDTO;
 import com.tipikae.paymybuddy.dto.NewTransferDTO;
@@ -31,6 +32,7 @@ import com.tipikae.paymybuddy.repositories.IOperationRepository;
  * @version 1.0
  *
  */
+@Transactional
 @Service
 public class OperationServiceImpl implements IOperationService {
 	
@@ -132,7 +134,7 @@ public class OperationServiceImpl implements IOperationService {
 		
 		if(emailSrc.equals(emailDest)) {
 			LOGGER.debug("EmailSrc and emailDest are identical");
-			throw new OperationForbiddenException("EmailSrc and emailDest are identical");
+			throw new OperationForbiddenException("Source and Destination are identical");
 		}
 		
 		User userSrc = userService.isUserExists(emailSrc);
@@ -140,6 +142,12 @@ public class OperationServiceImpl implements IOperationService {
 
 		Account accountSrc = userSrc.getAccount();
 		Account accountDest = userDest.getAccount();
+		
+		if(amount.compareTo(accountSrc.getBalance()) == 1 ) {
+			LOGGER.debug("Transfer: amount(" + amount + ") > balance(" + accountSrc.getBalance() + ")");
+			throw new OperationForbiddenException("Amount can't be more than balance.");
+		}
+		
 		BigDecimal fee = amount.multiply(rate);
 		Transfer transfer = new Transfer();
 		transfer.setAccount(accountSrc);

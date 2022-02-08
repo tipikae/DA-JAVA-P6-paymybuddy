@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -26,6 +26,8 @@ import com.tipikae.paymybuddy.dto.HomeDTO;
 import com.tipikae.paymybuddy.dto.ProfileDTO;
 import com.tipikae.paymybuddy.dto.NewUserDTO;
 import com.tipikae.paymybuddy.entities.User;
+import com.tipikae.paymybuddy.exceptions.BreadcrumbException;
+import com.tipikae.paymybuddy.exceptions.ConverterException;
 import com.tipikae.paymybuddy.exceptions.UserAlreadyExistException;
 import com.tipikae.paymybuddy.exceptions.UserNotFoundException;
 import com.tipikae.paymybuddy.services.IUserService;
@@ -97,16 +99,72 @@ class UserControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(view().name("registration"));
 	}
+
+	@WithMockUser
+	@Test
+	void getHomeReturnsHomeWhenOk() throws Exception {
+		HomeDTO homeDTO = new HomeDTO();
+		homeDTO.setBalance(new BigDecimal(1000.0));
+		when(userService.getHomeDetails(anyString())).thenReturn(homeDTO);
+		mockMvc.perform(get("/home"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("home"));
+	}
+
+	@WithMockUser
+	@Test
+	void getHomeReturnsHomeWhenBreadcrumbException() throws Exception {
+		HomeDTO homeDTO = new HomeDTO();
+		homeDTO.setBalance(new BigDecimal(1000.0));
+		when(userService.getHomeDetails(anyString())).thenReturn(homeDTO);
+		doThrow(BreadcrumbException.class).when(breadcrumb).getBreadCrumb(anyString(), anyString());
+		mockMvc.perform(get("/home"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("home"));
+	}
+
+	@WithMockUser
+	@Test
+	void getHomeReturns400WhenConverterException() throws Exception {
+		doThrow(ConverterException.class).when(userService).getHomeDetails(anyString());
+		mockMvc.perform(get("/home"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("error/400"));
+	}
+
+	@WithMockUser
+	@Test
+	void getHomeReturns404WhenNotFound() throws Exception {
+		doThrow(UserNotFoundException.class).when(userService).getHomeDetails(anyString());
+		mockMvc.perform(get("/home"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("error/404"));
+	}
 	
 	@WithMockUser
 	@Test
-	void getProfileReturnsProfileWhenFound() throws Exception {
+	void getProfileReturnsProfileWhenOk() throws Exception {
 		ProfileDTO profileDTO = new ProfileDTO();
 		profileDTO.setEmail("bob@bob.com");
 		profileDTO.setFirstname("bob");
 		profileDTO.setLastname("Bob");
-		profileDTO.setDateCreated(new Date());
+		profileDTO.setDateCreated(LocalDate.now());
 		when(userService.getProfileDetails(anyString())).thenReturn(profileDTO);
+		mockMvc.perform(get("/profile"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("profile"));
+	}
+	
+	@WithMockUser
+	@Test
+	void getProfileReturnsProfileWhenBreadcrumbException() throws Exception {
+		ProfileDTO profileDTO = new ProfileDTO();
+		profileDTO.setEmail("bob@bob.com");
+		profileDTO.setFirstname("bob");
+		profileDTO.setLastname("Bob");
+		profileDTO.setDateCreated(LocalDate.now());
+		when(userService.getProfileDetails(anyString())).thenReturn(profileDTO);
+		doThrow(BreadcrumbException.class).when(breadcrumb).getBreadCrumb(anyString(), anyString());
 		mockMvc.perform(get("/profile"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("profile"));
@@ -120,23 +178,38 @@ class UserControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(view().name("error/404"));
 	}
-
+	
 	@WithMockUser
 	@Test
-	void getHomeReturnsHomeWhenFound() throws Exception {
-		HomeDTO homeDTO = new HomeDTO();
-		homeDTO.setBalance(new BigDecimal(1000.0));
-		when(userService.getHomeDetails(anyString())).thenReturn(homeDTO);
-		mockMvc.perform(get("/home"))
+	void getProfileReturns400WhenConverterException() throws Exception {
+		doThrow(ConverterException.class).when(userService).getProfileDetails(anyString());
+		mockMvc.perform(get("/profile"))
 			.andExpect(status().isOk())
-			.andExpect(view().name("home"));
+			.andExpect(view().name("error/400"));
 	}
-
+	
 	@WithMockUser
 	@Test
-	void getHomeReturns404WhenNotFound() throws Exception {
-		doThrow(UserNotFoundException.class).when(userService).getHomeDetails(anyString());
-		mockMvc.perform(get("/home"))
+	void getBankReturnsBankWhenOk() throws Exception {
+		mockMvc.perform(get("/bank"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("bank"));
+	}
+	
+	@WithMockUser
+	@Test
+	void getBankReturnsBankWhenBreadcrumbException() throws Exception {
+		doThrow(BreadcrumbException.class).when(breadcrumb).getBreadCrumb(anyString(), anyString());
+		mockMvc.perform(get("/bank"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("bank"));
+	}
+	
+	@WithMockUser
+	@Test
+	void getBankReturns404WhenNotFound() throws Exception {
+		doThrow(UserNotFoundException.class).when(userService).getBank(anyString());
+		mockMvc.perform(get("/bank"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("error/404"));
 	}

@@ -11,11 +11,11 @@
 	<div layout:fragment="content">
 		<section>
 			<div class="col-md-12">
-				<div class="" th:if="home">
+				<div class="center bg-light padding40" th:if="home">
 					<h2>Welcome <span th:text="${home.firstname} + ' ' + ${home.lastname}"></span> !</h2>
-					<div>
-						<label>Balance:</label>
-						<label th:text="${home.balance}">€</label>
+					<div class="font25">
+						<label>Balance (€):</label>
+						<label th:text="${home.balance}"></label>
 					</div>
 				</div>
 			</div>

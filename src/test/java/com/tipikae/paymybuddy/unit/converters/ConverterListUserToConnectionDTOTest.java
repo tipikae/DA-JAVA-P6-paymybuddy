@@ -9,17 +9,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.tipikae.paymybuddy.converters.ConverterListConnectionToConnectionDTO;
+import com.tipikae.paymybuddy.converters.ConverterListUserToConnectionDTO;
 import com.tipikae.paymybuddy.dto.ConnectionDTO;
-import com.tipikae.paymybuddy.entities.Connection;
 import com.tipikae.paymybuddy.entities.User;
 import com.tipikae.paymybuddy.exceptions.ConverterException;
 
 @ExtendWith(SpringExtension.class)
-class ConverterListConnectionToConnectionDTOTest {
+class ConverterListUserToConnectionDTOTest {
 	
-	private ConverterListConnectionToConnectionDTO converterListConnectionToConnectionDTO
-		= new ConverterListConnectionToConnectionDTO();
+	private ConverterListUserToConnectionDTO converterListUserToConnectionDTO 
+		= new ConverterListUserToConnectionDTO();
 
 	@Test
 	void convertToListDTOsReturnsListWhenOK() throws ConverterException {
@@ -31,16 +30,14 @@ class ConverterListConnectionToConnectionDTOTest {
 		bob.setEmail("bob@bob.com");
 		bob.setFirstname("Bob");
 		bob.setLastname("BOB");
-		Connection connection = new Connection();
-		connection.setSrcUser(alice);
-		connection.setDestUser(bob);
-		List<Connection> connections = new ArrayList<>();
-		connections.add(connection);
-		List<ConnectionDTO> dtos = converterListConnectionToConnectionDTO.convertToListDTOs(connections);
-		assertEquals(1, dtos.size());
-		assertEquals(bob.getEmail(), dtos.get(0).getEmail());
+		List<User> users = new ArrayList<>();
+		users.add(alice);
+		users.add(bob);
+		List<ConnectionDTO> connections = converterListUserToConnectionDTO.convertToListDTOs(users);
+		assertEquals(2, connections.size());
+		assertEquals("BOB", connections.get(1).getLastname());
 	}
-	
+
 	@Test
 	void convertToListDTOsThrowsConverterExceptionWhenEmptyField() {
 		User allFields = new User();
@@ -51,13 +48,10 @@ class ConverterListConnectionToConnectionDTOTest {
 		notAllFields.setEmail("");
 		notAllFields.setFirstname("Bob");
 		notAllFields.setLastname("BOB");
-		Connection connection = new Connection();
-		connection.setSrcUser(allFields);
-		connection.setDestUser(notAllFields);
-		List<Connection> connections = new ArrayList<>();
-		connections.add(connection);
+		List<User> users = new ArrayList<>();
+		users.add(allFields);
+		users.add(notAllFields);
 		assertThrows(ConverterException.class, 
-				() -> converterListConnectionToConnectionDTO.convertToListDTOs(connections));
+				() -> converterListUserToConnectionDTO.convertToListDTOs(users));
 	}
-
 }
