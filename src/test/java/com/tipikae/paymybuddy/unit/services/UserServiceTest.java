@@ -171,4 +171,15 @@ class UserServiceTest {
 		assertThrows(ConverterException.class, () -> userService.getPotentialConnections("alice@alice.com"));
 	}
 
+	@Test
+	void getBankThrowsNothingWhenOk() throws UserNotFoundException {
+		when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(new User()));
+		userService.getBank("alice@alice.com");
+	}
+	
+	@Test
+	void getBankThrowsUserNotFoundExceptionWhenEmailNotFound() {
+		when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+		assertThrows(UserNotFoundException.class, () -> userService.getBank("alice@alice.com"));
+	}
 }
