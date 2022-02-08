@@ -26,32 +26,26 @@ public class BreadcrumbImpl implements IBreadcrumb {
 	 */
 	@Override
 	public List<BreadcrumbDTO> getBreadCrumb(String query, String label) throws BreadcrumbException {
-		List<BreadcrumbDTO> breadcrumb = new ArrayList<>();
-		try {
-			breadcrumb.add(getHomeBreadcrumb());
-			BreadcrumbDTO dto = new BreadcrumbDTO();
-			dto.setCurrent(true);
-			dto.setLabel(label);
-			dto.setQuery(query);
-			breadcrumb.add(dto);
-		} catch (Exception e) {
-			LOGGER.debug("GetBreadCrumb exception: " + e.getMessage());
+		if(query.equals("") || label.equals("")) {
+			LOGGER.debug("GetBreadCrumb exception: Empty field");
 			throw new BreadcrumbException("Error when creating DTO.");
 		}
+		List<BreadcrumbDTO> breadcrumb = new ArrayList<>();
+		breadcrumb.add(getHomeBreadcrumb());
+		BreadcrumbDTO dto = new BreadcrumbDTO();
+		dto.setCurrent(true);
+		dto.setLabel(label);
+		dto.setQuery(query);
+		breadcrumb.add(dto);
 		
 		return breadcrumb;
 	}
 	
-	private BreadcrumbDTO getHomeBreadcrumb() throws BreadcrumbException {
+	private BreadcrumbDTO getHomeBreadcrumb() {
 		BreadcrumbDTO home = new BreadcrumbDTO();
-		try {
-			home.setCurrent(false);
-			home.setLabel("Home");
-			home.setQuery("/home");
-		} catch (Exception e) {
-			LOGGER.debug("getHomeBreadcrumb exception: " + e.getMessage());
-			throw new BreadcrumbException("Error when creating home DTO.");
-		}
+		home.setCurrent(false);
+		home.setLabel("Home");
+		home.setQuery("/home");
 		return home;
 	}
 

@@ -26,4 +26,9 @@ class BreadcrumbTest {
 		assertEquals("Bank", list.get(1).getLabel());
 	}
 
+	@Test
+	void getBreadCrumbThrowsBreadcrumbExceptionWhenEmptyField() {
+		assertThrows(BreadcrumbException.class,
+				() -> breadcrumb.getBreadCrumb("/bank", ""));
+	}
 }
