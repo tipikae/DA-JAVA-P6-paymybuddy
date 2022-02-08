@@ -6,19 +6,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.tipikae.paymybuddy.converters.IConverterListUserToConnectionDTO;
+import com.tipikae.paymybuddy.converters.ConverterListUserToConnectionDTO;
 import com.tipikae.paymybuddy.dto.ConnectionDTO;
 import com.tipikae.paymybuddy.entities.User;
 import com.tipikae.paymybuddy.exceptions.ConverterException;
 
-@SpringBootTest
+@ExtendWith(SpringExtension.class)
 class ConverterListUserToConnectionDTOTest {
 	
-	@Autowired
-	private IConverterListUserToConnectionDTO converterListUserToConnectionDTO;
+	private ConverterListUserToConnectionDTO converterListUserToConnectionDTO 
+		= new ConverterListUserToConnectionDTO();
 
 	@Test
 	void convertToListDTOsReturnsListWhenOK() throws ConverterException {

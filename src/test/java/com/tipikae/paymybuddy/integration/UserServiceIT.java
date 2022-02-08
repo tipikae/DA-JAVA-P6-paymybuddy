@@ -6,7 +6,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.tipikae.paymybuddy.dto.NewUserDTO;
 import com.tipikae.paymybuddy.exceptions.UserAlreadyExistException;
@@ -47,7 +46,6 @@ class UserServiceIT {
 		assertThrows(UserAlreadyExistException.class, () -> userService.registerNewUser(existingUserDTO));
 	}
 
-	@Transactional
 	@Test
 	void registerNewUserReturnsUserWhenEmailNotFound() throws UserAlreadyExistException {
 		assertEquals("victor@victor.com", userService.registerNewUser(newUserDTO).getEmail());

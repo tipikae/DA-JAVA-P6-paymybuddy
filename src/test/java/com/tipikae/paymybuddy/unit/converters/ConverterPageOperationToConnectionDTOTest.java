@@ -7,13 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.tipikae.paymybuddy.converters.IConverterPageOperationToOperationDTO;
+import com.tipikae.paymybuddy.converters.ConverterPageOperationToOperationDTO;
 import com.tipikae.paymybuddy.dto.OperationDTO;
 import com.tipikae.paymybuddy.entities.Deposit;
 import com.tipikae.paymybuddy.entities.Operation;
@@ -22,14 +21,13 @@ import com.tipikae.paymybuddy.entities.User;
 import com.tipikae.paymybuddy.entities.Withdrawal;
 import com.tipikae.paymybuddy.exceptions.ConverterException;
 
-@SpringBootTest
+@ExtendWith(SpringExtension.class)
 class ConverterPageOperationToConnectionDTOTest {
 	
-	@Autowired
-	private IConverterPageOperationToOperationDTO converterPageOperationToOperationDTO;
+	private ConverterPageOperationToOperationDTO converterPageOperationToOperationDTO 
+		= new ConverterPageOperationToOperationDTO();
 
-	@Value("${paymybuddy.rate}")
-	private BigDecimal rate;
+	private BigDecimal rate = new BigDecimal(0.005);
 	
 	@Test
 	void convertToPageDTOReturnsPageOperationDTOWhenOk() throws ConverterException {

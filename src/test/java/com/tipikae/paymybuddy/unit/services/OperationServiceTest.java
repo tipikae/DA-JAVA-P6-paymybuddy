@@ -19,7 +19,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.tipikae.paymybuddy.converters.IConverterListConnectionToConnectionDTO;
 import com.tipikae.paymybuddy.converters.IConverterPageOperationToOperationDTO;
@@ -36,7 +35,6 @@ import com.tipikae.paymybuddy.repositories.IOperationRepository;
 import com.tipikae.paymybuddy.services.IUserService;
 import com.tipikae.paymybuddy.services.OperationServiceImpl;
 
-@Transactional
 @ExtendWith(MockitoExtension.class)
 class OperationServiceTest {
 	
@@ -77,7 +75,7 @@ class OperationServiceTest {
 				.thenReturn(pageDTO);
 		assertEquals(0, operationService.getOperations("alice@alice.com", 1, 5).getNumberOfElements());
 	}
-	
+
 	@Test
 	void depositThrowsUserNotFoundExceptionWhenEmailNotFound() throws UserNotFoundException {
 		NewOperationDTO operationDTO = new NewOperationDTO();

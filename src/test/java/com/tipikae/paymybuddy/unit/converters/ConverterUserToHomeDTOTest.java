@@ -5,20 +5,20 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.math.BigDecimal;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.tipikae.paymybuddy.converters.IConverterUserToHomeDTO;
+import com.tipikae.paymybuddy.converters.ConverterUserToHomeDTO;
 import com.tipikae.paymybuddy.dto.HomeDTO;
 import com.tipikae.paymybuddy.entities.Account;
 import com.tipikae.paymybuddy.entities.User;
 import com.tipikae.paymybuddy.exceptions.ConverterException;
 
-@SpringBootTest
+@ExtendWith(SpringExtension.class)
 class ConverterUserToHomeDTOTest {
 	
-	@Autowired
-	private IConverterUserToHomeDTO converterUserToHomeDTO;
+	private ConverterUserToHomeDTO converterUserToHomeDTO 
+		= new ConverterUserToHomeDTO();
 
 	@Test
 	void convertToDTOReturnsHomeDTOWhenOk() throws ConverterException {

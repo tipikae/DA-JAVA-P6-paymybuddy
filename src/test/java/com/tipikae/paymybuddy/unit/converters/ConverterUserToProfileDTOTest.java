@@ -5,19 +5,19 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.Date;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.tipikae.paymybuddy.converters.IConverterUserToProfileDTO;
+import com.tipikae.paymybuddy.converters.ConverterUserToProfileDTO;
 import com.tipikae.paymybuddy.entities.Account;
 import com.tipikae.paymybuddy.entities.User;
 import com.tipikae.paymybuddy.exceptions.ConverterException;
 
-@SpringBootTest
+@ExtendWith(SpringExtension.class)
 class ConverterUserToProfileDTOTest {
 	
-	@Autowired
-	private IConverterUserToProfileDTO converterUserToProfileDTO;
+	private ConverterUserToProfileDTO converterUserToProfileDTO
+		= new ConverterUserToProfileDTO();
 
 	@Test
 	void convertToDTOReturnsProfileDTOWhenOk() throws ConverterException {

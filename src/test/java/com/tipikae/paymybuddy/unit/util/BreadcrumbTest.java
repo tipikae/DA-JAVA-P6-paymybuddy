@@ -5,18 +5,17 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.tipikae.paymybuddy.dto.BreadcrumbDTO;
 import com.tipikae.paymybuddy.exceptions.BreadcrumbException;
-import com.tipikae.paymybuddy.util.IBreadcrumb;
+import com.tipikae.paymybuddy.util.BreadcrumbImpl;
 
-@SpringBootTest
+@ExtendWith(SpringExtension.class)
 class BreadcrumbTest {
 	
-	@Autowired
-	private IBreadcrumb breadcrumb;
+	private BreadcrumbImpl breadcrumb = new BreadcrumbImpl();
 
 	@Test
 	void getBreadCrumbReturnsListWhenOk() throws BreadcrumbException {
